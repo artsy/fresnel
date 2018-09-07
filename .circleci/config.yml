@@ -1,0 +1,70 @@
+defaults: &defaults
+  working_directory: ~/artsy/responsive
+  docker:
+    - image: circleci/node:8
+
+save_cache: &save_cache
+  save_cache:
+    key: yarn-deps-{{ checksum "yarn.lock" }}
+    paths:
+      - ./node_modules
+
+restore_cache: &restore_cache
+  restore_cache:
+    keys:
+      - yarn-deps-{{ checksum "yarn.lock" }}
+      - yarn-deps-
+
+verify_dependencies: &verify_dependencies
+  run: yarn --check-files
+
+filter_master: &filter_master
+  filters:
+    branches:
+      only:
+        - master
+
+version: 2
+jobs:
+  update-cache:
+    <<: *defaults
+    steps:
+      - checkout
+      - <<: *restore_cache
+      - <<: *verify_dependencies
+      - <<: *save_cache
+  type-check:
+    <<: *defaults
+    steps:
+      - checkout
+      - <<: *restore_cache
+      - <<: *verify_dependencies
+      - run: yarn type-check
+  lint:
+    <<: *defaults
+    steps:
+      - checkout
+      - <<: *restore_cache
+      - <<: *verify_dependencies
+      - run: yarn lint
+  deploy:
+    <<: *defaults
+    steps:
+      - checkout
+      - <<: *restore_cache
+      - run: echo "//registry.npmjs.org/:_authToken=$NPM_TOKEN" >> ~/.npmrc
+      - run: yarn semantic-release
+workflows:
+  version: 2
+  build_and_verify:
+    jobs:
+      - update-cache
+      - type-check
+      - lint
+      - deploy:
+          context: npm-deploy
+          <<: *filter_master
+          requires:
+            - update-cache
+            - lint
+            - type-check
