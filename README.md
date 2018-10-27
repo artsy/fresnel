@@ -9,6 +9,19 @@
   yarn add @artsy/responsive
 ```
 
+# TODO:
+
+- [x] API
+- [x] Core implementation
+- [ ] Deal with issue of invisible components being mounted (which may lead to accidental side-effects).
+      _A quick and dirty implementation exists, but needs to be taken to completion either now or in a next PR._
+- [ ] Put examples of API usage in this PR description.
+- [ ] Make a final call on the deprecation path for `Responsive`.
+- [ ] Write guide for README repo that outlines process of writing responsive components:
+  1. Use styled-system’s responsive props when layout only slightly adapts (TODO come up with better terminology for this)
+  2. When design changes in a way that’s not solvable by responsive props, use `Media` API, but on the component nearest to the leaf of the tree.
+- [ ] Add a link to the README guide in the `Responsive` deprecation warning.
+
 ### Use# React Media component
 
 TODO: Describe problem and ideally how to avoid using the Media component altogether
