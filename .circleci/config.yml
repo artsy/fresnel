@@ -1,5 +1,5 @@
 defaults: &defaults
-  working_directory: ~/artsy/react-responsive-media
+  working_directory: ~/artsy/responsive
   docker:
     - image: circleci/node:8
 
