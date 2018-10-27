@@ -1,0 +1,30 @@
+{
+  "extends": ["tslint:recommended", "tslint-react", "tslint-config-prettier"],
+  "rules": {
+    "curly": false,
+    "interface-name": [true, "never-prefix"],
+    "jsx-boolean-value": [true, "never"],
+    "jsx-no-lambda": false,
+    "jsx-no-bind": false,
+    "max-classes-per-file": [false],
+    "member-access": [false],
+    "member-ordering": false,
+    "no-console": [true, "log", "error"],
+    "no-unused-expression": false,
+    "no-var-requires": false,
+    "object-literal-sort-keys": false,
+    "ordered-imports": false,
+    "no-namespace": [true, "allow-declarations"],
+    "trailing-comma": false,
+    "variable-name": [true, "ban-keywords", "allow-leading-underscore"],
+    "completed-docs": [
+      true,
+      {
+        "functions": { "visibilities": ["exported"] },
+        "classes": { "visibilities": ["exported"] },
+        "types": { "visibilities": ["exported"] },
+        "variables": { "visibilities": ["exported"] }
+      }
+    ]
+  }
+}

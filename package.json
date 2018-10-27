@@ -1,0 +1,132 @@
+{
+  "name": "@artsy/responsive",
+  "version": "0.1.0",
+  "description": "A renderProps-based component for conditionally rendering items based on matched media queries.",
+  "main": "dist/index.js",
+  "files": [
+    "dist"
+  ],
+  "typings": "dist/index.d.ts",
+  "scripts": {
+    "clean": "rm -rf dist",
+    "compile": "babel src --out-dir dist -s --source-map --extensions '.ts,.tsx' --ignore src/**/__tests__",
+    "lint": "tslint -c tslint.json --project tsconfig.json",
+    "precommit": "lint-staged",
+    "prepush": "yarn run type-check",
+    "prepublishOnly": "yarn clean && yarn compile && yarn type-declarations",
+    "prettier": "prettier",
+    "prettier-project": "yarn prettier-write 'src/**/*.{ts,tsx}'",
+    "prettier-write": "yarn prettier --write",
+    "semantic-release": "semantic-release",
+    "test": "yarn type-check && yarn jest",
+    "type-check": "tsc --emitDeclarationOnly --pretty",
+    "type-declarations": "tsc --emitDeclarationOnly",
+    "watch": "concurrently --raw --kill-others 'yarn compile -w' 'tsc --emitDeclarationOnly -w'"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@github.com/artsy/responsive.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/artsy/responsive/issues"
+  },
+  "homepage": "https://github.com/artsy/responsive#readme",
+  "peerDependencies": {
+    "react": "^16.2.0"
+  },
+  "devDependencies": {
+    "@babel/cli": "^7.0.0",
+    "@babel/core": "^7.0.0",
+    "@babel/preset-env": "^7.0.0",
+    "@babel/preset-react": "^7.0.0",
+    "@babel/preset-typescript": "^7.0.0",
+    "@types/jest": "^23.1.0",
+    "@types/node": "^10.3.0",
+    "@types/react": "^16.4.13",
+    "babel-core": "^7.0.0-bridge.0",
+    "babel-jest": "^23.0.1",
+    "concurrently": "^3.5.1",
+    "conventional-changelog-ember": "^2.0.0",
+    "docz": "^0.10.2",
+    "docz-theme-default": "^0.10.2",
+    "husky": "^0.14.3",
+    "jest": "^23.1.0",
+    "lint-staged": "^7.2.0",
+    "prettier": "^1.12.1",
+    "react-dom": "^16.2.0",
+    "semantic-release": "^15.5.0",
+    "styled-components": "^3.3.2",
+    "tslint": "^5.10.0",
+    "tslint-config-prettier": "^1.13.0",
+    "tslint-react": "^3.6.0",
+    "typescript": "^2.9.0",
+    "typescript-styled-plugin": "^0.6.3"
+  },
+  "dependencies": {
+    "@artsy/palette": "^2.13.3",
+    "react": "16.3.2"
+  },
+  "lint-staged": {
+    "*.@(ts|tsx)": [
+      "tslint -c tslint.json --fix",
+      "yarn prettier-write --",
+      "git add"
+    ]
+  },
+  "prettier": {
+    "semi": false,
+    "singleQuote": false,
+    "trailingComma": "es5",
+    "bracketSpacing": true
+  },
+  "release": {
+    "analyzeCommits": {
+      "preset": "ember",
+      "releaseRules": [
+        {
+          "tag": "DOC",
+          "release": "patch"
+        },
+        {
+          "tag": "FIX",
+          "release": "patch"
+        },
+        {
+          "tag": "PATCH",
+          "release": "patch"
+        },
+        {
+          "tag": "FEATURE",
+          "release": "minor"
+        },
+        {
+          "tag": "BREAKING",
+          "release": "major"
+        }
+      ]
+    }
+  },
+  "jest": {
+    "transform": {
+      ".(ts|tsx)": "babel-jest"
+    },
+    "testRegex": "(/__tests__/.*|\\.(test))\\.(ts|tsx)$",
+    "testPathIgnorePatterns": [
+      "<rootDir>/dist/"
+    ],
+    "moduleFileExtensions": [
+      "ts",
+      "tsx",
+      "js"
+    ],
+    "modulePathIgnorePatterns": [
+      "<rootDir>/dist/*"
+    ],
+    "moduleDirectories": [
+      "node_modules",
+      "<rootDir>/src"
+    ]
+  }
+}
