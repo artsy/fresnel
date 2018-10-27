@@ -409,7 +409,7 @@ export function createMedia<
           const generatedStyle: RenderPropStyleGenerator = matchingStyle => css`
             display: none;
             @media ${query} {
-              display: inherit;
+              display: contents;
               ${matchingStyle};
             }
           `
