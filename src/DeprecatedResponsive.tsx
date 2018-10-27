@@ -7,18 +7,25 @@ import React from "react"
 
 const ResponsiveContext = React.createContext({})
 
+/** TODO */
 export type MediaQueries<M extends string = string> = { [K in M]: string }
+
+/** TODO */
 export interface MediaQueryMatchers {
   [key: string]: MediaQueryList
 }
+
+/** TODO */
 export type MediaQueryMatches<M extends string = string> = { [K in M]: boolean }
 
+/** TODO */
 export interface ResponsiveProviderProps<M extends string> {
   mediaQueries: MediaQueries<M>
   initialMatchingMediaQueries?: M[]
   children: React.ReactNode
 }
 
+/** TODO */
 export interface ResponsiveProviderState {
   mediaQueryMatchers?: MediaQueryMatchers
   mediaQueryMatches: MediaQueryMatches
@@ -31,6 +38,7 @@ const shallowEqual = (a: MediaQueryMatches, b: MediaQueryMatches) => {
   return true
 }
 
+/** TODO */
 export function createResponsiveComponents<M extends string>() {
   const ResponsiveConsumer = class extends React.Component<
     React.ConsumerProps<MediaQueryMatches<M>>
