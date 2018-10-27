@@ -25,7 +25,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+ssh://git@github.com/artsy/responsive.git"
+    "url": "git+ssh://git@github.com/artsy/react-responsive-media.git"
   },
   "authors": [
     "Eloy Durán <eloy.de.enige@gmail.com>",
@@ -33,9 +33,9 @@
   ],
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/artsy/responsive/issues"
+    "url": "https://github.com/artsy/react-responsive-media/issues"
   },
-  "homepage": "https://github.com/artsy/responsive#readme",
+  "homepage": "https://github.com/artsy/react-responsive-media#readme",
   "peerDependencies": {
     "react": "^16.2.0"
   },
