@@ -1,12 +1,12 @@
-# @artsy/responsive
+# @artsy/react-responsive-media
 
-[![CircleCI](https://circleci.com/gh/artsy/responsive.svg?style=shield)](https://circleci.com/gh/artsy/responsive)
-[![npm version](https://badge.fury.io/js/%40artsy%2Fresponsive.svg)](https://www.npmjs.com/package/@artsy/responsive)
+[![CircleCI](https://circleci.com/gh/artsy/responsive.svg?style=shield)](https://circleci.com/gh/artsy/react-responsive-media)
+[![npm version](https://badge.fury.io/js/%40artsy%2Fresponsive.svg)](https://www.npmjs.com/package/@artsy/react-responsive-media)
 
 ### Installation
 
 ```sh
-  yarn add @artsy/responsive
+  yarn add @artsy/react-responsive-media
 ```
 
 # TODO:

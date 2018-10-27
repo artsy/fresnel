@@ -1,7 +1,7 @@
 {
-  "name": "@artsy/responsive",
+  "name": "@artsy/react-responsive-media",
   "version": "0.1.0",
-  "description": "A renderProps-based component for conditionally rendering items based on matched media queries.",
+  "description": "TODO description",
   "main": "dist/index.js",
   "files": [
     "dist"
