@@ -1,3 +1,4 @@
+// FIXME: Remove palette
 import { themeProps } from "@artsy/palette"
 import React from "react"
 import styled, { css, InterpolationValue } from "styled-components"
