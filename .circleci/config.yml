@@ -47,6 +47,13 @@ jobs:
       - <<: *restore_cache
       - <<: *verify_dependencies
       - run: yarn lint
+  test:
+    <<: *defaults
+    steps:
+      - checkout
+      - <<: *restore_cache
+      - <<: *verify_dependencies
+      - run: yarn test
   deploy:
     <<: *defaults
     steps:
@@ -61,6 +68,7 @@ workflows:
       - update-cache
       - type-check
       - lint
+      - test
       - deploy:
           context: npm-deploy
           <<: *filter_master
@@ -68,3 +76,4 @@ workflows:
             - update-cache
             - lint
             - type-check
+            - test
