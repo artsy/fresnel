@@ -35,7 +35,7 @@ describe("Media", () => {
       .toJSON()
     expect(query.type).toEqual("div")
     expect(query).toHaveStyleRule("display", "none")
-    expect(query).toHaveStyleRule("display", "inherit", {
+    expect(query).toHaveStyleRule("display", "contents", {
       media: "(width:100px)",
     })
   })
@@ -47,7 +47,7 @@ describe("Media", () => {
         .toJSON()
       expect(query.type).toEqual("div")
       expect(query).toHaveStyleRule("display", "none")
-      expect(query).toHaveStyleRule("display", "inherit", {
+      expect(query).toHaveStyleRule("display", "contents", {
         media: "(max-width:767px)",
       })
     })
@@ -58,7 +58,7 @@ describe("Media", () => {
         .toJSON()
       expect(query.type).toEqual("div")
       expect(query).toHaveStyleRule("display", "none")
-      expect(query).toHaveStyleRule("display", "inherit", {
+      expect(query).toHaveStyleRule("display", "contents", {
         media: "(min-width:1120px)",
       })
     })
@@ -69,7 +69,7 @@ describe("Media", () => {
         .toJSON()
       expect(query.type).toEqual("div")
       expect(query).toHaveStyleRule("display", "none")
-      expect(query).toHaveStyleRule("display", "inherit", {
+      expect(query).toHaveStyleRule("display", "contents", {
         media: "(min-width:1024px)",
       })
     })
@@ -80,7 +80,7 @@ describe("Media", () => {
         .toJSON()
       expect(query.type).toEqual("div")
       expect(query).toHaveStyleRule("display", "none")
-      expect(query).toHaveStyleRule("display", "inherit", {
+      expect(query).toHaveStyleRule("display", "contents", {
         media: "(min-width:768px) and (max-width:1119px)",
       })
     })
@@ -128,7 +128,7 @@ describe("Media", () => {
         .toJSON()
       expect(query.type).toEqual("div")
       expect(query).toHaveStyleRule("display", "none")
-      expect(query).toHaveStyleRule("display", "inherit", {
+      expect(query).toHaveStyleRule("display", "contents", {
         media: "(hover:hover)",
       })
     })
@@ -143,7 +143,7 @@ describe("Media", () => {
         .toJSON()
       expect(query.type).toEqual("div")
       expect(query).toHaveStyleRule("display", "none")
-      expect(query).toHaveStyleRule("display", "inherit", {
+      expect(query).toHaveStyleRule("display", "contents", {
         media: "(hover:none)",
       })
     })
@@ -165,7 +165,7 @@ describe("Media", () => {
         .toJSON()
       expect(query.type).toEqual("span")
       expect(query).toHaveStyleRule("display", "none")
-      expect(query).toHaveStyleRule("display", "inherit", {
+      expect(query).toHaveStyleRule("display", "contents", {
         media: "(max-width:767px)",
       })
     })
