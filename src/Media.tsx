@@ -26,15 +26,6 @@ const MutuallyExclusiveProps = [
 // TODO: All of these props should be mutually exclusive. Using a union should
 //       probably be made possible by https://github.com/Microsoft/TypeScript/pull/27408.
 export interface MediaProps<B, I> {
-  /**
-   * Allows you to pass in any CSS Media Query that will be used to
-   * conditionally show or hide the children.
-   *
-   * Use this sparingly and consider making your use-case part of the API,
-   * because these raw strings cannot be used directly on React Native.
-   */
-  query?: string
-
   // tslint:disable:jsdoc-format
 
   /**
@@ -269,9 +260,6 @@ export function createMedia<
               key => matches[key]
             )
 
-            // FIXME: Remove
-            // console.log(matchingBreakpoints)
-
             return (
               <MediaContext.Provider
                 value={{
@@ -308,9 +296,7 @@ export function createMedia<
       <MediaContext.Consumer>
         {({ onlyRenderAt } = {}) => {
           let query: string
-          if (props.query) {
-            query = props.query
-          } else if (props.interaction) {
+          if (props.interaction) {
             query = config.interactions[props.interaction as string](
               !!props.not
             )
@@ -321,6 +307,18 @@ export function createMedia<
             if (breakpointProps.at) {
               if (onlyRenderAt && !onlyRenderAt.includes(breakpointProps.at)) {
                 return null
+              }
+
+              const lastBreakpoint =
+                sortedBreakpoints[sortedBreakpoints.length - 1]
+
+              if (breakpointProps.at === lastBreakpoint) {
+                console.warn(
+                  "[@artsy/react-responsive-media] " +
+                    "`at` is being used with the largest breakpoint. Consider " +
+                    `using <Media gte="${lastBreakpoint}"> to account for ` +
+                    "dimensions outside of this range."
+                )
               }
 
               breakpointProps = atRanges[breakpointProps.at as string]

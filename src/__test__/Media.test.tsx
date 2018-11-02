@@ -18,28 +18,6 @@ const { Media, MediaContextProvider } = createMedia({
 })
 
 describe("Media", () => {
-  // FIXME: Once an error is thrown it breaks all other tests
-  xit("throws when trying to use mutually exclusive props", () => {
-    expect(() => {
-      renderer.create(
-        <Media query="(width:100px)" at="extra-small">
-          ohai
-        </Media>
-      )
-    }).toThrow()
-  })
-
-  it("creates a container that will only display when its query matches", () => {
-    const query = renderer
-      .create(<Media query="(width:100px)">ohai</Media>)
-      .toJSON()
-    expect(query.type).toEqual("div")
-    expect(query).toHaveStyleRule("display", "none")
-    expect(query).toHaveStyleRule("display", "contents", {
-      media: "(width:100px)",
-    })
-  })
-
   describe("concerning breakpoints", () => {
     it("creates a container that will only display when the page size is less than the specified breakpoint", () => {
       const query = renderer
@@ -233,7 +211,7 @@ describe("Media", () => {
       ).toEqual(["small", "medium"])
     })
 
-    it("renders only matching `greaterThanOrEqual` breakpoints", () => {
+    it("renders only matching `gte` breakpoints", () => {
       const query = renderer.create(
         <MediaContextProvider onlyRenderAt={["small", "medium"]}>
           <Media greaterThanOrEqual="small">small</Media>
@@ -262,6 +240,27 @@ describe("Media", () => {
 
     xit("renders only matching interactions", () => {
       // TODO:
+    })
+  })
+
+  // TODO: Figure out why this test has to go at the end lest it break the
+  //       other tests.
+  describe("concerning errors and warnings", () => {
+    it("throws when trying to use mutually exclusive props", () => {
+      global.console.error = jest.fn()
+      expect(() => {
+        renderer.create(
+          <Media lessThan="small" at="extra-small">
+            ohai
+          </Media>
+        )
+      }).toThrow()
+    })
+
+    it("warns when using `at` in conjunction with the largest breakpoint", () => {
+      global.console.warn = jest.fn()
+      renderer.create(<Media at="large">ohai</Media>).toJSON()
+      expect(global.console.warn).toHaveBeenCalled()
     })
   })
 })

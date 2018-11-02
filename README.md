@@ -59,7 +59,7 @@ const App = () => (
     <Media at='md'>
       <TabletApp />
     </Media>
-    <Media gte='lg'>
+    <Media greaterThanOrEqual='lg'>
       <DesktopApp />
     </Media>
   </MediaContextProvider>
@@ -164,7 +164,7 @@ export const Home = () => (
     <Media at='sm'>
       <MobileLayout />
     </Media>
-    <Media gte='md'>
+    <Media greaterThanOrEqual='md'>
       <DesktopLayout />
     </Media>
   </>
@@ -204,7 +204,7 @@ For example, children of this `Media` declaration will only be visible if the
 viewport width is between 0 and 1024 points:
 
 ```tsx
-<Media lt="lg">...</Media>
+<Media lessThan="lg">...</Media>
 ```
 
 #### gt
@@ -216,7 +216,7 @@ For example, children of this `Media` declaration will only be visible if the
 viewport width is greater than 1024 points:
 
 ```tsx
-<Media gt="md">...</Media>
+<Media greaterThan="md">...</Media>
 ```
 
 #### gte
@@ -228,7 +228,7 @@ For example, children of this `Media` declaration will only be visible if the
 viewport width is 768 points or up:
 
 ```tsx
-<Media gte="md">...</Media>
+<Media greaterThanOrEqual="md">...</Media>
 ```
 
 #### between
