@@ -22,13 +22,85 @@
   2. When design changes in a way that’s not solvable by responsive props, use `Media` API, but on the component nearest to the leaf of the tree.
 - [ ] Add a link to the README guide in the `Responsive` deprecation warning.
 
-### Use# React Media component
+### Overview
 
-TODO: Describe problem and ideally how to avoid using the Media component altogether
+When writing responsive components it's common to use media queries to adjust the display when certain conditions are met. Historically this has taken place directly in CSS:
 
-- declarative rather than imperative
+```js
+const Layout = styled.div`
+  @media screen and (max-width: 767px) {
+    width: 100%;
+  }
+  @media screen and (min-width: 768px) {
+    width: 50%;
+  }
+`
+```
 
-## API
+By hooking into a breakpoint definition, `@artsy/react-responsive-media` takes this imperative approach and makes it declarative:
+
+```js
+import { createMedia } from '@artsy/react-responsive-media'
+
+const { MediaContextProvider, Media } = createMedia({
+  breakpoints: {
+    sm: 0,
+    md: 768
+    lg: 1024,
+    xl: 1192,
+  },
+})
+
+const App = () => (
+  <MediaContextProvider>
+    <Media at='sm'>
+      <MobileApp />
+    </Media>
+    <Media at='md'>
+      <TabletApp />
+    </Media>
+    <Media gte='lg'>
+      <DesktopApp />
+    </Media>
+  </MediaContextProvider>
+)
+```
+
+But why go this route when one can use a conditionally rendered approach similar to [`react-responsive`](https://github.com/contra/react-responsive) or [`react-media`](https://github.com/ReactTraining/react-media)?
+
+Server side rendering!
+
+But first, what is conditional rendering?
+
+In the React ecosystem a common approach to writing declarative responsive components is to use the [`matchMedia` api](https://developer.mozilla.org/en-US/docs/Web/API/Window/matchMedia):
+
+```js
+<Responsive>
+  {({ xs }) => {
+    if (xs) {
+      return <MobileApp />
+    } else {
+      return <DesktopApp />
+    }
+  }}
+</Responsive>
+```
+
+On the client, when a given breakpoint is matched React conditionally renders a tree.
+
+However, this approach suffers from a few flaws when used in conjunction with server-side rendering (SSR):
+
+- It's impossible to reliably know the user's current breakpoint during the server render phase since that requires a browser.
+- Setting breakpoint sizes based on user-agent sniffing is prone to errors due the inability to precisely match device capabilities to size. One mobile device might have greater pixel density than another, a mobile device may fit multiple breakpoints when taking device orientation into consideration, etc. The best devs can do is guess the current breakpoint and populate `<Responsive>` with assumed state.
+
+Artsy approaches this problem in the following way:
+
+1. Render markup for all breakpoints on the server and send it down the wire.
+2. The browser receives markup with proper media query styling and will immediately start rendering the expected visual result for whatever viewport width the browser is at.
+3. When all JS has loaded and React starts the rehydration phase, we query the browser synchronously for what breakpoint it’s at and then limit the rendered components to the matching breakpoints. This prevents lifecycle methods from firing in hidden components and unused html being written to the DOM.
+4. Additionally, we register event listeners with the browser to notify the `MediaContextProvider` when a different breakpoint is matched and then re-render the tree using the new value for `renderOnlyAt`.
+
+See [#server-side-rendering] for a complete example.
 
 ### Setup
 
@@ -63,11 +135,43 @@ It’s advisable to do this setup in its own module so that it can be easily
 imported throughout your application:
 
 ```tsx
-export const MediaContextProvider = MyAppMediaComponents.MediaContextProvider
-export const Media = MyAppMediaComponents.Media
+// Responsive.js
+
+export const { MediaContextProvider, Media } = MyAppMediaComponents
 ```
 
-### Usage
+And then elsewhere
+
+````tsx
+// App.js
+
+import { MediaContextProvider } from './Responsive'
+import { Home } from './Home'
+
+const App = () => (
+  <MediaContextProvider>
+    <Home />
+  </MediaContextProvider>
+)
+
+
+// Home.js
+
+import { Media } from './Responsive'
+
+export const Home = () => (
+  <>
+    <Media at='sm'>
+      <MobileLayout />
+    </Media>
+    <Media gte='md'>
+      <DesktopLayout />
+    </Media>
+  </>
+)
+
+
+### Usage API
 
 The `Media` component created for your application has a few mutually exclusive
 props that make up the API you’ll use to declare your responsive layouts. These
@@ -89,9 +193,9 @@ viewport width is between 0 and 768 points:
 
 ```tsx
 <Media at="sm">...</Media>
-```
+````
 
-#### lessThan
+#### lt
 
 Use this to declare that children should only be visible while the viewport
 width is less than the start offset of the specified breakpoint.
@@ -100,10 +204,10 @@ For example, children of this `Media` declaration will only be visible if the
 viewport width is between 0 and 1024 points:
 
 ```tsx
-<Media lessThan="lg">...</Media>
+<Media lt="lg">...</Media>
 ```
 
-#### greaterThan
+#### gt
 
 Use this to declare that children should only be visible while the viewport
 width is greater than the start offset of the _next_ breakpoint.
@@ -112,10 +216,10 @@ For example, children of this `Media` declaration will only be visible if the
 viewport width is greater than 1024 points:
 
 ```tsx
-<Media greaterThan="md">...</Media>
+<Media gt="md">...</Media>
 ```
 
-#### greaterThanOrEqual
+#### gte
 
 Use this to declare that children should only be visible while the viewport
 width is equal to the start offset of the specified breakpoint _or_ greater.
@@ -124,7 +228,7 @@ For example, children of this `Media` declaration will only be visible if the
 viewport width is 768 points or up:
 
 ```tsx
-<Media greaterThanOrEqual="md">...</Media>
+<Media gte="md">...</Media>
 ```
 
 #### between
@@ -146,7 +250,9 @@ viewport width is between 768 and 1192 points:
 
 ## Pros vs Cons
 
-### Commits and Deployments
+## Development
+
+<details>
 
 Circle CI is set up to publish releases to NPM automatically via [semantic-release](https://github.com/semantic-release/semantic-release) following every successful merge to master.
 
@@ -176,3 +282,5 @@ Release versions (major, minor, patch) are triggered [by commit messages](https:
 ```
 [BREAKING refactor] Update API to support new platform
 ```
+
+</details>
