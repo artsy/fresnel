@@ -3,9 +3,12 @@ import "jest-styled-components"
 import React from "react"
 import renderer from "react-test-renderer"
 import styled, { css } from "styled-components"
-import { createMedia } from "../Media"
+import { createMedia, createSortedBreakpoints, createAtRanges } from "../Media"
 
-const { Media, MediaContextProvider } = createMedia({
+// FIXME: remove
+// import { themeProps } from "@artsy/palette"
+
+const config = {
   breakpoints: {
     "extra-small": 0,
     small: 768,
@@ -15,9 +18,38 @@ const { Media, MediaContextProvider } = createMedia({
   interactions: {
     hover: negated => `(hover:${negated ? "none" : "hover"})`,
   },
-})
+}
+
+const { Media, MediaContextProvider } = createMedia(config)
 
 describe("Media", () => {
+  describe("concerning errors and warnings", () => {
+    const errorLogger = global.console.error
+    const warnLogger = global.console.warn
+
+    afterEach(() => {
+      global.console.error = errorLogger
+      global.console.warn = warnLogger
+    })
+
+    it("throws when trying to use mutually exclusive props", () => {
+      global.console.error = jest.fn()
+      expect(() => {
+        renderer.create(
+          <Media lessThan="small" at="extra-small">
+            ohai
+          </Media>
+        )
+      }).toThrow()
+    })
+
+    it("warns when using `at` in conjunction with the largest breakpoint", () => {
+      global.console.warn = jest.fn()
+      renderer.create(<Media at="large">ohai</Media>).toJSON()
+      expect(global.console.warn).toHaveBeenCalled()
+    })
+  })
+
   describe("concerning breakpoints", () => {
     it("creates a container that will only display when the page size is less than the specified breakpoint", () => {
       const query = renderer
@@ -211,7 +243,7 @@ describe("Media", () => {
       ).toEqual(["small", "medium"])
     })
 
-    it("renders only matching `gte` breakpoints", () => {
+    it("renders only matching `greaterThanOrEqual` breakpoints", () => {
       const query = renderer.create(
         <MediaContextProvider onlyRenderAt={["small", "medium"]}>
           <Media greaterThanOrEqual="small">small</Media>
@@ -241,26 +273,89 @@ describe("Media", () => {
     xit("renders only matching interactions", () => {
       // TODO:
     })
+
+    describe("without a context provider", () => {
+      it("only renders the current breakpoint", () => {
+        mockCurrentDynamicBreakpoint("medium")
+
+        const query = renderer.create(
+          <>
+            <Media at="extra-small">
+              <span className="extra-small" />
+            </Media>
+            <Media at="medium">
+              <span className="medium" />
+            </Media>
+            <Media at="large">
+              <span className="large" />
+            </Media>
+          </>
+        )
+
+        expect(query.find("span").length).toEqual(1)
+        expect(query.find("span.medium")).not.toBeNull()
+      })
+    })
   })
 
-  // TODO: Figure out why this test has to go at the end lest it break the
-  //       other tests.
-  describe("concerning errors and warnings", () => {
-    it("throws when trying to use mutually exclusive props", () => {
-      global.console.error = jest.fn()
-      expect(() => {
-        renderer.create(
-          <Media lessThan="small" at="extra-small">
-            ohai
+  describe("with a context provider and narrowed down set of breakpoints to render at", () => {
+    it("only renders the current breakpoint", () => {
+      mockCurrentDynamicBreakpoint("medium")
+
+      const query = renderer.create(
+        <MediaContextProvider onlyRenderAt={["small", "medium"]}>
+          <Media at="extra-small">
+            <span className="extra-small" />
           </Media>
-        )
-      }).toThrow()
+          <Media at="medium">
+            <span className="medium" />
+          </Media>
+          <Media at="large">
+            <span className="large" />
+          </Media>
+        </MediaContextProvider>
+      )
+
+      expect(query.find("span").length).toEqual(1)
+      expect(query.find("span.medium")).not.toBeNull()
     })
 
-    it("warns when using `at` in conjunction with the largest breakpoint", () => {
-      global.console.warn = jest.fn()
-      renderer.create(<Media at="large">ohai</Media>).toJSON()
-      expect(global.console.warn).toHaveBeenCalled()
+    it("does not render anything if the current breakpoint isn’t in the already narrowed down set", () => {
+      mockCurrentDynamicBreakpoint("large")
+
+      const query = renderer.create(
+        <MediaContextProvider onlyRenderAt={["small", "medium"]}>
+          <Media at="extra-small">
+            <span className="extra-small" />
+          </Media>
+          <Media at="medium">
+            <span className="medium" />
+          </Media>
+          <Media at="large">
+            <span className="large" />
+          </Media>
+        </MediaContextProvider>
+      )
+
+      expect(query.find("span").length).toEqual(0)
     })
   })
 })
+
+function mockCurrentDynamicBreakpoint(at) {
+  // FIXME: remove palette
+  const sortedBreakpoints = createSortedBreakpoints(config.breakpoints)
+  const atRanges = createAtRanges(sortedBreakpoints)
+  // Also remove the reliance on palette and instead replace `themeProps.breakpoints`
+  // with `atRanges`, both because that needs to be done anyways but also so that we
+  // can use these exact media queries to reverse find the key belonging to it for our
+  // mocking needs.
+  // Here: https://github.com/artsy/react-responsive-media/blob/bee7c95fd3c8bd8342eca9c7302510ea2d39b9d5/src/Media.tsx#L263
+
+  window.matchMedia = jest.fn(mediaQuery => {
+    // Find key/mediaQuery pair from `atRanges`
+    const key = Object.entries(atRanges).find(([_k, v]) => mediaQuery === v)
+    // Return mock object that only matches the mocked breakpoint
+    return { matches: key === at }
+  })
+}

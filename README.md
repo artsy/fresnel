@@ -195,7 +195,7 @@ viewport width is between 0 and 768 points:
 <Media at="sm">...</Media>
 ````
 
-#### lt
+#### lessThan
 
 Use this to declare that children should only be visible while the viewport
 width is less than the start offset of the specified breakpoint.
@@ -207,7 +207,7 @@ viewport width is between 0 and 1024 points:
 <Media lessThan="lg">...</Media>
 ```
 
-#### gt
+#### greaterThan
 
 Use this to declare that children should only be visible while the viewport
 width is greater than the start offset of the _next_ breakpoint.
@@ -219,7 +219,7 @@ viewport width is greater than 1024 points:
 <Media greaterThan="md">...</Media>
 ```
 
-#### gte
+#### greaterThanOrEqual
 
 Use this to declare that children should only be visible while the viewport
 width is equal to the start offset of the specified breakpoint _or_ greater.

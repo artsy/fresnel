@@ -313,11 +313,30 @@ export function createMedia<
                 sortedBreakpoints[sortedBreakpoints.length - 1]
 
               if (breakpointProps.at === lastBreakpoint) {
+                // TODO: We should look into making React’s __DEV__ available
+                //       and have webpack completely compile these away.
+                let ownerName
+                try {
+                  // FIXME: This (seems) to only be accessible in React.Component
+                  //        classes. Since this is an SFC value is inaccessible. However,
+                  //        when converting this component to a class TS throws an error
+                  //        about private class being exported. This relates to the
+                  //        --emitDeclaration TS setting.
+                  ownerName = (this as any)._reactInternalFiber._debugOwner.type
+                    .name
+                } catch (err) {
+                  // no-op
+                }
+
                 console.warn(
                   "[@artsy/react-responsive-media] " +
                     "`at` is being used with the largest breakpoint. Consider " +
-                    `using <Media gte="${lastBreakpoint}"> to account for ` +
-                    "dimensions outside of this range."
+                    `using <Media greaterThanOrEqual="${lastBreakpoint}"> to ` +
+                    `account for dimensions outside of this range.${
+                      ownerName
+                        ? ` It is being used in the ${ownerName} component.`
+                        : ""
+                    }`
                 )
               }
 
@@ -451,14 +470,16 @@ function validateProps(props) {
   }
 }
 
-function createSortedBreakpoints(breakpoints: { [key: string]: number }) {
+export function createSortedBreakpoints(breakpoints: {
+  [key: string]: number
+}) {
   return Object.keys(breakpoints)
     .map(breakpoint => [breakpoint, breakpoints[breakpoint]])
     .sort((a, b) => (a[1] < b[1] ? -1 : 1))
     .map(breakpointAndValue => breakpointAndValue[0] as string)
 }
 
-function createAtRanges(sortedBreakpoints: string[]) {
+export function createAtRanges(sortedBreakpoints: string[]) {
   const atRanges = {}
   // tslint:disable-next-line:prefer-for-of
   for (let i = 0; i < sortedBreakpoints.length; i++) {
