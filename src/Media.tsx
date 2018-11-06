@@ -319,18 +319,18 @@ export function createMedia<
               if (breakpointProps.at === lastBreakpoint) {
                 // TODO: We should look into making React’s __DEV__ available
                 //       and have webpack completely compile these away.
-                let ownerName
-                try {
-                  // FIXME: This (seems) to only be accessible in React.Component
-                  //        classes. Since this is an SFC value is inaccessible. However,
-                  //        when converting this component to a class TS throws an error
-                  //        about private class being exported. This relates to the
-                  //        --emitDeclaration TS setting.
-                  ownerName = (this as any)._reactInternalFiber._debugOwner.type
-                    .name
-                } catch (err) {
-                  // no-op
-                }
+                const ownerName = null
+                // try {
+                //   // FIXME: This (seems) to only be accessible in React.Component
+                //   //        classes. Since this is an SFC value is inaccessible. However,
+                //   //        when converting this component to a class TS throws an error
+                //   //        about private class being exported. This relates to the
+                //   //        --emitDeclaration TS setting.
+                //   ownerName = (this as any)._reactInternalFiber._debugOwner.type
+                //     .name
+                // } catch (err) {
+                //   // no-op
+                // }
 
                 console.warn(
                   "[@artsy/react-responsive-media] " +
