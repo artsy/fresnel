@@ -3,7 +3,12 @@ import "jest-styled-components"
 import React from "react"
 import renderer from "react-test-renderer"
 import styled, { css } from "styled-components"
-import { createMedia, createSortedBreakpoints, createAtRanges } from "../Media"
+import { createMedia } from "../Media"
+import {
+  createSortedBreakpoints,
+  createAtRanges,
+  createBreakpointQueries,
+} from "../Utils"
 
 // FIXME: remove
 // import { themeProps } from "@artsy/palette"
@@ -23,6 +28,10 @@ const config = {
 const { Media, MediaContextProvider } = createMedia(config)
 
 describe("Media", () => {
+  afterEach(() => {
+    window.matchMedia = undefined
+  })
+
   describe("concerning errors and warnings", () => {
     const errorLogger = global.console.error
     const warnLogger = global.console.warn
@@ -274,7 +283,10 @@ describe("Media", () => {
       // TODO:
     })
 
-    describe("without a context provider", () => {
+    // TODO: This actually doesn’t make sense, I think, because if the user
+    //       decides to not use a provider they are opting for rendering all
+    //       variants. We just need to make sure to document this well.
+    xdescribe("without a context provider", () => {
       it("only renders the current breakpoint", () => {
         mockCurrentDynamicBreakpoint("medium")
 
@@ -292,8 +304,8 @@ describe("Media", () => {
           </>
         )
 
-        expect(query.find("span").length).toEqual(1)
-        expect(query.find("span.medium")).not.toBeNull()
+        expect(query.root.findAllByType("span").length).toEqual(1)
+        expect(query.root.findByProps({ className: "medium" })).not.toBeNull()
       })
     })
   })
@@ -316,8 +328,8 @@ describe("Media", () => {
         </MediaContextProvider>
       )
 
-      expect(query.find("span").length).toEqual(1)
-      expect(query.find("span.medium")).not.toBeNull()
+      expect(query.root.findAllByType("span").length).toEqual(1)
+      expect(query.root.findByProps({ className: "medium" })).not.toBeNull()
     })
 
     it("does not render anything if the current breakpoint isn’t in the already narrowed down set", () => {
@@ -337,25 +349,29 @@ describe("Media", () => {
         </MediaContextProvider>
       )
 
-      expect(query.find("span").length).toEqual(0)
+      expect(query.root.findAllByType("span").length).toEqual(0)
     })
   })
 })
 
 function mockCurrentDynamicBreakpoint(at) {
-  // FIXME: remove palette
   const sortedBreakpoints = createSortedBreakpoints(config.breakpoints)
   const atRanges = createAtRanges(sortedBreakpoints)
-  // Also remove the reliance on palette and instead replace `themeProps.breakpoints`
-  // with `atRanges`, both because that needs to be done anyways but also so that we
-  // can use these exact media queries to reverse find the key belonging to it for our
-  // mocking needs.
-  // Here: https://github.com/artsy/react-responsive-media/blob/bee7c95fd3c8bd8342eca9c7302510ea2d39b9d5/src/Media.tsx#L263
-
+  const mediaQueries = createBreakpointQueries(
+    config.breakpoints,
+    sortedBreakpoints,
+    atRanges
+  )
   window.matchMedia = jest.fn(mediaQuery => {
     // Find key/mediaQuery pair from `atRanges`
-    const key = Object.entries(atRanges).find(([_k, v]) => mediaQuery === v)
+    const key = Object.entries(mediaQueries).find(
+      ([_k, v]) => mediaQuery === v
+    )[0]
     // Return mock object that only matches the mocked breakpoint
-    return { matches: key === at }
+    return {
+      matches: key === at,
+      addListener: jest.fn(),
+      removeListener: jest.fn(),
+    }
   })
 }

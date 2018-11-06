@@ -1,6 +1,7 @@
 /**
- * TODO: This is the actual implementation which is generic and ready to be
- *       extracted.
+ * TODO: This is the deprecated runtime media-query component from Reaction.
+ *       It can probably be simplified somewhat if we’re not going to be using
+ *       it directly any longer.
  */
 
 import React from "react"
