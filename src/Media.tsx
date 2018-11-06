@@ -204,6 +204,15 @@ export interface MediaProps<B, I> extends MediaBreakpointProps<B> {
 
 export interface MediaContextProviderProps<B> {
   /**
+   * Disables usage of browser MediaQuery API to only render at the current
+   * breakpoint.
+   *
+   * Disabling this means React components for all breakpoints will mount and
+   * shown/hidden only based on pure CSS media queries. Use this with caution.
+   */
+  disableDynamicMediaQueries?: boolean
+
+  /**
    * This list of breakpoints can be used to limit the rendered output to these.
    *
    * For instance, when a server knows for some user-agents that certain
@@ -255,40 +264,56 @@ export function createMedia<
 
   // TODO: Make sure this doesn’t render unnecessarily!
   const MediaContextProvider: React.SFC<MediaContextProviderProps<B>> = ({
+    disableDynamicMediaQueries,
     onlyRenderAt,
     children,
   }) => {
-    const mediaQueries = createBreakpointQueries(
-      config.breakpoints,
-      sortedBreakpoints,
-      atRanges
-    )
-    return (
-      <DynamicResponsive.Provider
-        mediaQueries={mediaQueries}
-        initialMatchingMediaQueries={intersection(
-          sortedBreakpoints,
-          onlyRenderAt
-        )}
-      >
-        <DynamicResponsive.Consumer>
-          {matches => {
-            const matchingBreakpoints = Object.keys(matches).filter(
-              key => matches[key]
-            )
-            return (
-              <MediaContext.Provider
-                value={{
-                  onlyRenderAt: intersection(matchingBreakpoints, onlyRenderAt),
-                }}
-              >
-                {children}
-              </MediaContext.Provider>
-            )
+    if (disableDynamicMediaQueries) {
+      return (
+        <MediaContext.Provider
+          value={{
+            onlyRenderAt,
           }}
-        </DynamicResponsive.Consumer>
-      </DynamicResponsive.Provider>
-    )
+        >
+          {children}
+        </MediaContext.Provider>
+      )
+    } else {
+      const mediaQueries = createBreakpointQueries(
+        config.breakpoints,
+        sortedBreakpoints,
+        atRanges
+      )
+      return (
+        <DynamicResponsive.Provider
+          mediaQueries={mediaQueries}
+          initialMatchingMediaQueries={intersection(
+            sortedBreakpoints,
+            onlyRenderAt
+          )}
+        >
+          <DynamicResponsive.Consumer>
+            {matches => {
+              const matchingBreakpoints = Object.keys(matches).filter(
+                key => matches[key]
+              )
+              return (
+                <MediaContext.Provider
+                  value={{
+                    onlyRenderAt: intersection(
+                      matchingBreakpoints,
+                      onlyRenderAt
+                    ),
+                  }}
+                >
+                  {children}
+                </MediaContext.Provider>
+              )
+            }}
+          </DynamicResponsive.Consumer>
+        </DynamicResponsive.Provider>
+      )
+    }
   }
 
   // TODO: Ensure the component does not re-render if the instance’s query still
