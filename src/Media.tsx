@@ -1,9 +1,14 @@
+// tslint:disable:jsdoc-format
+
 import React from "react"
 import styled, { css, InterpolationValue } from "styled-components"
-import { createResponsiveComponents } from "./DeprecatedResponsive"
-
-// FIXME: Remove palette
-import { themeProps } from "@artsy/palette"
+import { createResponsiveComponents } from "./DynamicResponsive"
+import {
+  createSortedBreakpoints,
+  createAtRanges,
+  createBreakpointQueries,
+  createBreakpointQuery,
+} from "./Utils"
 
 type RenderProp = ((
   generatedStyle: RenderPropStyleGenerator
@@ -25,18 +30,8 @@ const MutuallyExclusiveProps = [
 
 // TODO: All of these props should be mutually exclusive. Using a union should
 //       probably be made possible by https://github.com/Microsoft/TypeScript/pull/27408.
-export interface MediaProps<B, I> {
-  /**
-   * Allows you to pass in any CSS Media Query that will be used to
-   * conditionally show or hide the children.
-   *
-   * Use this sparingly and consider making your use-case part of the API,
-   * because these raw strings cannot be used directly on React Native.
-   */
-  query?: string
 
-  // tslint:disable:jsdoc-format
-
+export interface MediaBreakpointProps<B> {
   /**
    * Children will only be shown if the viewport matches the specified
    * breakpoint. That is, a viewport width that’s higher than the configured
@@ -145,7 +140,9 @@ export interface MediaProps<B, I> {
    *
    */
   between?: [B, B]
+}
 
+export interface MediaProps<B, I> extends MediaBreakpointProps<B> {
   /**
    * Children will only be shown if the interaction query matches.
    *
@@ -250,32 +247,39 @@ export function createMedia<
   type B = keyof C["breakpoints"]
   type I = keyof C["interactions"]
 
+  const sortedBreakpoints = createSortedBreakpoints(config.breakpoints)
+  const atRanges = createAtRanges(sortedBreakpoints)
+
   const DynamicResponsive = createResponsiveComponents()
   const MediaContext = React.createContext<MediaContextProviderProps<B>>({})
 
+  // TODO: Make sure this doesn’t render unnecessarily!
   const MediaContextProvider: React.SFC<MediaContextProviderProps<B>> = ({
     onlyRenderAt,
     children,
   }) => {
-    const { hover, ...breakpointMediaQueries } = themeProps.mediaQueries
+    const mediaQueries = createBreakpointQueries(
+      config.breakpoints,
+      sortedBreakpoints,
+      atRanges
+    )
     return (
       <DynamicResponsive.Provider
-        mediaQueries={breakpointMediaQueries as any}
-        initialMatchingMediaQueries={["xs", "sm", "md", "lg", "xl"]}
+        mediaQueries={mediaQueries}
+        initialMatchingMediaQueries={intersection(
+          sortedBreakpoints,
+          onlyRenderAt
+        )}
       >
         <DynamicResponsive.Consumer>
           {matches => {
             const matchingBreakpoints = Object.keys(matches).filter(
               key => matches[key]
             )
-
-            // FIXME: Remove
-            // console.log(matchingBreakpoints)
-
             return (
               <MediaContext.Provider
                 value={{
-                  onlyRenderAt: onlyRenderAt || matchingBreakpoints,
+                  onlyRenderAt: intersection(matchingBreakpoints, onlyRenderAt),
                 }}
               >
                 {children}
@@ -287,18 +291,6 @@ export function createMedia<
     )
   }
 
-  const sortedBreakpoints = createSortedBreakpoints(config.breakpoints)
-  const atRanges = createAtRanges(sortedBreakpoints)
-
-  const findNextBreakpoint = (breakpoint: string) => {
-    const nextBreakpoint =
-      sortedBreakpoints[sortedBreakpoints.indexOf(breakpoint) + 1]
-    if (!nextBreakpoint) {
-      throw new Error(`There is no breakpoint larger than ${breakpoint}`)
-    }
-    return nextBreakpoint
-  }
-
   // TODO: Ensure the component does not re-render if the instance’s query still
   //       matches a new `renderOnlyAt` value.
   const Media: React.SFC<MediaProps<B, I>> = props => {
@@ -307,10 +299,8 @@ export function createMedia<
     return (
       <MediaContext.Consumer>
         {({ onlyRenderAt } = {}) => {
-          let query: string
-          if (props.query) {
-            query = props.query
-          } else if (props.interaction) {
+          let query: string | null
+          if (props.interaction) {
             query = config.interactions[props.interaction as string](
               !!props.not
             )
@@ -323,87 +313,50 @@ export function createMedia<
                 return null
               }
 
-              breakpointProps = atRanges[breakpointProps.at as string]
+              const lastBreakpoint =
+                sortedBreakpoints[sortedBreakpoints.length - 1]
+
+              if (breakpointProps.at === lastBreakpoint) {
+                // TODO: We should look into making React’s __DEV__ available
+                //       and have webpack completely compile these away.
+                const ownerName = null
+                // try {
+                //   // FIXME: This (seems) to only be accessible in React.Component
+                //   //        classes. Since this is an SFC value is inaccessible. However,
+                //   //        when converting this component to a class TS throws an error
+                //   //        about private class being exported. This relates to the
+                //   //        --emitDeclaration TS setting.
+                //   ownerName = (this as any)._reactInternalFiber._debugOwner.type
+                //     .name
+                // } catch (err) {
+                //   // no-op
+                // }
+
+                console.warn(
+                  "[@artsy/react-responsive-media] " +
+                    "`at` is being used with the largest breakpoint. Consider " +
+                    `using <Media greaterThanOrEqual="${lastBreakpoint}"> to ` +
+                    `account for dimensions outside of this range.${
+                      ownerName
+                        ? ` It is being used in the ${ownerName} component.`
+                        : ""
+                    }`
+                )
+              }
+
+              breakpointProps = atRanges[breakpointProps.at] as MediaProps<B, I>
             }
 
-            // lessThan
-            if (breakpointProps.lessThan) {
-              const width =
-                config.breakpoints[breakpointProps.lessThan as string]
+            query = createBreakpointQuery(
+              config.breakpoints,
+              sortedBreakpoints,
+              breakpointProps,
+              onlyRenderAt
+            )
+          }
 
-              if (onlyRenderAt) {
-                const lowestAllowedWidth = Math.min(
-                  ...onlyRenderAt.map(
-                    breakpoint => config.breakpoints[breakpoint as string]
-                  )
-                )
-                if (lowestAllowedWidth >= width) {
-                  return null
-                }
-              }
-              query = `(max-width:${width - 1}px)`
-
-              // greaterThan
-            } else if (breakpointProps.greaterThan) {
-              const width =
-                config.breakpoints[
-                  findNextBreakpoint(breakpointProps.greaterThan as string)
-                ]
-
-              if (onlyRenderAt) {
-                const highestAllowedWidth = Math.max(
-                  ...onlyRenderAt.map(
-                    breakpoint => config.breakpoints[breakpoint as string]
-                  )
-                )
-                if (highestAllowedWidth < width) {
-                  return null
-                }
-              }
-              query = `(min-width:${width}px)`
-
-              //  greaterThanOrEqual
-            } else if (breakpointProps.greaterThanOrEqual) {
-              const width =
-                config.breakpoints[breakpointProps.greaterThanOrEqual as string]
-
-              if (onlyRenderAt) {
-                const highestAllowedWidth = Math.max(
-                  ...onlyRenderAt.map(
-                    breakpoint => config.breakpoints[breakpoint as string]
-                  )
-                )
-                if (highestAllowedWidth < width) {
-                  return null
-                }
-              }
-              query = `(min-width:${width}px)`
-
-              // between
-            } else if (breakpointProps.between) {
-              // TODO: This is the only useful breakpoint to negate, but we’ll
-              //       we’ll see when/if we need it. We could then also decide
-              //       to add `oustide`.
-              const fromWidth =
-                config.breakpoints[breakpointProps.between[0] as string]
-              const toWidth =
-                config.breakpoints[breakpointProps.between[1] as string]
-
-              if (onlyRenderAt) {
-                const allowedWidths = onlyRenderAt.map(
-                  breakpoint => config.breakpoints[breakpoint as string]
-                )
-                if (
-                  Math.max(...allowedWidths) < fromWidth ||
-                  Math.min(...allowedWidths) >= toWidth
-                ) {
-                  return null
-                }
-              }
-
-              // prettier-ignore
-              query = `(min-width:${fromWidth}px) and (max-width:${toWidth - 1}px)`
-            }
+          if (!query) {
+            return null
           }
 
           const generatedStyle: RenderPropStyleGenerator = matchingStyle => css`
@@ -435,6 +388,10 @@ export function createMedia<
   return { Media, MediaContextProvider }
 }
 
+function intersection(a1: any[], a2?: any[]) {
+  return a2 ? a1.filter(element => a2.indexOf(element) >= 0) : a1
+}
+
 function validateProps(props) {
   const selectedProps = Object.keys(props).filter(prop =>
     MutuallyExclusiveProps.includes(prop)
@@ -451,26 +408,4 @@ function validateProps(props) {
       "The `not` prop is only allowed in combination with the `interaction` prop."
     )
   }
-}
-
-function createSortedBreakpoints(breakpoints: { [key: string]: number }) {
-  return Object.keys(breakpoints)
-    .map(breakpoint => [breakpoint, breakpoints[breakpoint]])
-    .sort((a, b) => (a[1] < b[1] ? -1 : 1))
-    .map(breakpointAndValue => breakpointAndValue[0] as string)
-}
-
-function createAtRanges(sortedBreakpoints: string[]) {
-  const atRanges = {}
-  // tslint:disable-next-line:prefer-for-of
-  for (let i = 0; i < sortedBreakpoints.length; i++) {
-    const from = sortedBreakpoints[i]
-    const to = sortedBreakpoints[i + 1]
-    if (to) {
-      atRanges[from] = { between: [from, to] }
-    } else {
-      atRanges[from] = { greaterThanOrEqual: from }
-    }
-  }
-  return atRanges
 }

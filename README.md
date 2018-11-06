@@ -59,7 +59,7 @@ const App = () => (
     <Media at='md'>
       <TabletApp />
     </Media>
-    <Media gte='lg'>
+    <Media greaterThanOrEqual='lg'>
       <DesktopApp />
     </Media>
   </MediaContextProvider>
@@ -164,7 +164,7 @@ export const Home = () => (
     <Media at='sm'>
       <MobileLayout />
     </Media>
-    <Media gte='md'>
+    <Media greaterThanOrEqual='md'>
       <DesktopLayout />
     </Media>
   </>
@@ -195,7 +195,7 @@ viewport width is between 0 and 768 points:
 <Media at="sm">...</Media>
 ````
 
-#### lt
+#### lessThan
 
 Use this to declare that children should only be visible while the viewport
 width is less than the start offset of the specified breakpoint.
@@ -204,10 +204,10 @@ For example, children of this `Media` declaration will only be visible if the
 viewport width is between 0 and 1024 points:
 
 ```tsx
-<Media lt="lg">...</Media>
+<Media lessThan="lg">...</Media>
 ```
 
-#### gt
+#### greaterThan
 
 Use this to declare that children should only be visible while the viewport
 width is greater than the start offset of the _next_ breakpoint.
@@ -216,10 +216,10 @@ For example, children of this `Media` declaration will only be visible if the
 viewport width is greater than 1024 points:
 
 ```tsx
-<Media gt="md">...</Media>
+<Media greaterThan="md">...</Media>
 ```
 
-#### gte
+#### greaterThanOrEqual
 
 Use this to declare that children should only be visible while the viewport
 width is equal to the start offset of the specified breakpoint _or_ greater.
@@ -228,7 +228,7 @@ For example, children of this `Media` declaration will only be visible if the
 viewport width is 768 points or up:
 
 ```tsx
-<Media gte="md">...</Media>
+<Media greaterThanOrEqual="md">...</Media>
 ```
 
 #### between

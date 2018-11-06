@@ -18,7 +18,7 @@
     "prettier-project": "yarn prettier-write 'src/**/*.{ts,tsx}'",
     "prettier-write": "yarn prettier --write",
     "semantic-release": "semantic-release",
-    "test": "yarn type-check && yarn jest",
+    "test": "yarn type-check && yarn lint && yarn jest",
     "type-check": "tsc --emitDeclarationOnly --pretty",
     "type-declarations": "tsc --emitDeclarationOnly",
     "watch": "concurrently --raw --kill-others 'yarn compile -w' 'tsc --emitDeclarationOnly -w'"
@@ -37,11 +37,8 @@
   },
   "homepage": "https://github.com/artsy/react-responsive-media#readme",
   "peerDependencies": {
-    "react": "^16.2.0"
-  },
-  "dependencies": {
-    "@artsy/palette": "^2.19.8",
-    "react": "16.3.2"
+    "react": "^16.3.0",
+    "styled-components": "*"
   },
   "devDependencies": {
     "@babel/cli": "^7.0.0",
@@ -53,6 +50,7 @@
     "@types/jest": "^23.1.0",
     "@types/node": "^10.3.0",
     "@types/react": "^16.4.13",
+    "@types/react-test-renderer": "^16.0.3",
     "babel-core": "^7.0.0-bridge.0",
     "babel-jest": "^23.0.1",
     "concurrently": "^3.5.1",
@@ -62,6 +60,7 @@
     "jest-styled-components": "^6.2.2",
     "lint-staged": "^7.2.0",
     "prettier": "^1.12.1",
+    "react": "16.3.2",
     "react-dom": "^16.2.0",
     "react-test-renderer": "^16.6.0",
     "semantic-release": "^15.5.0",
