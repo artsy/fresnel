@@ -283,15 +283,12 @@ describe("Media", () => {
       // TODO:
     })
 
-    // TODO: This actually doesn’t make sense, I think, because if the user
-    //       decides to not use a provider they are opting for rendering all
-    //       variants. We just need to make sure to document this well.
-    xdescribe("without a context provider", () => {
+    describe("client-side with dynamic media query API available", () => {
       it("only renders the current breakpoint", () => {
         mockCurrentDynamicBreakpoint("medium")
 
         const query = renderer.create(
-          <>
+          <MediaContextProvider onlyRenderAt={["small", "medium"]}>
             <Media at="extra-small">
               <span className="extra-small" />
             </Media>
@@ -301,21 +298,67 @@ describe("Media", () => {
             <Media at="large">
               <span className="large" />
             </Media>
-          </>
+          </MediaContextProvider>
         )
 
         expect(query.root.findAllByType("span").length).toEqual(1)
         expect(query.root.findByProps({ className: "medium" })).not.toBeNull()
       })
+
+      it("disables usage of dynamic API to further narrow down", () => {
+        mockCurrentDynamicBreakpoint("medium")
+
+        const query = renderer.create(
+          <MediaContextProvider
+            onlyRenderAt={["extra-small", "medium", "large"]}
+            disableDynamicMediaQueries
+          >
+            <Media at="extra-small">
+              <span className="extra-small" />
+            </Media>
+            <Media at="medium">
+              <span className="medium" />
+            </Media>
+            <Media at="large">
+              <span className="large" />
+            </Media>
+          </MediaContextProvider>
+        )
+
+        expect(query.root.findAllByType("span").length).toEqual(3)
+      })
+
+      it("does not render anything if the current breakpoint isn’t in the already narrowed down set", () => {
+        mockCurrentDynamicBreakpoint("large")
+
+        const query = renderer.create(
+          <MediaContextProvider onlyRenderAt={["small", "medium"]}>
+            <Media at="extra-small">
+              <span className="extra-small" />
+            </Media>
+            <Media at="medium">
+              <span className="medium" />
+            </Media>
+            <Media at="large">
+              <span className="large" />
+            </Media>
+          </MediaContextProvider>
+        )
+
+        expect(query.root.findAllByType("span").length).toEqual(0)
+      })
     })
   })
 
-  describe("with a context provider and narrowed down set of breakpoints to render at", () => {
+  // TODO: This actually doesn’t make sense, I think, because if the user
+  //       decides to not use a provider they are opting for rendering all
+  //       variants. We just need to make sure to document this well.
+  xdescribe("without a context provider", () => {
     it("only renders the current breakpoint", () => {
       mockCurrentDynamicBreakpoint("medium")
 
       const query = renderer.create(
-        <MediaContextProvider onlyRenderAt={["small", "medium"]}>
+        <>
           <Media at="extra-small">
             <span className="extra-small" />
           </Media>
@@ -325,31 +368,11 @@ describe("Media", () => {
           <Media at="large">
             <span className="large" />
           </Media>
-        </MediaContextProvider>
+        </>
       )
 
       expect(query.root.findAllByType("span").length).toEqual(1)
       expect(query.root.findByProps({ className: "medium" })).not.toBeNull()
-    })
-
-    it("does not render anything if the current breakpoint isn’t in the already narrowed down set", () => {
-      mockCurrentDynamicBreakpoint("large")
-
-      const query = renderer.create(
-        <MediaContextProvider onlyRenderAt={["small", "medium"]}>
-          <Media at="extra-small">
-            <span className="extra-small" />
-          </Media>
-          <Media at="medium">
-            <span className="medium" />
-          </Media>
-          <Media at="large">
-            <span className="large" />
-          </Media>
-        </MediaContextProvider>
-      )
-
-      expect(query.root.findAllByType("span").length).toEqual(0)
     })
   })
 })
