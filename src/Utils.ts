@@ -1,3 +1,5 @@
+// tslint:disable:completed-docs
+
 import { MediaBreakpointProps } from "./Media"
 
 export function createSortedBreakpoints(breakpoints: {

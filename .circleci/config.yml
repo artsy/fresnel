@@ -53,7 +53,7 @@ jobs:
       - checkout
       - <<: *restore_cache
       - <<: *verify_dependencies
-      - run: yarn test
+      - run: yarn jest
   deploy:
     <<: *defaults
     steps:

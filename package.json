@@ -18,7 +18,7 @@
     "prettier-project": "yarn prettier-write 'src/**/*.{ts,tsx}'",
     "prettier-write": "yarn prettier --write",
     "semantic-release": "semantic-release",
-    "test": "yarn type-check && yarn jest",
+    "test": "yarn type-check && yarn lint && yarn jest",
     "type-check": "tsc --emitDeclarationOnly --pretty",
     "type-declarations": "tsc --emitDeclarationOnly",
     "watch": "concurrently --raw --kill-others 'yarn compile -w' 'tsc --emitDeclarationOnly -w'"
