@@ -93,7 +93,7 @@ However, this approach suffers from a few flaws when used in conjunction with se
 - It's impossible to reliably know the user's current breakpoint during the server render phase since that requires a browser.
 - Setting breakpoint sizes based on user-agent sniffing is prone to errors due the inability to precisely match device capabilities to size. One mobile device might have greater pixel density than another, a mobile device may fit multiple breakpoints when taking device orientation into consideration, etc. The best devs can do is guess the current breakpoint and populate `<Responsive>` with assumed state.
 
-After a lot of [discussion](https://github.com/artsy/reaction/issues/1367), we settled on what we think makes the best tradeoffs. We approach this problem in the following way:
+After a lot of [discussion](https://github.com/artsy/reaction/issues/1367), we settled on what we think makes the best trade-offs. We approach this problem in the following way:
 
 1. Render markup for all breakpoints on the server and send it down the wire.
 2. The browser receives markup with proper media query styling and will immediately start rendering the expected visual result for whatever viewport width the browser is at.
@@ -293,7 +293,7 @@ Cons:
 - Pages now include markup for _all_ breakpoints, which increases the page size.
 - The current media query is no longer something components can access; it is determined only by the props of the `<Media>` component they find themselves in.
 
-That last con presents an interesting problem. How might we represent a component that gets styled differently at differnet breakpoints? (Let's imagine a `matchMedia` example.)
+That last con presents an interesting problem. How might we represent a component that gets styled differently at different breakpoints? (Let's imagine a `matchMedia` example.)
 
 ```tsx
 <Sans size={xs ? 2 : 3}>
