@@ -260,7 +260,10 @@ export function createMedia<
   const atRanges = createAtRanges(sortedBreakpoints)
 
   const DynamicResponsive = createResponsiveComponents()
+
   const MediaContext = React.createContext<MediaContextProviderProps<B>>({})
+  MediaContext.Consumer.displayName = "Media.Context"
+  MediaContext.Provider.displayName = "Media.Context"
 
   // TODO: Make sure this doesn’t render unnecessarily!
   const MediaContextProvider: React.SFC<MediaContextProviderProps<B>> = ({
