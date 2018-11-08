@@ -2,7 +2,7 @@ import "jest-styled-components"
 
 import React from "react"
 import renderer from "react-test-renderer"
-import styled, { css } from "styled-components"
+import styled, { css, InterpolationValue } from "styled-components"
 import { createMedia } from "../Media"
 import {
   createSortedBreakpoints,
@@ -170,15 +170,22 @@ describe("Media", () => {
 
   describe("with a render prop", () => {
     it("yields the generated style such that it can be applied to another element", () => {
+      const Container = styled.span<{ responsiveStyle: InterpolationValue[] }>`
+        ${props => props.responsiveStyle};
+      `
       const query = renderer
         .create(
           <Media lessThan="small">
-            {generatedStyle => {
-              const Component = styled.span`
-                ${generatedStyle()};
-              `
-              return <Component>ohai</Component>
-            }}
+            {generatedStyle => (
+              <Container
+                responsiveStyle={generatedStyle(css`
+                  // Optional styling that is applied to the matching state
+                  font-family: "Comic Sans MS";
+                `)}
+              >
+                ohai
+              </Container>
+            )}
           </Media>
         )
         .toJSON()
