@@ -181,21 +181,34 @@ export interface MediaProps<B, I> extends MediaBreakpointProps<B> {
    * In case a different element is preferred or styling for both the matching
    * and not matching states should be added, a render prop can be provided.
    *
+   * However, when doing this be sure to not create the styled component inline!
+   * Doing so will trigger re-renders of its children on each render pass.
+   * Instead define it once outside of your component’s render implementation
+   * and pass the styling in as a prop:
+   *
    * @example
    *
      ```tsx
-     <Media greaterThan="xs">
-      {generatedStyle => {
-        const Container = styled.span`
-          // Regular component styling
-          ${generatedStyle(css`
-            // Optional styling that is applied to the matching state
-            font-family: "Comic Sans MS";
-          `)}
-        `
-        return <Container>ohai</Container>
-      }}
-     </Media>
+     const Container = styled.span<{ responsiveStyle: InterpolationValue[] }>`
+       ${props => props.responsiveStyle};
+       // Regular component styling
+       // ...
+     `
+
+     const Component = () => (
+       <Media greaterThan="xs">
+         {generatedStyle => (
+           <Container
+             responsiveStyle={generatedStyle(css`
+               // Optional styling that is applied to the matching state
+               font-family: "Comic Sans MS";
+             `)}
+           >
+             ohai
+           </Container>
+         )}
+       </Media>
+     )
      ```
    *
    */
@@ -260,9 +273,11 @@ export function createMedia<
   const atRanges = createAtRanges(sortedBreakpoints)
 
   const DynamicResponsive = createResponsiveComponents()
-  const MediaContext = React.createContext<MediaContextProviderProps<B>>({})
 
-  // TODO: Make sure this doesn’t render unnecessarily!
+  const MediaContext = React.createContext<MediaContextProviderProps<B>>({})
+  MediaContext.Consumer.displayName = "Media.Context"
+  MediaContext.Provider.displayName = "Media.Context"
+
   const MediaContextProvider: React.SFC<MediaContextProviderProps<B>> = ({
     disableDynamicMediaQueries,
     onlyRenderAt,
@@ -401,10 +416,11 @@ export function createMedia<
             ) as React.ReactElement<any>
           }
 
-          const MediaContainer = styled.div`
-            ${generatedStyle()};
-          `
-          return <MediaContainer>{props.children}</MediaContainer>
+          return (
+            <MediaContainer generatedStyle={generatedStyle}>
+              {props.children}
+            </MediaContainer>
+          )
         }}
       </MediaContext.Consumer>
     )
@@ -412,6 +428,10 @@ export function createMedia<
 
   return { Media, MediaContextProvider }
 }
+
+const MediaContainer = styled.div<{ generatedStyle: RenderPropStyleGenerator }>`
+  ${({ generatedStyle }) => generatedStyle()};
+`
 
 function intersection(a1: any[], a2?: any[]) {
   return a2 ? a1.filter(element => a2.indexOf(element) >= 0) : a1
