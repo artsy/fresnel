@@ -93,14 +93,46 @@ However, this approach suffers from a few flaws when used in conjunction with se
 - It's impossible to reliably know the user's current breakpoint during the server render phase since that requires a browser.
 - Setting breakpoint sizes based on user-agent sniffing is prone to errors due the inability to precisely match device capabilities to size. One mobile device might have greater pixel density than another, a mobile device may fit multiple breakpoints when taking device orientation into consideration, etc. The best devs can do is guess the current breakpoint and populate `<Responsive>` with assumed state.
 
-Artsy approaches this problem in the following way:
+Artsy settled on what we think makes the best trade-offs. We approach this problem in the following way:
 
 1. Render markup for all breakpoints on the server and send it down the wire.
 2. The browser receives markup with proper media query styling and will immediately start rendering the expected visual result for whatever viewport width the browser is at.
 3. When all JS has loaded and React starts the rehydration phase, we query the browser synchronously for what breakpoint it’s at and then limit the rendered components to the matching breakpoints. This prevents lifecycle methods from firing in hidden components and unused html being written to the DOM.
 4. Additionally, we register event listeners with the browser to notify the `MediaContextProvider` when a different breakpoint is matched and then re-render the tree using the new value for `renderOnlyAt`.
 
-See [#server-side-rendering] for a complete example.
+Let's compare what a component tree using `matchMedia` would look like with our approach:
+
+<table>
+<tr><th>Before</th><th>After</th></tr>
+<tr><td>
+
+```tsx
+<Responsive>
+  {({ xs }) => {
+    if (xs) return <SmallArticleItem {...props} />
+    else return <LargeArticleItem {...props} />
+  }}
+</Responsive>
+```
+
+</td>
+<td>
+
+```tsx
+<>
+  <Media at="xs">
+    <SmallArticleItem {...props} />
+  </Media>
+  <Media greaterThan="xs">
+    <LargeArticleItem {...props} />
+  </Media>
+</>
+```
+
+</td></tr>
+</table>
+
+See [#server-side-rendering][] for a complete example.
 
 ### Setup
 
@@ -249,6 +281,42 @@ viewport width is between 768 and 1192 points:
 ## Client-side rendering
 
 ## Pros vs Cons
+
+Pros:
+
+- Built on top of simple, proven technology: HTML and CSS media queries.
+- Users see rendered markup at the correct breakpoint for their device, even before React has been loaded.
+- Avoids messing with React rehydration, which quickly gets very complex.
+
+Cons:
+
+- Pages now include markup for _all_ breakpoints, which increases the page size.
+- The current media query is no longer something components can access; it is determined only by the props of the `<Media>` component they find themselves in.
+
+That last con presents an interesting problem. How might we represent a component that gets styled differently at different breakpoints? (Let's imagine a `matchMedia` example.)
+
+```tsx
+<Sans size={xs ? 2 : 3}>
+```
+
+```tsx
+<>
+  <Media at="xs">
+    {this.getComponent('xs')
+  </Media>
+  <Media greaterThan="xs">
+    {this.getComponent()
+  </Media>
+</>
+```
+```tsx
+getComponent(breakpoint?: string) {
+  const xs = breakpoint === 'xs'
+  return <Sans size={xs ? 2 : 3} />
+}
+```
+
+We're still figuring out patterns for this, so please [let us know](https://github.com/artsy/react-responsive-media/issues/new) if you have suggestions.
 
 ## Development
 
