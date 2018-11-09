@@ -41,9 +41,6 @@ const shallowEqual = (a: MediaQueryMatches, b: MediaQueryMatches) => {
   return true
 }
 
-// FIXME: Resolve issue where React reconciler is mismatched during SSR hydration pass.
-const tempCountFixThisIfNeeded = 0
-
 /** TODO */
 export function createResponsiveComponents<M extends string>() {
   const ResponsiveConsumer: React.SFC<
@@ -169,9 +166,7 @@ export function createResponsiveComponents<M extends string>() {
       render() {
         return (
           <ResponsiveContext.Provider value={this.state.mediaQueryMatches}>
-            <section key={tempCountFixThisIfNeeded}>
-              {this.props.children}
-            </section>
+            {this.props.children}
           </ResponsiveContext.Provider>
         )
       }
