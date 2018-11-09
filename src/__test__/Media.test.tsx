@@ -220,6 +220,20 @@ describe("Media", () => {
   })
 
   describe("with a context", () => {
+    const getChildren = query => {
+      return (
+        query.root
+          .findAllByType("div")
+          .map((div, index) => {
+            if (index > 0) {
+              return div.props.children
+            }
+          })
+          // FIXME: Exclude containing div element.
+          .filter(Boolean)
+      )
+    }
+
     it("renders only matching `at` breakpoints", () => {
       const query = renderer.create(
         <MediaContextProvider onlyRenderAt={["extra-small", "small"]}>
@@ -228,9 +242,7 @@ describe("Media", () => {
           <Media at="medium">medium</Media>
         </MediaContextProvider>
       )
-      expect(
-        query.root.findAllByType("div").map(div => div.props.children)
-      ).toEqual(["extra-small", "small"])
+      expect(getChildren(query)).toEqual(["extra-small", "small"])
     })
 
     it("renders only matching `lessThan` breakpoints", () => {
@@ -241,9 +253,7 @@ describe("Media", () => {
           <Media lessThan="large">medium</Media>
         </MediaContextProvider>
       )
-      expect(
-        query.root.findAllByType("div").map(div => div.props.children)
-      ).toEqual(["small", "medium"])
+      expect(getChildren(query)).toEqual(["small", "medium"])
     })
 
     it("renders only matching `greaterThan` breakpoints", () => {
@@ -254,9 +264,7 @@ describe("Media", () => {
           <Media greaterThan="medium">large</Media>
         </MediaContextProvider>
       )
-      expect(
-        query.root.findAllByType("div").map(div => div.props.children)
-      ).toEqual(["small", "medium"])
+      expect(getChildren(query)).toEqual(["small", "medium"])
     })
 
     it("renders only matching `greaterThanOrEqual` breakpoints", () => {
@@ -267,9 +275,7 @@ describe("Media", () => {
           <Media greaterThanOrEqual="large">large</Media>
         </MediaContextProvider>
       )
-      expect(
-        query.root.findAllByType("div").map(div => div.props.children)
-      ).toEqual(["small", "medium"])
+      expect(getChildren(query)).toEqual(["small", "medium"])
     })
 
     it("renders only matching `between` breakpoints", () => {
@@ -281,9 +287,7 @@ describe("Media", () => {
           <Media between={["small", "large"]}>small - large</Media>
         </MediaContextProvider>
       )
-      expect(
-        query.root.findAllByType("div").map(div => div.props.children)
-      ).toEqual(["small - large"])
+      expect(getChildren(query)).toEqual(["small - large"])
     })
 
     xit("renders only matching interactions", () => {
