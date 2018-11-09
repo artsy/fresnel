@@ -229,7 +229,10 @@ describe("Media", () => {
         </MediaContextProvider>
       )
       expect(
-        query.root.findAllByType("div").map(div => div.props.children)
+        query.root
+          .findAllByType("div")
+          .map(div => div.props.children)
+          .filter(Boolean)
       ).toEqual(["extra-small", "small"])
     })
 
@@ -242,7 +245,10 @@ describe("Media", () => {
         </MediaContextProvider>
       )
       expect(
-        query.root.findAllByType("div").map(div => div.props.children)
+        query.root
+          .findAllByType("div")
+          .map(div => div.props.children)
+          .filter(Boolean)
       ).toEqual(["small", "medium"])
     })
 
@@ -255,7 +261,10 @@ describe("Media", () => {
         </MediaContextProvider>
       )
       expect(
-        query.root.findAllByType("div").map(div => div.props.children)
+        query.root
+          .findAllByType("div")
+          .map(div => div.props.children)
+          .filter(Boolean)
       ).toEqual(["small", "medium"])
     })
 
@@ -268,7 +277,10 @@ describe("Media", () => {
         </MediaContextProvider>
       )
       expect(
-        query.root.findAllByType("div").map(div => div.props.children)
+        query.root
+          .findAllByType("div")
+          .map(div => div.props.children)
+          .filter(Boolean)
       ).toEqual(["small", "medium"])
     })
 
@@ -282,7 +294,10 @@ describe("Media", () => {
         </MediaContextProvider>
       )
       expect(
-        query.root.findAllByType("div").map(div => div.props.children)
+        query.root
+          .findAllByType("div")
+          .map(div => div.props.children)
+          .filter(Boolean)
       ).toEqual(["small - large"])
     })
 

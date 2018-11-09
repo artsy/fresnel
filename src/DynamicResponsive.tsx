@@ -6,10 +6,6 @@
 
 import React from "react"
 
-const ResponsiveContext = React.createContext({})
-ResponsiveContext.Consumer.displayName = "Media.DynamicContext"
-ResponsiveContext.Provider.displayName = "Media.DynamicContext"
-
 /** TODO */
 export type MediaQueries<M extends string = string> = { [K in M]: string }
 
@@ -43,6 +39,10 @@ const shallowEqual = (a: MediaQueryMatches, b: MediaQueryMatches) => {
 
 /** TODO */
 export function createResponsiveComponents<M extends string>() {
+  const ResponsiveContext = React.createContext({})
+  ResponsiveContext.Consumer.displayName = "Media.DynamicContext"
+  ResponsiveContext.Provider.displayName = "Media.DynamicContext"
+
   const ResponsiveConsumer: React.SFC<
     React.ConsumerProps<MediaQueryMatches<M>>
   > = ResponsiveContext.Consumer as React.SFC<React.ConsumerProps<any>>

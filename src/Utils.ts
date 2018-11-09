@@ -47,7 +47,7 @@ export function createBreakpointQueries(
   return Object.entries(atRanges).reduce(
     (queries, [k, v]) => ({
       ...queries,
-      [k]: createBreakpointQuery(breakpoints, sortedBreakpoints, v),
+      [k]: createBreakpointQuery(breakpoints, sortedBreakpoints, v)[1],
     }),
     {}
   )
@@ -60,7 +60,8 @@ export function createBreakpointQuery(
   sortedBreakpoints: string[],
   breakpointProps: MediaBreakpointProps<string>,
   onlyRenderAt?: string[]
-): string | null {
+): [boolean, string] {
+  let shouldRender = true
   // lessThan
   if (breakpointProps.lessThan) {
     const width = breakpoints[breakpointProps.lessThan]
@@ -70,10 +71,10 @@ export function createBreakpointQuery(
         ...onlyRenderAt.map(breakpoint => breakpoints[breakpoint])
       )
       if (lowestAllowedWidth >= width) {
-        return null
+        shouldRender = false
       }
     }
-    return `(max-width:${width - 1}px)`
+    return [shouldRender, `(max-width:${width - 1}px)`]
 
     // greaterThan
   } else if (breakpointProps.greaterThan) {
@@ -87,10 +88,10 @@ export function createBreakpointQuery(
         ...onlyRenderAt.map(breakpoint => breakpoints[breakpoint])
       )
       if (highestAllowedWidth < width) {
-        return null
+        shouldRender = false
       }
     }
-    return `(min-width:${width}px)`
+    return [shouldRender, `(min-width:${width}px)`]
 
     //  greaterThanOrEqual
   } else if (breakpointProps.greaterThanOrEqual) {
@@ -101,10 +102,10 @@ export function createBreakpointQuery(
         ...onlyRenderAt.map(breakpoint => breakpoints[breakpoint])
       )
       if (highestAllowedWidth < width) {
-        return null
+        shouldRender = false
       }
     }
-    return `(min-width:${width}px)`
+    return [shouldRender, `(min-width:${width}px)`]
 
     // between
   } else if (breakpointProps.between) {
@@ -122,12 +123,12 @@ export function createBreakpointQuery(
         Math.max(...allowedWidths) < fromWidth ||
         Math.min(...allowedWidths) >= toWidth
       ) {
-        return null
+        shouldRender = false
       }
     }
 
     // prettier-ignore
-    return `(min-width:${fromWidth}px) and (max-width:${toWidth - 1}px)`
+    return [shouldRender, `(min-width:${fromWidth}px) and (max-width:${toWidth - 1}px)`]
   }
   throw new Error(
     `Unexpected breakpoint props: ${JSON.stringify(breakpointProps)}`
