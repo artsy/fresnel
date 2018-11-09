@@ -6,10 +6,6 @@
 
 import React from "react"
 
-const ResponsiveContext = React.createContext({})
-ResponsiveContext.Consumer.displayName = "Media.DynamicContext"
-ResponsiveContext.Provider.displayName = "Media.DynamicContext"
-
 /** TODO */
 export type MediaQueries<M extends string = string> = { [K in M]: string }
 
@@ -41,11 +37,12 @@ const shallowEqual = (a: MediaQueryMatches, b: MediaQueryMatches) => {
   return true
 }
 
-// FIXME: Resolve issue where React reconciler is mismatched during SSR hydration pass.
-let tempReconcilerIndexFixThisIfNeeded = 0
-
 /** TODO */
 export function createResponsiveComponents<M extends string>() {
+  const ResponsiveContext = React.createContext({})
+  ResponsiveContext.Consumer.displayName = "Media.DynamicContext"
+  ResponsiveContext.Provider.displayName = "Media.DynamicContext"
+
   const ResponsiveConsumer: React.SFC<
     React.ConsumerProps<MediaQueryMatches<M>>
   > = ResponsiveContext.Consumer as React.SFC<React.ConsumerProps<any>>
@@ -167,13 +164,9 @@ export function createResponsiveComponents<M extends string>() {
       }
 
       render() {
-        tempReconcilerIndexFixThisIfNeeded += 1
-
         return (
           <ResponsiveContext.Provider value={this.state.mediaQueryMatches}>
-            <div key={tempReconcilerIndexFixThisIfNeeded}>
-              {this.props.children}
-            </div>
+            {this.props.children}
           </ResponsiveContext.Provider>
         )
       }

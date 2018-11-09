@@ -333,97 +333,108 @@ export function createMedia<
 
   // TODO: Ensure the component does not re-render if the instance’s query still
   //       matches a new `renderOnlyAt` value.
-  const Media: React.SFC<MediaProps<B, I>> = props => {
-    validateProps(props)
+  const Media = class extends React.Component<MediaProps<B, I>> {
+    constructor(props) {
+      super(props)
+      validateProps(props)
+    }
 
-    return (
-      <MediaContext.Consumer>
-        {({ onlyRenderAt } = {}) => {
-          let query: string | null
-          if (props.interaction) {
-            query = config.interactions[props.interaction as string](
-              !!props.not
-            )
-          } else {
-            let breakpointProps = props
+    render() {
+      const props = this.props
+      return (
+        <MediaContext.Consumer>
+          {({ onlyRenderAt } = {}) => {
+            let shouldRender: boolean = true
+            let query: string | null
+            if (props.interaction) {
+              query = config.interactions[props.interaction as string](
+                !!props.not
+              )
+            } else {
+              let breakpointProps = props
 
-            // at
-            if (breakpointProps.at) {
-              if (onlyRenderAt && !onlyRenderAt.includes(breakpointProps.at)) {
-                return null
-              }
-
-              const lastBreakpoint =
-                sortedBreakpoints[sortedBreakpoints.length - 1]
-
-              if (breakpointProps.at === lastBreakpoint) {
-                // TODO: We should look into making React’s __DEV__ available
-                //       and have webpack completely compile these away.
-                const ownerName = null
-                // try {
-                //   // FIXME: This (seems) to only be accessible in React.Component
-                //   //        classes. Since this is an SFC value is inaccessible. However,
-                //   //        when converting this component to a class TS throws an error
-                //   //        about private class being exported. This relates to the
-                //   //        --emitDeclaration TS setting.
-                //   ownerName = (this as any)._reactInternalFiber._debugOwner.type
-                //     .name
-                // } catch (err) {
-                //   // no-op
+              // at
+              if (breakpointProps.at) {
+                // if (
+                //   onlyRenderAt &&
+                //   !onlyRenderAt.includes(breakpointProps.at)
+                // ) {
+                //   return null
                 // }
 
-                console.warn(
-                  "[@artsy/react-responsive-media] " +
-                    "`at` is being used with the largest breakpoint. Consider " +
-                    `using <Media greaterThanOrEqual="${lastBreakpoint}"> to ` +
-                    `account for dimensions outside of this range.${
-                      ownerName
-                        ? ` It is being used in the ${ownerName} component.`
-                        : ""
-                    }`
-                )
+                const lastBreakpoint =
+                  sortedBreakpoints[sortedBreakpoints.length - 1]
+
+                if (breakpointProps.at === lastBreakpoint) {
+                  // TODO: We should look into making React’s __DEV__ available
+                  //       and have webpack completely compile these away.
+                  let ownerName = null
+                  try {
+                    const owner = (this as any)._reactInternalFiber._debugOwner
+                      .type
+                    ownerName = owner.displayName || owner.name
+                  } catch (err) {
+                    // no-op
+                  }
+
+                  console.warn(
+                    "[@artsy/react-responsive-media] " +
+                      "`at` is being used with the largest breakpoint. Consider " +
+                      `using <Media greaterThanOrEqual="${lastBreakpoint}"> to ` +
+                      `account for dimensions outside of this range.${
+                        ownerName
+                          ? ` It is being used in the ${ownerName} component.`
+                          : ""
+                      }`
+                  )
+                }
+
+                breakpointProps = atRanges[breakpointProps.at] as MediaProps<
+                  B,
+                  I
+                >
               }
 
-              breakpointProps = atRanges[breakpointProps.at] as MediaProps<B, I>
+              const [sr, q] = createBreakpointQuery(
+                config.breakpoints,
+                sortedBreakpoints,
+                breakpointProps,
+                onlyRenderAt
+              )
+              shouldRender = sr
+              query = q
             }
 
-            query = createBreakpointQuery(
-              config.breakpoints,
-              sortedBreakpoints,
-              breakpointProps,
-              onlyRenderAt
+            // if (!query) {
+            //   return null
+            // }
+
+            const generatedStyle: RenderPropStyleGenerator = matchingStyle => css`
+              display: none;
+              @media ${query} {
+                display: contents;
+                ${matchingStyle};
+              }
+            `
+
+            if (typeof props.children === "function") {
+              // FIXME: This typings shouldn’t be necessary, because the actual type is
+              //        ReactNode and is legal. However, for some reason it breaks the
+              //        SFC typing of this component.
+              return (props.children as any)(
+                generatedStyle
+              ) as React.ReactElement<any>
+            }
+
+            return (
+              <MediaContainer generatedStyle={generatedStyle}>
+                {shouldRender ? props.children : null}
+              </MediaContainer>
             )
-          }
-
-          if (!query) {
-            return null
-          }
-
-          const generatedStyle: RenderPropStyleGenerator = matchingStyle => css`
-            display: none;
-            @media ${query} {
-              display: contents;
-              ${matchingStyle};
-            }
-          `
-
-          if (typeof props.children === "function") {
-            // FIXME: This typings shouldn’t be necessary, because the actual type is
-            //        ReactNode and is legal. However, for some reason it breaks the
-            //        SFC typing of this component.
-            return (props.children as any)(
-              generatedStyle
-            ) as React.ReactElement<any>
-          }
-
-          return (
-            <MediaContainer generatedStyle={generatedStyle}>
-              {props.children}
-            </MediaContainer>
-          )
-        }}
-      </MediaContext.Consumer>
-    )
+          }}
+        </MediaContext.Consumer>
+      )
+    }
   }
 
   return { Media, MediaContextProvider }
