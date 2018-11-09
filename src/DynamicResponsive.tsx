@@ -171,9 +171,9 @@ export function createResponsiveComponents<M extends string>() {
 
         return (
           <ResponsiveContext.Provider value={this.state.mediaQueryMatches}>
-            <section key={tempReconcilerIndexFixThisIfNeeded}>
+            <div key={tempReconcilerIndexFixThisIfNeeded}>
               {this.props.children}
-            </section>
+            </div>
           </ResponsiveContext.Provider>
         )
       }
