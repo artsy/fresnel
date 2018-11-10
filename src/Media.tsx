@@ -1,18 +1,11 @@
 // tslint:disable:jsdoc-format
 
 import React from "react"
-import styled, { css, InterpolationValue } from "styled-components"
 import { createResponsiveComponents } from "./DynamicResponsive"
 import { Breakpoints } from "./Breakpoints"
 import { intersection, propKey } from "./Utils"
 
-type RenderProp = ((
-  generatedStyle: RenderPropStyleGenerator
-) => React.ReactNode)
-
-type RenderPropStyleGenerator = (
-  matchingStyle?: InterpolationValue[]
-) => InterpolationValue[]
+export type RenderProp = ((className: string) => React.ReactNode)
 
 // TODO: All of these props should be mutually exclusive. Using a union should
 //       probably be made possible by https://github.com/Microsoft/TypeScript/pull/27408.
@@ -385,24 +378,11 @@ export function createMedia<
               ...(type === "between" ? breakpoint : [breakpoint]),
             ].join("-")
 
-            // const generatedStyle: RenderPropStyleGenerator = matchingStyle => css`
-            //   display: none;
-            //   @media ${query} {
-            //     display: contents;
-            //     ${matchingStyle};
-            //   }
-            // `
-
-            // if (typeof props.children === "function") {
-            //   // FIXME: This typings shouldn’t be necessary, because the actual type is
-            //   //        ReactNode and is legal. However, for some reason it breaks the
-            //   //        SFC typing of this component.
-            //   return (props.children as any)(
-            //     generatedStyle
-            //   ) as React.ReactElement<any>
-            // }
-
-            return <div className={className}>{props.children}</div>
+            if (props.children instanceof Function) {
+              return props.children(className)
+            } else {
+              return <div className={className}>{props.children}</div>
+            }
           }}
         </MediaContext.Consumer>
       )
@@ -411,10 +391,6 @@ export function createMedia<
 
   return { Media, MediaContextProvider, MediaStyle: breakpoints.toStyle() }
 }
-
-const MediaContainer = styled.div<{ generatedStyle: RenderPropStyleGenerator }>`
-  ${({ generatedStyle }) => generatedStyle()};
-`
 
 const MutuallyExclusiveProps = [
   "query",
