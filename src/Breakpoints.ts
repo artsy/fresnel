@@ -94,7 +94,7 @@ export class Breakpoints {
         const lowestAllowedWidth = Math.min(
           ...onlyRenderAt.map(breakpoint => this._breakpoints[breakpoint])
         )
-        return !(lowestAllowedWidth >= width)
+        return lowestAllowedWidth < width
       }
       case "greaterThan": {
         const width = this._breakpoints[
@@ -103,14 +103,14 @@ export class Breakpoints {
         const highestAllowedWidth = Math.max(
           ...onlyRenderAt.map(breakpoint => this._breakpoints[breakpoint])
         )
-        return !(highestAllowedWidth < width)
+        return highestAllowedWidth >= width
       }
       case "greaterThanOrEqual": {
         const width = this._breakpoints[breakpointProps.greaterThanOrEqual]
         const highestAllowedWidth = Math.max(
           ...onlyRenderAt.map(breakpoint => this._breakpoints[breakpoint])
         )
-        return !(highestAllowedWidth < width)
+        return highestAllowedWidth >= width
       }
       case "between": {
         // TODO: This is the only useful breakpoint to negate, but we’ll
@@ -121,9 +121,9 @@ export class Breakpoints {
         const allowedWidths = onlyRenderAt.map(
           breakpoint => this._breakpoints[breakpoint]
         )
-        return !(
-          Math.max(...allowedWidths) < fromWidth ||
-          Math.min(...allowedWidths) >= toWidth
+        return (
+          Math.min(...allowedWidths) <= fromWidth &&
+          Math.max(...allowedWidths) >= toWidth
         )
       }
     }

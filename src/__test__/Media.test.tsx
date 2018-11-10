@@ -323,7 +323,7 @@ describe("Media", () => {
         expect(query.root.findByProps({ className: "medium" })).not.toBeNull()
       })
 
-      it("disables usage of dynamic API to further narrow down", () => {
+      it.only("disables usage of dynamic API to further narrow down", () => {
         mockCurrentDynamicBreakpoint("medium")
 
         const query = renderer.create(
