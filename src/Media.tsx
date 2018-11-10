@@ -6,8 +6,9 @@ import { createResponsiveComponents } from "./DynamicResponsive"
 import {
   createSortedBreakpoints,
   createAtRanges,
-  createBreakpointQueries,
+  createAtBreakpointQueries,
   createBreakpointQuery,
+  shouldRender,
 } from "./Utils"
 
 type RenderProp = ((
@@ -27,6 +28,8 @@ const MutuallyExclusiveProps = [
   "between",
   "interaction",
 ]
+
+export type MediaBreakpointKey = keyof MediaBreakpointProps<any>
 
 // TODO: All of these props should be mutually exclusive. Using a union should
 //       probably be made possible by https://github.com/Microsoft/TypeScript/pull/27408.
@@ -271,6 +274,65 @@ export function createMedia<
 
   const sortedBreakpoints = createSortedBreakpoints(config.breakpoints)
   const atRanges = createAtRanges(sortedBreakpoints)
+  const atMediaQueries = createAtBreakpointQueries(
+    config.breakpoints,
+    sortedBreakpoints,
+    atRanges
+  )
+
+  function createBreakpointQueries<T>(
+    key: MediaBreakpointKey,
+    breakpoints: T[]
+  ) {
+    return breakpoints.reduce<Map<T, string>>((map, breakpoint) => {
+      map.set(
+        breakpoint,
+        createBreakpointQuery(config.breakpoints, sortedBreakpoints, {
+          [key]: breakpoint,
+        })
+      )
+      return map
+    }, new Map())
+  }
+
+  const betweenCombinations = sortedBreakpoints
+    .slice(0, -1)
+    .reduce<Array<[string, string]>>(
+      (acc, b1, i) => [
+        ...acc,
+        ...sortedBreakpoints.slice(i + 1).map<[string, string]>(b2 => [b1, b2]),
+      ],
+      []
+    )
+
+  const mediaQueries = {
+    at: new Map(Object.entries(atMediaQueries)),
+    lessThan: createBreakpointQueries("lessThan", sortedBreakpoints.slice(1)),
+    greaterThan: createBreakpointQueries(
+      "greaterThan",
+      sortedBreakpoints.slice(0, -1)
+    ),
+    greaterThanOrEqual: createBreakpointQueries(
+      "greaterThanOrEqual",
+      sortedBreakpoints
+    ),
+    between: createBreakpointQueries("between", betweenCombinations),
+  }
+
+  const findMediaQuery = (
+    breakpointKey: MediaBreakpointKey,
+    breakpointValue: string | [string, string]
+  ) => {
+    if (breakpointKey === "between") {
+      return mediaQueries.between.get(
+        betweenCombinations.find(
+          c => c[0] === breakpointValue[0] && c[1] === breakpointValue[1]
+        )
+      )
+    } else {
+      return mediaQueries[breakpointKey].get(breakpointValue as string)
+    }
+  }
 
   const DynamicResponsive = createResponsiveComponents()
 
@@ -294,14 +356,9 @@ export function createMedia<
         </MediaContext.Provider>
       )
     } else {
-      const mediaQueries = createBreakpointQueries(
-        config.breakpoints,
-        sortedBreakpoints,
-        atRanges
-      )
       return (
         <DynamicResponsive.Provider
-          mediaQueries={mediaQueries}
+          mediaQueries={atMediaQueries}
           initialMatchingMediaQueries={intersection(
             sortedBreakpoints,
             onlyRenderAt
@@ -344,28 +401,18 @@ export function createMedia<
       return (
         <MediaContext.Consumer>
           {({ onlyRenderAt } = {}) => {
-            let shouldRender: boolean = true
+            let renderChildren: boolean = true
             let query: string | null
             if (props.interaction) {
               query = config.interactions[props.interaction as string](
                 !!props.not
               )
             } else {
-              let breakpointProps = props
-
-              // at
-              if (breakpointProps.at) {
-                // if (
-                //   onlyRenderAt &&
-                //   !onlyRenderAt.includes(breakpointProps.at)
-                // ) {
-                //   return null
-                // }
-
+              if (props.at) {
                 const lastBreakpoint =
                   sortedBreakpoints[sortedBreakpoints.length - 1]
 
-                if (breakpointProps.at === lastBreakpoint) {
+                if (props.at === lastBreakpoint) {
                   // TODO: We should look into making React’s __DEV__ available
                   //       and have webpack completely compile these away.
                   let ownerName = null
@@ -388,21 +435,23 @@ export function createMedia<
                       }`
                   )
                 }
-
-                breakpointProps = atRanges[breakpointProps.at] as MediaProps<
-                  B,
-                  I
-                >
               }
 
-              const [sr, q] = createBreakpointQuery(
-                config.breakpoints,
-                sortedBreakpoints,
-                breakpointProps,
-                onlyRenderAt
+              const { children, interaction, not, ...breakpointProps } = props
+              const breakpointKey = propKey(breakpointProps)
+              query = findMediaQuery(
+                breakpointKey,
+                breakpointProps[breakpointKey]
               )
-              shouldRender = sr
-              query = q
+
+              if (onlyRenderAt) {
+                renderChildren = shouldRender(
+                  config.breakpoints,
+                  sortedBreakpoints,
+                  breakpointProps,
+                  onlyRenderAt
+                )
+              }
             }
 
             // if (!query) {
@@ -428,7 +477,7 @@ export function createMedia<
 
             return (
               <MediaContainer generatedStyle={generatedStyle}>
-                {shouldRender ? props.children : null}
+                {renderChildren ? props.children : null}
               </MediaContainer>
             )
           }}
@@ -443,6 +492,10 @@ export function createMedia<
 const MediaContainer = styled.div<{ generatedStyle: RenderPropStyleGenerator }>`
   ${({ generatedStyle }) => generatedStyle()};
 `
+
+function propKey(breakpointProps: MediaBreakpointProps<any>) {
+  return Object.keys(breakpointProps)[0] as MediaBreakpointKey
+}
 
 function intersection(a1: any[], a2?: any[]) {
   return a2 ? a1.filter(element => a2.indexOf(element) >= 0) : a1

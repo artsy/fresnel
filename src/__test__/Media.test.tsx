@@ -7,7 +7,7 @@ import { createMedia } from "../Media"
 import {
   createSortedBreakpoints,
   createAtRanges,
-  createBreakpointQueries,
+  createAtBreakpointQueries,
 } from "../Utils"
 
 // FIXME: remove
@@ -402,7 +402,7 @@ describe("Media", () => {
 function mockCurrentDynamicBreakpoint(at) {
   const sortedBreakpoints = createSortedBreakpoints(config.breakpoints)
   const atRanges = createAtRanges(sortedBreakpoints)
-  const mediaQueries = createBreakpointQueries(
+  const mediaQueries = createAtBreakpointQueries(
     config.breakpoints,
     sortedBreakpoints,
     atRanges

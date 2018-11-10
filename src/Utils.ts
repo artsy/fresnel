@@ -11,18 +11,16 @@ export function createSortedBreakpoints(breakpoints: {
     .map(breakpointAndValue => breakpointAndValue[0] as string)
 }
 
-export function createAtRanges(
-  sortedBreakpoints: string[]
-): { [key: string]: MediaBreakpointProps<string> } {
-  const atRanges = {}
+export function createAtRanges(sortedBreakpoints: string[]) {
+  const atRanges = new Map<string, MediaBreakpointProps<any>>()
   // tslint:disable-next-line:prefer-for-of
   for (let i = 0; i < sortedBreakpoints.length; i++) {
     const from = sortedBreakpoints[i]
     const to = sortedBreakpoints[i + 1]
     if (to) {
-      atRanges[from] = { between: [from, to] }
+      atRanges.set(from, { between: [from, to] })
     } else {
-      atRanges[from] = { greaterThanOrEqual: from }
+      atRanges.set(from, { greaterThanOrEqual: from })
     }
   }
   return atRanges
@@ -37,17 +35,17 @@ function findNextBreakpoint(sortedBreakpoints: string[], breakpoint: string) {
   return nextBreakpoint
 }
 
-export function createBreakpointQueries(
+export function createAtBreakpointQueries(
   breakpoints: {
     [key: string]: number
   },
   sortedBreakpoints: string[],
-  atRanges: { [key: string]: MediaBreakpointProps<string> }
-) {
-  return Object.entries(atRanges).reduce(
+  atRanges: Map<string, MediaBreakpointProps<any>>
+): { [key: string]: string } {
+  return Array.from(atRanges.entries()).reduce(
     (queries, [k, v]) => ({
       ...queries,
-      [k]: createBreakpointQuery(breakpoints, sortedBreakpoints, v)[1],
+      [k]: createBreakpointQuery(breakpoints, sortedBreakpoints, v),
     }),
     {}
   )
@@ -58,79 +56,95 @@ export function createBreakpointQuery(
     [key: string]: number
   },
   sortedBreakpoints: string[],
-  breakpointProps: MediaBreakpointProps<string>,
-  onlyRenderAt?: string[]
-): [boolean, string] {
-  let shouldRender = true
-  // lessThan
+  breakpointProps: MediaBreakpointProps<string>
+): string {
   if (breakpointProps.lessThan) {
     const width = breakpoints[breakpointProps.lessThan]
-
-    if (onlyRenderAt) {
-      const lowestAllowedWidth = Math.min(
-        ...onlyRenderAt.map(breakpoint => breakpoints[breakpoint])
-      )
-      if (lowestAllowedWidth >= width) {
-        shouldRender = false
-      }
-    }
-    return [shouldRender, `(max-width:${width - 1}px)`]
-
-    // greaterThan
+    return `(max-width:${width - 1}px)`
   } else if (breakpointProps.greaterThan) {
     const width =
       breakpoints[
         findNextBreakpoint(sortedBreakpoints, breakpointProps.greaterThan)
       ]
-
-    if (onlyRenderAt) {
-      const highestAllowedWidth = Math.max(
-        ...onlyRenderAt.map(breakpoint => breakpoints[breakpoint])
-      )
-      if (highestAllowedWidth < width) {
-        shouldRender = false
-      }
-    }
-    return [shouldRender, `(min-width:${width}px)`]
-
-    //  greaterThanOrEqual
+    return `(min-width:${width}px)`
   } else if (breakpointProps.greaterThanOrEqual) {
     const width = breakpoints[breakpointProps.greaterThanOrEqual]
-
-    if (onlyRenderAt) {
-      const highestAllowedWidth = Math.max(
-        ...onlyRenderAt.map(breakpoint => breakpoints[breakpoint])
-      )
-      if (highestAllowedWidth < width) {
-        shouldRender = false
-      }
-    }
-    return [shouldRender, `(min-width:${width}px)`]
-
-    // between
+    return `(min-width:${width}px)`
   } else if (breakpointProps.between) {
     // TODO: This is the only useful breakpoint to negate, but we’ll
     //       we’ll see when/if we need it. We could then also decide
     //       to add `oustide`.
     const fromWidth = breakpoints[breakpointProps.between[0]]
     const toWidth = breakpoints[breakpointProps.between[1]]
-
-    if (onlyRenderAt) {
-      const allowedWidths = onlyRenderAt.map(
-        breakpoint => breakpoints[breakpoint]
-      )
-      if (
-        Math.max(...allowedWidths) < fromWidth ||
-        Math.min(...allowedWidths) >= toWidth
-      ) {
-        shouldRender = false
-      }
-    }
-
-    // prettier-ignore
-    return [shouldRender, `(min-width:${fromWidth}px) and (max-width:${toWidth - 1}px)`]
+    return `(min-width:${fromWidth}px) and (max-width:${toWidth - 1}px)`
   }
   throw new Error(
     `Unexpected breakpoint props: ${JSON.stringify(breakpointProps)}`
   )
+}
+
+export function shouldRender(
+  breakpoints: {
+    [key: string]: number
+  },
+  sortedBreakpoints: string[],
+  breakpointProps: MediaBreakpointProps<string>,
+  onlyRenderAt: string[]
+): boolean {
+  if (breakpointProps.at) {
+    const from = breakpointProps.at
+    const fromIndex = sortedBreakpoints.indexOf(breakpointProps.at)
+    const to = sortedBreakpoints[fromIndex + 1]
+    if (to) {
+      breakpointProps = { between: [from, to] }
+    } else {
+      breakpointProps = {
+        greaterThanOrEqual: from,
+      }
+    }
+  }
+  if (breakpointProps.lessThan) {
+    const width = breakpoints[breakpointProps.lessThan]
+    const lowestAllowedWidth = Math.min(
+      ...onlyRenderAt.map(breakpoint => breakpoints[breakpoint])
+    )
+    if (lowestAllowedWidth >= width) {
+      return false
+    }
+  } else if (breakpointProps.greaterThan) {
+    const width =
+      breakpoints[
+        findNextBreakpoint(sortedBreakpoints, breakpointProps.greaterThan)
+      ]
+    const highestAllowedWidth = Math.max(
+      ...onlyRenderAt.map(breakpoint => breakpoints[breakpoint])
+    )
+    if (highestAllowedWidth < width) {
+      return false
+    }
+  } else if (breakpointProps.greaterThanOrEqual) {
+    const width = breakpoints[breakpointProps.greaterThanOrEqual]
+    const highestAllowedWidth = Math.max(
+      ...onlyRenderAt.map(breakpoint => breakpoints[breakpoint])
+    )
+    if (highestAllowedWidth < width) {
+      return false
+    }
+  } else if (breakpointProps.between) {
+    // TODO: This is the only useful breakpoint to negate, but we’ll
+    //       we’ll see when/if we need it. We could then also decide
+    //       to add `oustide`.
+    const fromWidth = breakpoints[breakpointProps.between[0]]
+    const toWidth = breakpoints[breakpointProps.between[1]]
+    const allowedWidths = onlyRenderAt.map(
+      breakpoint => breakpoints[breakpoint]
+    )
+    if (
+      Math.max(...allowedWidths) < fromWidth ||
+      Math.min(...allowedWidths) >= toWidth
+    ) {
+      return false
+    }
+  }
+  return true
 }
