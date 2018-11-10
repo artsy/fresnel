@@ -1,10 +1,17 @@
 import { MediaBreakpointProps } from "./Media"
 import { propKey } from "./Utils"
 
+/**
+ * A union of possible breakpoint props.
+ */
 export type MediaBreakpointKey = keyof MediaBreakpointProps
 
 type Tuple = [string, string]
 
+/**
+ * Encapsulates all breakpoint data needed by the Media component. The data is
+ * generated on initialization so no further runtime work is necessary.
+ */
 export class Breakpoints {
   public readonly sorted: ReadonlyArray<string>
 
