@@ -4,11 +4,7 @@ import React from "react"
 import renderer from "react-test-renderer"
 import styled, { css, InterpolationValue } from "styled-components"
 import { createMedia } from "../Media"
-import {
-  createSortedBreakpoints,
-  createAtRanges,
-  createBreakpointQueries,
-} from "../Utils"
+import { Breakpoints } from "../Breakpoints"
 
 // FIXME: remove
 // import { themeProps } from "@artsy/palette"
@@ -327,7 +323,7 @@ describe("Media", () => {
         expect(query.root.findByProps({ className: "medium" })).not.toBeNull()
       })
 
-      it("disables usage of dynamic API to further narrow down", () => {
+      it.only("disables usage of dynamic API to further narrow down", () => {
         mockCurrentDynamicBreakpoint("medium")
 
         const query = renderer.create(
@@ -400,17 +396,11 @@ describe("Media", () => {
 })
 
 function mockCurrentDynamicBreakpoint(at) {
-  const sortedBreakpoints = createSortedBreakpoints(config.breakpoints)
-  const atRanges = createAtRanges(sortedBreakpoints)
-  const mediaQueries = createBreakpointQueries(
-    config.breakpoints,
-    sortedBreakpoints,
-    atRanges
-  )
+  const breakpoints = new Breakpoints(config.breakpoints)
+
   window.matchMedia = jest.fn(mediaQuery => {
-    // Find key/mediaQuery pair from `atRanges`
-    const key = Object.entries(mediaQueries).find(
-      ([_k, v]) => mediaQuery === v
+    const key = Object.entries(breakpoints.getAtMediaQueries()).find(
+      ([_, query]) => mediaQuery === query
     )[0]
     // Return mock object that only matches the mocked breakpoint
     return {

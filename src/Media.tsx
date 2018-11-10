@@ -3,12 +3,8 @@
 import React from "react"
 import styled, { css, InterpolationValue } from "styled-components"
 import { createResponsiveComponents } from "./DynamicResponsive"
-import {
-  createSortedBreakpoints,
-  createAtRanges,
-  createBreakpointQueries,
-  createBreakpointQuery,
-} from "./Utils"
+import { Breakpoints } from "./Breakpoints"
+import { intersection, propKey } from "./Utils"
 
 type RenderProp = ((
   generatedStyle: RenderPropStyleGenerator
@@ -18,20 +14,9 @@ type RenderPropStyleGenerator = (
   matchingStyle?: InterpolationValue[]
 ) => InterpolationValue[]
 
-const MutuallyExclusiveProps = [
-  "query",
-  "at",
-  "lessThan",
-  "greaterThan",
-  "greaterThanOrEqual",
-  "between",
-  "interaction",
-]
-
 // TODO: All of these props should be mutually exclusive. Using a union should
 //       probably be made possible by https://github.com/Microsoft/TypeScript/pull/27408.
-
-export interface MediaBreakpointProps<B> {
+export interface MediaBreakpointProps<B = string> {
   /**
    * Children will only be shown if the viewport matches the specified
    * breakpoint. That is, a viewport width that’s higher than the configured
@@ -269,8 +254,7 @@ export function createMedia<
   type B = keyof C["breakpoints"]
   type I = keyof C["interactions"]
 
-  const sortedBreakpoints = createSortedBreakpoints(config.breakpoints)
-  const atRanges = createAtRanges(sortedBreakpoints)
+  const breakpoints = new Breakpoints(config.breakpoints)
 
   const DynamicResponsive = createResponsiveComponents()
 
@@ -294,16 +278,11 @@ export function createMedia<
         </MediaContext.Provider>
       )
     } else {
-      const mediaQueries = createBreakpointQueries(
-        config.breakpoints,
-        sortedBreakpoints,
-        atRanges
-      )
       return (
         <DynamicResponsive.Provider
-          mediaQueries={mediaQueries}
+          mediaQueries={breakpoints.getAtMediaQueries()}
           initialMatchingMediaQueries={intersection(
-            sortedBreakpoints,
+            breakpoints.sorted,
             onlyRenderAt
           )}
         >
@@ -344,28 +323,18 @@ export function createMedia<
       return (
         <MediaContext.Consumer>
           {({ onlyRenderAt } = {}) => {
-            let shouldRender: boolean = true
+            let renderChildren: boolean = true
             let query: string | null
             if (props.interaction) {
               query = config.interactions[props.interaction as string](
                 !!props.not
               )
             } else {
-              let breakpointProps = props
-
-              // at
-              if (breakpointProps.at) {
-                // if (
-                //   onlyRenderAt &&
-                //   !onlyRenderAt.includes(breakpointProps.at)
-                // ) {
-                //   return null
-                // }
-
+              if (props.at) {
                 const lastBreakpoint =
-                  sortedBreakpoints[sortedBreakpoints.length - 1]
+                  breakpoints.sorted[breakpoints.sorted.length - 1]
 
-                if (breakpointProps.at === lastBreakpoint) {
+                if (props.at === lastBreakpoint) {
                   // TODO: We should look into making React’s __DEV__ available
                   //       and have webpack completely compile these away.
                   let ownerName = null
@@ -388,26 +357,22 @@ export function createMedia<
                       }`
                   )
                 }
-
-                breakpointProps = atRanges[breakpointProps.at] as MediaProps<
-                  B,
-                  I
-                >
               }
 
-              const [sr, q] = createBreakpointQuery(
-                config.breakpoints,
-                sortedBreakpoints,
-                breakpointProps,
-                onlyRenderAt
+              const { children, interaction, not, ...breakpointProps } = props
+              const breakpointKey = propKey(breakpointProps)
+              query = breakpoints.getMediaQuery(
+                breakpointKey,
+                breakpointProps[breakpointKey]
               )
-              shouldRender = sr
-              query = q
-            }
 
-            // if (!query) {
-            //   return null
-            // }
+              if (onlyRenderAt) {
+                renderChildren = breakpoints.shouldRender(
+                  breakpointProps,
+                  onlyRenderAt
+                )
+              }
+            }
 
             const generatedStyle: RenderPropStyleGenerator = matchingStyle => css`
               display: none;
@@ -428,7 +393,7 @@ export function createMedia<
 
             return (
               <MediaContainer generatedStyle={generatedStyle}>
-                {shouldRender ? props.children : null}
+                {renderChildren ? props.children : null}
               </MediaContainer>
             )
           }}
@@ -444,9 +409,15 @@ const MediaContainer = styled.div<{ generatedStyle: RenderPropStyleGenerator }>`
   ${({ generatedStyle }) => generatedStyle()};
 `
 
-function intersection(a1: any[], a2?: any[]) {
-  return a2 ? a1.filter(element => a2.indexOf(element) >= 0) : a1
-}
+const MutuallyExclusiveProps = [
+  "query",
+  "at",
+  "lessThan",
+  "greaterThan",
+  "greaterThanOrEqual",
+  "between",
+  "interaction",
+]
 
 function validateProps(props) {
   const selectedProps = Object.keys(props).filter(prop =>
