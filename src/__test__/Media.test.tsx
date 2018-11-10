@@ -4,11 +4,7 @@ import React from "react"
 import renderer from "react-test-renderer"
 import styled, { css, InterpolationValue } from "styled-components"
 import { createMedia } from "../Media"
-import {
-  createSortedBreakpoints,
-  createAtRanges,
-  createAtBreakpointQueries,
-} from "../Utils"
+import { Breakpoints } from "../Breakpoints"
 
 // FIXME: remove
 // import { themeProps } from "@artsy/palette"
@@ -400,17 +396,11 @@ describe("Media", () => {
 })
 
 function mockCurrentDynamicBreakpoint(at) {
-  const sortedBreakpoints = createSortedBreakpoints(config.breakpoints)
-  const atRanges = createAtRanges(sortedBreakpoints)
-  const mediaQueries = createAtBreakpointQueries(
-    config.breakpoints,
-    sortedBreakpoints,
-    atRanges
-  )
+  const utils = new Breakpoints(config.breakpoints)
+
   window.matchMedia = jest.fn(mediaQuery => {
-    // Find key/mediaQuery pair from `atRanges`
-    const key = Object.entries(mediaQueries).find(
-      ([_k, v]) => mediaQuery === v
+    const key = Object.entries(utils.atMediaQueries).find(
+      ([_, query]) => mediaQuery === query
     )[0]
     // Return mock object that only matches the mocked breakpoint
     return {

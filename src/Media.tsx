@@ -3,13 +3,7 @@
 import React from "react"
 import styled, { css, InterpolationValue } from "styled-components"
 import { createResponsiveComponents } from "./DynamicResponsive"
-import {
-  createSortedBreakpoints,
-  createAtRanges,
-  createAtBreakpointQueries,
-  createBreakpointQuery,
-  shouldRender,
-} from "./Utils"
+import { Breakpoints } from "./Breakpoints"
 
 type RenderProp = ((
   generatedStyle: RenderPropStyleGenerator
@@ -272,67 +266,7 @@ export function createMedia<
   type B = keyof C["breakpoints"]
   type I = keyof C["interactions"]
 
-  const sortedBreakpoints = createSortedBreakpoints(config.breakpoints)
-  const atRanges = createAtRanges(sortedBreakpoints)
-  const atMediaQueries = createAtBreakpointQueries(
-    config.breakpoints,
-    sortedBreakpoints,
-    atRanges
-  )
-
-  function createBreakpointQueries<T>(
-    key: MediaBreakpointKey,
-    breakpoints: T[]
-  ) {
-    return breakpoints.reduce<Map<T, string>>((map, breakpoint) => {
-      map.set(
-        breakpoint,
-        createBreakpointQuery(config.breakpoints, sortedBreakpoints, {
-          [key]: breakpoint,
-        })
-      )
-      return map
-    }, new Map())
-  }
-
-  const betweenCombinations = sortedBreakpoints
-    .slice(0, -1)
-    .reduce<Array<[string, string]>>(
-      (acc, b1, i) => [
-        ...acc,
-        ...sortedBreakpoints.slice(i + 1).map<[string, string]>(b2 => [b1, b2]),
-      ],
-      []
-    )
-
-  const mediaQueries = {
-    at: new Map(Object.entries(atMediaQueries)),
-    lessThan: createBreakpointQueries("lessThan", sortedBreakpoints.slice(1)),
-    greaterThan: createBreakpointQueries(
-      "greaterThan",
-      sortedBreakpoints.slice(0, -1)
-    ),
-    greaterThanOrEqual: createBreakpointQueries(
-      "greaterThanOrEqual",
-      sortedBreakpoints
-    ),
-    between: createBreakpointQueries("between", betweenCombinations),
-  }
-
-  const findMediaQuery = (
-    breakpointKey: MediaBreakpointKey,
-    breakpointValue: string | [string, string]
-  ) => {
-    if (breakpointKey === "between") {
-      return mediaQueries.between.get(
-        betweenCombinations.find(
-          c => c[0] === breakpointValue[0] && c[1] === breakpointValue[1]
-        )
-      )
-    } else {
-      return mediaQueries[breakpointKey].get(breakpointValue as string)
-    }
-  }
+  const breakpoints = new Breakpoints(config.breakpoints)
 
   const DynamicResponsive = createResponsiveComponents()
 
@@ -358,9 +292,9 @@ export function createMedia<
     } else {
       return (
         <DynamicResponsive.Provider
-          mediaQueries={atMediaQueries}
+          mediaQueries={breakpoints.atMediaQueries}
           initialMatchingMediaQueries={intersection(
-            sortedBreakpoints,
+            breakpoints.sorted,
             onlyRenderAt
           )}
         >
@@ -410,7 +344,7 @@ export function createMedia<
             } else {
               if (props.at) {
                 const lastBreakpoint =
-                  sortedBreakpoints[sortedBreakpoints.length - 1]
+                  breakpoints.sorted[breakpoints.sorted.length - 1]
 
                 if (props.at === lastBreakpoint) {
                   // TODO: We should look into making React’s __DEV__ available
@@ -439,24 +373,18 @@ export function createMedia<
 
               const { children, interaction, not, ...breakpointProps } = props
               const breakpointKey = propKey(breakpointProps)
-              query = findMediaQuery(
+              query = breakpoints.getMediaQuery(
                 breakpointKey,
                 breakpointProps[breakpointKey]
               )
 
               if (onlyRenderAt) {
-                renderChildren = shouldRender(
-                  config.breakpoints,
-                  sortedBreakpoints,
+                renderChildren = breakpoints.shouldRender(
                   breakpointProps,
                   onlyRenderAt
                 )
               }
             }
-
-            // if (!query) {
-            //   return null
-            // }
 
             const generatedStyle: RenderPropStyleGenerator = matchingStyle => css`
               display: none;
