@@ -323,86 +323,93 @@ export function createMedia<
       return (
         <MediaContext.Consumer>
           {({ onlyRenderAt } = {}) => {
-            let renderChildren: boolean = true
-            let query: string | null
-            if (props.interaction) {
-              query = config.interactions[props.interaction as string](
-                !!props.not
-              )
-            } else {
-              if (props.at) {
-                const lastBreakpoint =
-                  breakpoints.sorted[breakpoints.sorted.length - 1]
+            // let renderChildren: boolean = true
+            // let query: string | null
+            // if (props.interaction) {
+            // query = config.interactions[props.interaction as string](
+            //   !!props.not
+            // )
+            // } else {
+            if (props.at) {
+              const lastBreakpoint =
+                breakpoints.sorted[breakpoints.sorted.length - 1]
 
-                if (props.at === lastBreakpoint) {
-                  // TODO: We should look into making React’s __DEV__ available
-                  //       and have webpack completely compile these away.
-                  let ownerName = null
-                  try {
-                    const owner = (this as any)._reactInternalFiber._debugOwner
-                      .type
-                    ownerName = owner.displayName || owner.name
-                  } catch (err) {
-                    // no-op
-                  }
-
-                  console.warn(
-                    "[@artsy/react-responsive-media] " +
-                      "`at` is being used with the largest breakpoint. Consider " +
-                      `using <Media greaterThanOrEqual="${lastBreakpoint}"> to ` +
-                      `account for dimensions outside of this range.${
-                        ownerName
-                          ? ` It is being used in the ${ownerName} component.`
-                          : ""
-                      }`
-                  )
+              if (props.at === lastBreakpoint) {
+                // TODO: We should look into making React’s __DEV__ available
+                //       and have webpack completely compile these away.
+                let ownerName = null
+                try {
+                  const owner = (this as any)._reactInternalFiber._debugOwner
+                    .type
+                  ownerName = owner.displayName || owner.name
+                } catch (err) {
+                  // no-op
                 }
-              }
 
-              const { children, interaction, not, ...breakpointProps } = props
-              const breakpointKey = propKey(breakpointProps)
-              query = breakpoints.getMediaQuery(
-                breakpointKey,
-                breakpointProps[breakpointKey]
-              )
-
-              if (onlyRenderAt) {
-                renderChildren = breakpoints.shouldRender(
-                  breakpointProps,
-                  onlyRenderAt
+                console.warn(
+                  "[@artsy/react-responsive-media] " +
+                    "`at` is being used with the largest breakpoint. Consider " +
+                    `using <Media greaterThanOrEqual="${lastBreakpoint}"> to ` +
+                    `account for dimensions outside of this range.${
+                      ownerName
+                        ? ` It is being used in the ${ownerName} component.`
+                        : ""
+                    }`
                 )
               }
-            }
 
-            const generatedStyle: RenderPropStyleGenerator = matchingStyle => css`
-              display: none;
-              @media ${query} {
-                display: contents;
-                ${matchingStyle};
+              if (onlyRenderAt && !onlyRenderAt.includes(props.at)) {
+                return null
               }
-            `
-
-            if (typeof props.children === "function") {
-              // FIXME: This typings shouldn’t be necessary, because the actual type is
-              //        ReactNode and is legal. However, for some reason it breaks the
-              //        SFC typing of this component.
-              return (props.children as any)(
-                generatedStyle
-              ) as React.ReactElement<any>
             }
 
-            return (
-              <MediaContainer generatedStyle={generatedStyle}>
-                {renderChildren ? props.children : null}
-              </MediaContainer>
-            )
+            const { children, interaction, not, ...breakpointProps } = props
+            const type = propKey(breakpointProps)
+            const breakpoint = breakpointProps[type]
+            // query = breakpoints.getMediaQuery(
+            //   breakpointKey,
+            //   breakpointProps[breakpointKey]
+            // )
+
+            if (
+              onlyRenderAt &&
+              !breakpoints.shouldRender(breakpointProps, onlyRenderAt)
+            ) {
+              return null
+            }
+            // }
+
+            const className = [
+              "rrm",
+              type,
+              ...(type === "between" ? breakpoint : [breakpoint]),
+            ].join("-")
+
+            // const generatedStyle: RenderPropStyleGenerator = matchingStyle => css`
+            //   display: none;
+            //   @media ${query} {
+            //     display: contents;
+            //     ${matchingStyle};
+            //   }
+            // `
+
+            // if (typeof props.children === "function") {
+            //   // FIXME: This typings shouldn’t be necessary, because the actual type is
+            //   //        ReactNode and is legal. However, for some reason it breaks the
+            //   //        SFC typing of this component.
+            //   return (props.children as any)(
+            //     generatedStyle
+            //   ) as React.ReactElement<any>
+            // }
+
+            return <div className={className}>{props.children}</div>
           }}
         </MediaContext.Consumer>
       )
     }
   }
 
-  return { Media, MediaContextProvider }
+  return { Media, MediaContextProvider, MediaStyle: breakpoints.toStyle() }
 }
 
 const MediaContainer = styled.div<{ generatedStyle: RenderPropStyleGenerator }>`

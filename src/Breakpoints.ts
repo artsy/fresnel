@@ -79,6 +79,22 @@ export class Breakpoints {
     return this._mediaQueries[breakpointType].get(breakpointKey(breakpoint))
   }
 
+  public toStyle() {
+    const styleRules = Object.entries(this._mediaQueries).reduce(
+      (acc, [type, queries]) => {
+        queries.forEach((query, breakpoint) => {
+          const className = ["rrm", type, breakpoint].join("-")
+          acc.push(
+            `.${className}{display:none;@media ${query}{display:contents;}}`
+          )
+        })
+        return acc
+      },
+      []
+    )
+    return styleRules.join("\n")
+  }
+
   public shouldRender(
     breakpointProps: MediaBreakpointProps,
     onlyRenderAt: string[]
