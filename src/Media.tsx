@@ -4,6 +4,7 @@ import React from "react"
 import styled, { css, InterpolationValue } from "styled-components"
 import { createResponsiveComponents } from "./DynamicResponsive"
 import { Breakpoints } from "./Breakpoints"
+import { intersection, propKey } from "./Utils"
 
 type RenderProp = ((
   generatedStyle: RenderPropStyleGenerator
@@ -13,22 +14,9 @@ type RenderPropStyleGenerator = (
   matchingStyle?: InterpolationValue[]
 ) => InterpolationValue[]
 
-const MutuallyExclusiveProps = [
-  "query",
-  "at",
-  "lessThan",
-  "greaterThan",
-  "greaterThanOrEqual",
-  "between",
-  "interaction",
-]
-
-export type MediaBreakpointKey = keyof MediaBreakpointProps<any>
-
 // TODO: All of these props should be mutually exclusive. Using a union should
 //       probably be made possible by https://github.com/Microsoft/TypeScript/pull/27408.
-
-export interface MediaBreakpointProps<B> {
+export interface MediaBreakpointProps<B = string> {
   /**
    * Children will only be shown if the viewport matches the specified
    * breakpoint. That is, a viewport width that’s higher than the configured
@@ -292,7 +280,7 @@ export function createMedia<
     } else {
       return (
         <DynamicResponsive.Provider
-          mediaQueries={breakpoints.atMediaQueries}
+          mediaQueries={breakpoints.getAtMediaQueries()}
           initialMatchingMediaQueries={intersection(
             breakpoints.sorted,
             onlyRenderAt
@@ -421,13 +409,15 @@ const MediaContainer = styled.div<{ generatedStyle: RenderPropStyleGenerator }>`
   ${({ generatedStyle }) => generatedStyle()};
 `
 
-function propKey(breakpointProps: MediaBreakpointProps<any>) {
-  return Object.keys(breakpointProps)[0] as MediaBreakpointKey
-}
-
-function intersection(a1: any[], a2?: any[]) {
-  return a2 ? a1.filter(element => a2.indexOf(element) >= 0) : a1
-}
+const MutuallyExclusiveProps = [
+  "query",
+  "at",
+  "lessThan",
+  "greaterThan",
+  "greaterThanOrEqual",
+  "between",
+  "interaction",
+]
 
 function validateProps(props) {
   const selectedProps = Object.keys(props).filter(prop =>

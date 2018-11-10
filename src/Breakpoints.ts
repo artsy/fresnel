@@ -1,25 +1,21 @@
-// tslint:disable:completed-docs
+import { MediaBreakpointProps } from "./Media"
+import { propKey } from "./Utils"
 
-import { MediaBreakpointProps, MediaBreakpointKey } from "./Media"
+export type MediaBreakpointKey = keyof MediaBreakpointProps
+
+type Tuple = [string, string]
 
 export class Breakpoints {
-  public sorted: string[]
+  public readonly sorted: ReadonlyArray<string>
 
-  // TODO: This is really only for DynamicResponsive, maybe make it take a Map
-  //       instead?
-  public atMediaQueries: {
-    [key: string]: string
-  }
-
-  private mediaQueries: {
+  private _breakpoints: { [key: string]: number }
+  private _mediaQueries: {
     at: Map<string, string>
     lessThan: Map<string, string>
     greaterThan: Map<string, string>
     greaterThanOrEqual: Map<string, string>
-    between: Map<[string, string], string>
+    between: Map<Tuple, string>
   }
-  private _breakpoints: { [key: string]: number }
-  private _betweenCombinations: Array<[string, string]>
 
   constructor(breakpoints: { [key: string]: number }) {
     this._breakpoints = breakpoints
@@ -29,38 +25,19 @@ export class Breakpoints {
       .sort((a, b) => (a[1] < b[1] ? -1 : 1))
       .map(breakpointAndValue => breakpointAndValue[0] as string)
 
-    const atRanges = new Map<string, MediaBreakpointProps<any>>()
-    // tslint:disable-next-line:prefer-for-of
-    for (let i = 0; i < this.sorted.length; i++) {
-      const from = this.sorted[i]
-      const to = this.sorted[i + 1]
-      if (to) {
-        atRanges.set(from, { between: [from, to] })
-      } else {
-        atRanges.set(from, { greaterThanOrEqual: from })
-      }
-    }
-
-    this._betweenCombinations = this.sorted
+    // List of all possible and valid `between` combinations
+    const betweenCombinations: Tuple[] = this.sorted
       .slice(0, -1)
-      .reduce<Array<[string, string]>>(
+      .reduce<Tuple[]>(
         (acc, b1, i) => [
           ...acc,
-          ...this.sorted.slice(i + 1).map<[string, string]>(b2 => [b1, b2]),
+          ...this.sorted.slice(i + 1).map<Tuple>(b2 => [b1, b2]),
         ],
         []
       )
 
-    this.atMediaQueries = Array.from(atRanges.entries()).reduce(
-      (queries, [k, v]) => ({
-        ...queries,
-        [k]: this._createBreakpointQuery(v),
-      }),
-      {} as { [key: string]: string }
-    )
-
-    this.mediaQueries = {
-      at: new Map(Object.entries(this.atMediaQueries)),
+    this._mediaQueries = {
+      at: this._createBreakpointQueries("at", this.sorted),
       lessThan: this._createBreakpointQueries("lessThan", this.sorted.slice(1)),
       greaterThan: this._createBreakpointQueries(
         "greaterThan",
@@ -70,110 +47,121 @@ export class Breakpoints {
         "greaterThanOrEqual",
         this.sorted
       ),
-      between: this._createBreakpointQueries(
-        "between",
-        this._betweenCombinations
-      ),
+      between: this._createBreakpointQueries("between", betweenCombinations),
     }
   }
 
+  // TODO: This is really only for DynamicResponsive, maybe make it take a Map
+  //       instead?
+  public getAtMediaQueries() {
+    return Array.from(this._mediaQueries.at.entries()).reduce(
+      (acc, [k, v]) => ({ ...acc, [k]: v }),
+      {}
+    )
+  }
+
   public getMediaQuery(
-    breakpointKey: MediaBreakpointKey,
-    breakpointValue: string | [string, string]
+    breakpointType: MediaBreakpointKey,
+    breakpoint: string | Tuple
   ) {
-    if (breakpointKey === "between") {
-      return this.mediaQueries.between.get(
-        this._betweenCombinations.find(
-          c => c[0] === breakpointValue[0] && c[1] === breakpointValue[1]
-        )
-      )
+    if (breakpointType === "between") {
+      for (const tuple of this._mediaQueries.between.entries()) {
+        const [brk, query] = tuple
+        if (brk[0] === breakpoint[0] && brk[1] === breakpoint[1]) {
+          return query
+        }
+      }
     } else {
-      return this.mediaQueries[breakpointKey].get(breakpointValue as string)
+      return this._mediaQueries[breakpointType].get(breakpoint as string)
     }
   }
 
   public shouldRender(
-    breakpointProps: MediaBreakpointProps<string>,
+    breakpointProps: MediaBreakpointProps,
     onlyRenderAt: string[]
   ): boolean {
+    breakpointProps = this._normalizeProps(breakpointProps)
+    switch (propKey(breakpointProps)) {
+      case "lessThan": {
+        const width = this._breakpoints[breakpointProps.lessThan]
+        const lowestAllowedWidth = Math.min(
+          ...onlyRenderAt.map(breakpoint => this._breakpoints[breakpoint])
+        )
+        return !(lowestAllowedWidth >= width)
+      }
+      case "greaterThan": {
+        const width = this._breakpoints[
+          this._findNextBreakpoint(breakpointProps.greaterThan)
+        ]
+        const highestAllowedWidth = Math.max(
+          ...onlyRenderAt.map(breakpoint => this._breakpoints[breakpoint])
+        )
+        return !(highestAllowedWidth < width)
+      }
+      case "greaterThanOrEqual": {
+        const width = this._breakpoints[breakpointProps.greaterThanOrEqual]
+        const highestAllowedWidth = Math.max(
+          ...onlyRenderAt.map(breakpoint => this._breakpoints[breakpoint])
+        )
+        return !(highestAllowedWidth < width)
+      }
+      case "between": {
+        // TODO: This is the only useful breakpoint to negate, but we’ll
+        //       we’ll see when/if we need it. We could then also decide
+        //       to add `oustide`.
+        const fromWidth = this._breakpoints[breakpointProps.between[0]]
+        const toWidth = this._breakpoints[breakpointProps.between[1]]
+        const allowedWidths = onlyRenderAt.map(
+          breakpoint => this._breakpoints[breakpoint]
+        )
+        return !(
+          Math.max(...allowedWidths) < fromWidth ||
+          Math.min(...allowedWidths) >= toWidth
+        )
+      }
+    }
+  }
+
+  private _normalizeProps(
+    breakpointProps: MediaBreakpointProps
+  ): MediaBreakpointProps {
     if (breakpointProps.at) {
-      const from = breakpointProps.at
       const fromIndex = this.sorted.indexOf(breakpointProps.at)
       const to = this.sorted[fromIndex + 1]
-      if (to) {
-        breakpointProps = { between: [from, to] }
-      } else {
-        breakpointProps = {
-          greaterThanOrEqual: from,
-        }
-      }
+      return to
+        ? { between: [breakpointProps.at, to] }
+        : { greaterThanOrEqual: breakpointProps.at }
     }
-    if (breakpointProps.lessThan) {
-      const width = this._breakpoints[breakpointProps.lessThan]
-      const lowestAllowedWidth = Math.min(
-        ...onlyRenderAt.map(breakpoint => this._breakpoints[breakpoint])
-      )
-      if (lowestAllowedWidth >= width) {
-        return false
-      }
-    } else if (breakpointProps.greaterThan) {
-      const width = this._breakpoints[
-        this._findNextBreakpoint(breakpointProps.greaterThan)
-      ]
-      const highestAllowedWidth = Math.max(
-        ...onlyRenderAt.map(breakpoint => this._breakpoints[breakpoint])
-      )
-      if (highestAllowedWidth < width) {
-        return false
-      }
-    } else if (breakpointProps.greaterThanOrEqual) {
-      const width = this._breakpoints[breakpointProps.greaterThanOrEqual]
-      const highestAllowedWidth = Math.max(
-        ...onlyRenderAt.map(breakpoint => this._breakpoints[breakpoint])
-      )
-      if (highestAllowedWidth < width) {
-        return false
-      }
-    } else if (breakpointProps.between) {
-      // TODO: This is the only useful breakpoint to negate, but we’ll
-      //       we’ll see when/if we need it. We could then also decide
-      //       to add `oustide`.
-      const fromWidth = this._breakpoints[breakpointProps.between[0]]
-      const toWidth = this._breakpoints[breakpointProps.between[1]]
-      const allowedWidths = onlyRenderAt.map(
-        breakpoint => this._breakpoints[breakpoint]
-      )
-      if (
-        Math.max(...allowedWidths) < fromWidth ||
-        Math.min(...allowedWidths) >= toWidth
-      ) {
-        return false
-      }
-    }
-    return true
+    return breakpointProps
   }
 
   private _createBreakpointQuery(
-    breakpointProps: MediaBreakpointProps<string>
+    breakpointProps: MediaBreakpointProps
   ): string {
-    if (breakpointProps.lessThan) {
-      const width = this._breakpoints[breakpointProps.lessThan]
-      return `(max-width:${width - 1}px)`
-    } else if (breakpointProps.greaterThan) {
-      const width = this._breakpoints[
-        this._findNextBreakpoint(breakpointProps.greaterThan)
-      ]
-      return `(min-width:${width}px)`
-    } else if (breakpointProps.greaterThanOrEqual) {
-      const width = this._breakpoints[breakpointProps.greaterThanOrEqual]
-      return `(min-width:${width}px)`
-    } else if (breakpointProps.between) {
-      // TODO: This is the only useful breakpoint to negate, but we’ll
-      //       we’ll see when/if we need it. We could then also decide
-      //       to add `oustide`.
-      const fromWidth = this._breakpoints[breakpointProps.between[0]]
-      const toWidth = this._breakpoints[breakpointProps.between[1]]
-      return `(min-width:${fromWidth}px) and (max-width:${toWidth - 1}px)`
+    breakpointProps = this._normalizeProps(breakpointProps)
+    switch (propKey(breakpointProps)) {
+      case "lessThan": {
+        const width = this._breakpoints[breakpointProps.lessThan]
+        return `(max-width:${width - 1}px)`
+      }
+      case "greaterThan": {
+        const width = this._breakpoints[
+          this._findNextBreakpoint(breakpointProps.greaterThan)
+        ]
+        return `(min-width:${width}px)`
+      }
+      case "greaterThanOrEqual": {
+        const width = this._breakpoints[breakpointProps.greaterThanOrEqual]
+        return `(min-width:${width}px)`
+      }
+      case "between": {
+        // TODO: This is the only useful breakpoint to negate, but we’ll
+        //       we’ll see when/if we need it. We could then also decide
+        //       to add `oustide`.
+        const fromWidth = this._breakpoints[breakpointProps.between[0]]
+        const toWidth = this._breakpoints[breakpointProps.between[1]]
+        return `(min-width:${fromWidth}px) and (max-width:${toWidth - 1}px)`
+      }
     }
     throw new Error(
       `Unexpected breakpoint props: ${JSON.stringify(breakpointProps)}`
@@ -182,7 +170,7 @@ export class Breakpoints {
 
   private _createBreakpointQueries<T>(
     key: MediaBreakpointKey,
-    forBreakpoints: T[]
+    forBreakpoints: ReadonlyArray<T>
   ) {
     return forBreakpoints.reduce<Map<T, string>>((map, breakpoint) => {
       map.set(

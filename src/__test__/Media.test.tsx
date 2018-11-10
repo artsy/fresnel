@@ -396,10 +396,10 @@ describe("Media", () => {
 })
 
 function mockCurrentDynamicBreakpoint(at) {
-  const utils = new Breakpoints(config.breakpoints)
+  const breakpoints = new Breakpoints(config.breakpoints)
 
   window.matchMedia = jest.fn(mediaQuery => {
-    const key = Object.entries(utils.atMediaQueries).find(
+    const key = Object.entries(breakpoints.getAtMediaQueries()).find(
       ([_, query]) => mediaQuery === query
     )[0]
     // Return mock object that only matches the mocked breakpoint
