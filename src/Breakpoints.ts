@@ -121,9 +121,9 @@ export class Breakpoints {
         const allowedWidths = onlyRenderAt.map(
           breakpoint => this._breakpoints[breakpoint]
         )
-        return (
-          Math.min(...allowedWidths) <= fromWidth &&
-          Math.max(...allowedWidths) >= toWidth
+        return !(
+          Math.max(...allowedWidths) < fromWidth ||
+          Math.min(...allowedWidths) >= toWidth
         )
       }
     }
