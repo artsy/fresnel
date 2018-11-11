@@ -12,6 +12,11 @@ type Tuple = [string, string]
  * Encapsulates all breakpoint data needed by the Media component. The data is
  * generated on initialization so no further runtime work is necessary.
  */
+
+function breakpointKey(breakpoint: string | Tuple) {
+  return Array.isArray(breakpoint) ? breakpoint.join("-") : breakpoint
+}
+
 export class Breakpoints {
   public readonly sorted: ReadonlyArray<string>
 
@@ -21,7 +26,7 @@ export class Breakpoints {
     lessThan: Map<string, string>
     greaterThan: Map<string, string>
     greaterThanOrEqual: Map<string, string>
-    between: Map<Tuple, string>
+    between: Map<string, string>
   }
 
   constructor(breakpoints: { [key: string]: number }) {
@@ -35,10 +40,10 @@ export class Breakpoints {
     // List of all possible and valid `between` combinations
     const betweenCombinations: Tuple[] = this.sorted
       .slice(0, -1)
-      .reduce<Tuple[]>(
+      .reduce(
         (acc, b1, i) => [
           ...acc,
-          ...this.sorted.slice(i + 1).map<Tuple>(b2 => [b1, b2]),
+          ...this.sorted.slice(i + 1).map(b2 => [b1, b2]),
         ],
         []
       )
@@ -71,16 +76,23 @@ export class Breakpoints {
     breakpointType: MediaBreakpointKey,
     breakpoint: string | Tuple
   ) {
-    if (breakpointType === "between") {
-      for (const tuple of this._mediaQueries.between.entries()) {
-        const [brk, query] = tuple
-        if (brk[0] === breakpoint[0] && brk[1] === breakpoint[1]) {
-          return query
-        }
-      }
-    } else {
-      return this._mediaQueries[breakpointType].get(breakpoint as string)
-    }
+    return this._mediaQueries[breakpointType].get(breakpointKey(breakpoint))
+  }
+
+  public toStyle() {
+    const styleRules = Object.entries(this._mediaQueries).reduce(
+      (acc, [type, queries]) => {
+        queries.forEach((query, breakpoint) => {
+          const className = ["rrm", type, breakpoint].join("-")
+          acc.push(
+            `.${className}{display:none;@media ${query}{display:contents;}}`
+          )
+        })
+        return acc
+      },
+      []
+    )
+    return styleRules.join("\n")
   }
 
   public shouldRender(
@@ -175,13 +187,13 @@ export class Breakpoints {
     )
   }
 
-  private _createBreakpointQueries<T>(
+  private _createBreakpointQueries(
     key: MediaBreakpointKey,
-    forBreakpoints: ReadonlyArray<T>
+    forBreakpoints: ReadonlyArray<string | [string, string]>
   ) {
-    return forBreakpoints.reduce<Map<T, string>>((map, breakpoint) => {
+    return forBreakpoints.reduce<Map<string, string>>((map, breakpoint) => {
       map.set(
-        breakpoint,
+        breakpointKey(breakpoint),
         this._createBreakpointQuery({
           [key]: breakpoint,
         })

@@ -37,8 +37,7 @@
   },
   "homepage": "https://github.com/artsy/react-responsive-media#readme",
   "peerDependencies": {
-    "react": "^16.3.0",
-    "styled-components": "*"
+    "react": "^16.3.0"
   },
   "devDependencies": {
     "@babel/cli": "^7.0.0",

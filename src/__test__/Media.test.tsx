@@ -2,12 +2,9 @@ import "jest-styled-components"
 
 import React from "react"
 import renderer from "react-test-renderer"
-import styled, { css, InterpolationValue } from "styled-components"
+import { injectGlobal } from "styled-components"
 import { createMedia } from "../Media"
 import { Breakpoints } from "../Breakpoints"
-
-// FIXME: remove
-// import { themeProps } from "@artsy/palette"
 
 const config = {
   breakpoints: {
@@ -21,9 +18,15 @@ const config = {
   },
 }
 
-const { Media, MediaContextProvider } = createMedia(config)
+const { Media, MediaContextProvider, MediaStyle } = createMedia(config)
 
 describe("Media", () => {
+  beforeEach(() => {
+    injectGlobal`
+      ${MediaStyle}
+    `
+  })
+
   afterEach(() => {
     window.matchMedia = undefined
   })
@@ -136,7 +139,7 @@ describe("Media", () => {
     })
   })
 
-  describe("concerning interactions", () => {
+  xdescribe("concerning interactions", () => {
     it("creates a container that will only display when the interaction is available", () => {
       const query = renderer
         .create(<Media interaction="hover">ohai</Media>)
@@ -165,51 +168,17 @@ describe("Media", () => {
   })
 
   describe("with a render prop", () => {
-    it("yields the generated style such that it can be applied to another element", () => {
-      const Container = styled.span<{ responsiveStyle: InterpolationValue[] }>`
-        ${props => props.responsiveStyle};
-      `
+    it("yields the class name so it can be applied to another element", () => {
       const query = renderer
         .create(
           <Media lessThan="small">
-            {generatedStyle => (
-              <Container
-                responsiveStyle={generatedStyle(css`
-                  // Optional styling that is applied to the matching state
-                  font-family: "Comic Sans MS";
-                `)}
-              >
-                ohai
-              </Container>
-            )}
+            {className => <span className={className}>ohai</span>}
           </Media>
         )
         .toJSON()
       expect(query.type).toEqual("span")
       expect(query).toHaveStyleRule("display", "none")
       expect(query).toHaveStyleRule("display", "contents", {
-        media: "(max-width:767px)",
-      })
-    })
-
-    it("yields the generated style and allows adding styles to the matching media selector", () => {
-      const query = renderer
-        .create(
-          <Media lessThan="small">
-            {generatedStyle => {
-              const Component = styled.div`
-                ${generatedStyle(css`
-                  color: red;
-                `)};
-              `
-              return <Component>ohai</Component>
-            }}
-          </Media>
-        )
-        .toJSON()
-      expect(query.type).toEqual("div")
-      expect(query).not.toHaveStyleRule("color", "red")
-      expect(query).toHaveStyleRule("color", "red", {
         media: "(max-width:767px)",
       })
     })
@@ -225,10 +194,7 @@ describe("Media", () => {
         </MediaContextProvider>
       )
       expect(
-        query.root
-          .findAllByType("div")
-          .map(div => div.props.children)
-          .filter(Boolean)
+        query.root.findAllByType("div").map(div => div.props.children)
       ).toEqual(["extra-small", "small"])
     })
 
@@ -241,10 +207,7 @@ describe("Media", () => {
         </MediaContextProvider>
       )
       expect(
-        query.root
-          .findAllByType("div")
-          .map(div => div.props.children)
-          .filter(Boolean)
+        query.root.findAllByType("div").map(div => div.props.children)
       ).toEqual(["small", "medium"])
     })
 
@@ -257,10 +220,7 @@ describe("Media", () => {
         </MediaContextProvider>
       )
       expect(
-        query.root
-          .findAllByType("div")
-          .map(div => div.props.children)
-          .filter(Boolean)
+        query.root.findAllByType("div").map(div => div.props.children)
       ).toEqual(["small", "medium"])
     })
 
@@ -273,10 +233,7 @@ describe("Media", () => {
         </MediaContextProvider>
       )
       expect(
-        query.root
-          .findAllByType("div")
-          .map(div => div.props.children)
-          .filter(Boolean)
+        query.root.findAllByType("div").map(div => div.props.children)
       ).toEqual(["small", "medium"])
     })
 
@@ -290,10 +247,7 @@ describe("Media", () => {
         </MediaContextProvider>
       )
       expect(
-        query.root
-          .findAllByType("div")
-          .map(div => div.props.children)
-          .filter(Boolean)
+        query.root.findAllByType("div").map(div => div.props.children)
       ).toEqual(["small - large"])
     })
 
