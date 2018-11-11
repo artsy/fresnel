@@ -1,6 +1,6 @@
 import { Breakpoints } from "./Breakpoints"
-import { createClassName, createStyleRule, intersection } from "Utils"
-import { MediaBreakpointProps } from "Media"
+import { createClassName, createStyleRule, intersection } from "./Utils"
+import { MediaBreakpointProps } from "./Media"
 
 /**
  * Encapsulates all interaction data (and breakpoint data in the superclass)

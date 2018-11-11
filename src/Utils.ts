@@ -1,4 +1,4 @@
-import { MediaBreakpointProps } from "Media"
+import { MediaBreakpointProps } from "./Media"
 import { MediaBreakpointKey } from "./Breakpoints"
 
 /**
