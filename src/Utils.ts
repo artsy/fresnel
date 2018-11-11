@@ -23,7 +23,7 @@ export function intersection(
  * unless the given query matches.
  */
 export function createStyleRule(className: string, query: string) {
-  return `.${className}{display:none;@media ${query}{display:contents;}}`
+  return `.${className}{display:none;}@media ${query}{.${className}{display:contents;}}`
 }
 
 /**
