@@ -1,5 +1,5 @@
 import { MediaBreakpointProps } from "./Media"
-import { propKey } from "./Utils"
+import { propKey, createStyleRule, createClassName } from "./Utils"
 
 /**
  * A union of possible breakpoint props.
@@ -8,18 +8,20 @@ export type MediaBreakpointKey = keyof MediaBreakpointProps
 
 type Tuple = [string, string]
 
-/**
- * Encapsulates all breakpoint data needed by the Media component. The data is
- * generated on initialization so no further runtime work is necessary.
- */
-
 function breakpointKey(breakpoint: string | Tuple) {
   return Array.isArray(breakpoint) ? breakpoint.join("-") : breakpoint
 }
 
+/**
+ * Encapsulates all breakpoint data needed by the Media component. The data is
+ * generated on initialization so no further runtime work is necessary.
+ */
 export class Breakpoints {
-  public readonly sorted: ReadonlyArray<string>
+  static validKeys() {
+    return ["at", "lessThan", "greaterThan", "greaterThanOrEqual", "between"]
+  }
 
+  private _sortedBreakpoints: ReadonlyArray<string>
   private _breakpoints: { [key: string]: number }
   private _mediaQueries: {
     at: Map<string, string>
@@ -32,47 +34,56 @@ export class Breakpoints {
   constructor(breakpoints: { [key: string]: number }) {
     this._breakpoints = breakpoints
 
-    this.sorted = Object.keys(breakpoints)
+    this._sortedBreakpoints = Object.keys(breakpoints)
       .map(breakpoint => [breakpoint, breakpoints[breakpoint]])
       .sort((a, b) => (a[1] < b[1] ? -1 : 1))
       .map(breakpointAndValue => breakpointAndValue[0] as string)
 
     // List of all possible and valid `between` combinations
-    const betweenCombinations: Tuple[] = this.sorted
+    const betweenCombinations: Tuple[] = this._sortedBreakpoints
       .slice(0, -1)
       .reduce(
         (acc, b1, i) => [
           ...acc,
-          ...this.sorted.slice(i + 1).map(b2 => [b1, b2]),
+          ...this._sortedBreakpoints.slice(i + 1).map(b2 => [b1, b2]),
         ],
         []
       )
 
     this._mediaQueries = {
-      at: this._createBreakpointQueries("at", this.sorted),
-      lessThan: this._createBreakpointQueries("lessThan", this.sorted.slice(1)),
+      at: this._createBreakpointQueries("at", this._sortedBreakpoints),
+      lessThan: this._createBreakpointQueries(
+        "lessThan",
+        this._sortedBreakpoints.slice(1)
+      ),
       greaterThan: this._createBreakpointQueries(
         "greaterThan",
-        this.sorted.slice(0, -1)
+        this._sortedBreakpoints.slice(0, -1)
       ),
       greaterThanOrEqual: this._createBreakpointQueries(
         "greaterThanOrEqual",
-        this.sorted
+        this._sortedBreakpoints
       ),
       between: this._createBreakpointQueries("between", betweenCombinations),
     }
   }
 
-  // TODO: This is really only for DynamicResponsive, maybe make it take a Map
-  //       instead?
-  public getAtMediaQueries() {
+  public getMediaQueryTypes() {
+    return this._sortedBreakpoints
+  }
+
+  public getDynamicResponsiveMediaQueries() {
     return Array.from(this._mediaQueries.at.entries()).reduce(
       (acc, [k, v]) => ({ ...acc, [k]: v }),
       {}
     )
   }
 
-  public getMediaQuery(
+  public getLastBreakpoint() {
+    return this._sortedBreakpoints[this._sortedBreakpoints.length - 1]
+  }
+
+  public getBreakpointMediaQuery(
     breakpointType: MediaBreakpointKey,
     breakpoint: string | Tuple
   ) {
@@ -80,22 +91,15 @@ export class Breakpoints {
   }
 
   public toStyle() {
-    const styleRules = Object.entries(this._mediaQueries).reduce(
-      (acc, [type, queries]) => {
-        queries.forEach((query, breakpoint) => {
-          const className = ["rrm", type, breakpoint].join("-")
-          acc.push(
-            `.${className}{display:none;@media ${query}{display:contents;}}`
-          )
-        })
-        return acc
-      },
-      []
-    )
-    return styleRules.join("\n")
+    return Object.entries(this._mediaQueries).reduce((acc, [type, queries]) => {
+      queries.forEach((query, breakpoint) => {
+        acc.push(createStyleRule(createClassName(type, breakpoint), query))
+      })
+      return acc
+    }, [])
   }
 
-  public shouldRender(
+  public shouldRenderMediaQuery(
     breakpointProps: MediaBreakpointProps,
     onlyRenderAt: string[]
   ): boolean {
@@ -145,8 +149,8 @@ export class Breakpoints {
     breakpointProps: MediaBreakpointProps
   ): MediaBreakpointProps {
     if (breakpointProps.at) {
-      const fromIndex = this.sorted.indexOf(breakpointProps.at)
-      const to = this.sorted[fromIndex + 1]
+      const fromIndex = this._sortedBreakpoints.indexOf(breakpointProps.at)
+      const to = this._sortedBreakpoints[fromIndex + 1]
       return to
         ? { between: [breakpointProps.at, to] }
         : { greaterThanOrEqual: breakpointProps.at }
@@ -203,7 +207,9 @@ export class Breakpoints {
   }
 
   private _findNextBreakpoint(breakpoint: string) {
-    const nextBreakpoint = this.sorted[this.sorted.indexOf(breakpoint) + 1]
+    const nextBreakpoint = this._sortedBreakpoints[
+      this._sortedBreakpoints.indexOf(breakpoint) + 1
+    ]
     if (!nextBreakpoint) {
       throw new Error(`There is no breakpoint larger than ${breakpoint}`)
     }
