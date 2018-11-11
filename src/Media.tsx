@@ -2,9 +2,14 @@
 
 import React from "react"
 import { createResponsiveComponents } from "./DynamicResponsive"
-import { Breakpoints } from "./Breakpoints"
-import { intersection, propKey } from "./Utils"
+import { MediaQueries } from "./MediaQueries"
+import { intersection, propKey, createClassName } from "./Utils"
 
+/**
+ * A render prop that can be specified to retrieve the class name of the `Media`
+ * component usage, so it can be used to apply to another element instead of the
+ * default `div.
+ */
 export type RenderProp = ((className: string) => React.ReactNode)
 
 // TODO: All of these props should be mutually exclusive. Using a union should
@@ -137,22 +142,6 @@ export interface MediaProps<B, I> extends MediaBreakpointProps<B> {
   interaction?: I
 
   /**
-   * Used to negate an `interaction`.
-   *
-   * @example
-
-     ```tsx
-     // With interactions defined like these
-     { hover: negate => `(hover: ${negate ? "hover" : "none"})` }
-
-     // Matches an input device that is not capable of hovering
-     <Media not interaction="hover">ohai</Media>
-     ```
-   *
-   */
-  not?: boolean
-
-  /**
    * Either typical React nodes, in which case they will be wrapped in a `div`
    * element that using styled-components has had the media query applied.
    *
@@ -193,7 +182,7 @@ export interface MediaProps<B, I> extends MediaBreakpointProps<B> {
   children: React.ReactNode | RenderProp
 }
 
-export interface MediaContextProviderProps<B> {
+export interface MediaContextProviderProps<M> {
   /**
    * Disables usage of browser MediaQuery API to only render at the current
    * breakpoint.
@@ -204,13 +193,14 @@ export interface MediaContextProviderProps<B> {
   disableDynamicMediaQueries?: boolean
 
   /**
-   * This list of breakpoints can be used to limit the rendered output to these.
+   * This list of breakpoints and interactions can be used to limit the rendered
+   * output to these.
    *
    * For instance, when a server knows for some user-agents that certain
    * breakpoints will never apply, omitting them altogether will lower the
    * rendered byte size.
    */
-  onlyRenderAt?: B[]
+  onlyMatch?: M[]
 }
 
 /**
@@ -241,30 +231,30 @@ export interface MediaContextProviderProps<B> {
 export function createMedia<
   C extends {
     breakpoints: { [key: string]: number }
-    interactions: { [key: string]: (negated: boolean) => string }
+    interactions: { [key: string]: string }
   }
 >(config: C) {
   type B = keyof C["breakpoints"]
   type I = keyof C["interactions"]
 
-  const breakpoints = new Breakpoints(config.breakpoints)
+  const mediaQueries = new MediaQueries(config.breakpoints, config.interactions)
 
   const DynamicResponsive = createResponsiveComponents()
 
-  const MediaContext = React.createContext<MediaContextProviderProps<B>>({})
+  const MediaContext = React.createContext<MediaContextProviderProps<B | I>>({})
   MediaContext.Consumer.displayName = "Media.Context"
   MediaContext.Provider.displayName = "Media.Context"
 
-  const MediaContextProvider: React.SFC<MediaContextProviderProps<B>> = ({
+  const MediaContextProvider: React.SFC<MediaContextProviderProps<B | I>> = ({
     disableDynamicMediaQueries,
-    onlyRenderAt,
+    onlyMatch,
     children,
   }) => {
     if (disableDynamicMediaQueries) {
       return (
         <MediaContext.Provider
           value={{
-            onlyRenderAt,
+            onlyMatch,
           }}
         >
           {children}
@@ -273,24 +263,21 @@ export function createMedia<
     } else {
       return (
         <DynamicResponsive.Provider
-          mediaQueries={breakpoints.getAtMediaQueries()}
+          mediaQueries={mediaQueries.getDynamicResponsiveMediaQueries()}
           initialMatchingMediaQueries={intersection(
-            breakpoints.sorted,
-            onlyRenderAt
+            mediaQueries.getMediaQueryTypes(),
+            onlyMatch
           )}
         >
           <DynamicResponsive.Consumer>
             {matches => {
-              const matchingBreakpoints = Object.keys(matches).filter(
+              const matchingMediaQueries = Object.keys(matches).filter(
                 key => matches[key]
               )
               return (
                 <MediaContext.Provider
                   value={{
-                    onlyRenderAt: intersection(
-                      matchingBreakpoints,
-                      onlyRenderAt
-                    ),
+                    onlyMatch: intersection(matchingMediaQueries, onlyMatch),
                   }}
                 >
                   {children}
@@ -315,68 +302,53 @@ export function createMedia<
       const props = this.props
       return (
         <MediaContext.Consumer>
-          {({ onlyRenderAt } = {}) => {
-            // let renderChildren: boolean = true
-            // let query: string | null
-            // if (props.interaction) {
-            // query = config.interactions[props.interaction as string](
-            //   !!props.not
-            // )
-            // } else {
-            if (props.at) {
-              const lastBreakpoint =
-                breakpoints.sorted[breakpoints.sorted.length - 1]
+          {({ onlyMatch } = {}) => {
+            let className: string | null
+            const { children, interaction, ...breakpointProps } = props
+            if (props.interaction) {
+              className = createClassName("interaction", props.interaction)
+            } else {
+              if (props.at) {
+                const lastBreakpoint = mediaQueries.getLastBreakpoint()
+                if (props.at === lastBreakpoint) {
+                  // TODO: We should look into making React’s __DEV__ available
+                  //       and have webpack completely compile these away.
+                  let ownerName = null
+                  try {
+                    const owner = (this as any)._reactInternalFiber._debugOwner
+                      .type
+                    ownerName = owner.displayName || owner.name
+                  } catch (err) {
+                    // no-op
+                  }
 
-              if (props.at === lastBreakpoint) {
-                // TODO: We should look into making React’s __DEV__ available
-                //       and have webpack completely compile these away.
-                let ownerName = null
-                try {
-                  const owner = (this as any)._reactInternalFiber._debugOwner
-                    .type
-                  ownerName = owner.displayName || owner.name
-                } catch (err) {
-                  // no-op
+                  console.warn(
+                    "[@artsy/react-responsive-media] " +
+                      "`at` is being used with the largest breakpoint. Consider " +
+                      `using <Media greaterThanOrEqual="${lastBreakpoint}"> to ` +
+                      `account for dimensions outside of this range.${
+                        ownerName
+                          ? ` It is being used in the ${ownerName} component.`
+                          : ""
+                      }`
+                  )
                 }
-
-                console.warn(
-                  "[@artsy/react-responsive-media] " +
-                    "`at` is being used with the largest breakpoint. Consider " +
-                    `using <Media greaterThanOrEqual="${lastBreakpoint}"> to ` +
-                    `account for dimensions outside of this range.${
-                      ownerName
-                        ? ` It is being used in the ${ownerName} component.`
-                        : ""
-                    }`
-                )
               }
 
-              if (onlyRenderAt && !onlyRenderAt.includes(props.at)) {
-                return null
-              }
+              const type = propKey(breakpointProps)
+              const breakpoint = breakpointProps[type]
+              className = createClassName(type, breakpoint)
             }
 
-            const { children, interaction, not, ...breakpointProps } = props
-            const type = propKey(breakpointProps)
-            const breakpoint = breakpointProps[type]
-            // query = breakpoints.getMediaQuery(
-            //   breakpointKey,
-            //   breakpointProps[breakpointKey]
-            // )
-
             if (
-              onlyRenderAt &&
-              !breakpoints.shouldRender(breakpointProps, onlyRenderAt)
+              onlyMatch &&
+              !mediaQueries.shouldRenderMediaQuery(
+                { ...breakpointProps, interaction },
+                onlyMatch
+              )
             ) {
               return null
             }
-            // }
-
-            const className = [
-              "rrm",
-              type,
-              ...(type === "between" ? breakpoint : [breakpoint]),
-            ].join("-")
 
             if (props.children instanceof Function) {
               return props.children(className)
@@ -389,18 +361,14 @@ export function createMedia<
     }
   }
 
-  return { Media, MediaContextProvider, MediaStyle: breakpoints.toStyle() }
+  return {
+    Media,
+    MediaContextProvider,
+    MediaStyle: mediaQueries.toStyle().join("\n"),
+  }
 }
 
-const MutuallyExclusiveProps = [
-  "query",
-  "at",
-  "lessThan",
-  "greaterThan",
-  "greaterThanOrEqual",
-  "between",
-  "interaction",
-]
+const MutuallyExclusiveProps = MediaQueries.validKeys()
 
 function validateProps(props) {
   const selectedProps = Object.keys(props).filter(prop =>

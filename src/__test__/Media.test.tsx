@@ -4,7 +4,7 @@ import React from "react"
 import renderer from "react-test-renderer"
 import { injectGlobal } from "styled-components"
 import { createMedia } from "../Media"
-import { Breakpoints } from "../Breakpoints"
+import { MediaQueries } from "../MediaQueries"
 
 const config = {
   breakpoints: {
@@ -14,11 +14,12 @@ const config = {
     large: 1120,
   },
   interactions: {
-    hover: negated => `(hover:${negated ? "none" : "hover"})`,
+    hover: `(hover:hover)`,
   },
 }
 
 const { Media, MediaContextProvider, MediaStyle } = createMedia(config)
+const mediaQueries = new MediaQueries(config.breakpoints, config.interactions)
 
 describe("Media", () => {
   beforeEach(() => {
@@ -139,8 +140,8 @@ describe("Media", () => {
     })
   })
 
-  xdescribe("concerning interactions", () => {
-    it("creates a container that will only display when the interaction is available", () => {
+  describe("concerning interactions", () => {
+    it("creates a container that will only display when the interaction media query matches", () => {
       const query = renderer
         .create(<Media interaction="hover">ohai</Media>)
         .toJSON()
@@ -148,21 +149,6 @@ describe("Media", () => {
       expect(query).toHaveStyleRule("display", "none")
       expect(query).toHaveStyleRule("display", "contents", {
         media: "(hover:hover)",
-      })
-    })
-
-    it("creates a container that will only display when the interaction is not available", () => {
-      const query = renderer
-        .create(
-          <Media not interaction="hover">
-            ohai
-          </Media>
-        )
-        .toJSON()
-      expect(query.type).toEqual("div")
-      expect(query).toHaveStyleRule("display", "none")
-      expect(query).toHaveStyleRule("display", "contents", {
-        media: "(hover:none)",
       })
     })
   })
@@ -187,7 +173,7 @@ describe("Media", () => {
   describe("with a context", () => {
     it("renders only matching `at` breakpoints", () => {
       const query = renderer.create(
-        <MediaContextProvider onlyRenderAt={["extra-small", "small"]}>
+        <MediaContextProvider onlyMatch={["extra-small", "small"]}>
           <Media at="extra-small">extra-small</Media>
           <Media at="small">small</Media>
           <Media at="medium">medium</Media>
@@ -200,7 +186,7 @@ describe("Media", () => {
 
     it("renders only matching `lessThan` breakpoints", () => {
       const query = renderer.create(
-        <MediaContextProvider onlyRenderAt={["small", "medium"]}>
+        <MediaContextProvider onlyMatch={["small", "medium"]}>
           <Media lessThan="small">extra-small</Media>
           <Media lessThan="medium">small</Media>
           <Media lessThan="large">medium</Media>
@@ -213,7 +199,7 @@ describe("Media", () => {
 
     it("renders only matching `greaterThan` breakpoints", () => {
       const query = renderer.create(
-        <MediaContextProvider onlyRenderAt={["small", "medium"]}>
+        <MediaContextProvider onlyMatch={["small", "medium"]}>
           <Media greaterThan="extra-small">small</Media>
           <Media greaterThan="small">medium</Media>
           <Media greaterThan="medium">large</Media>
@@ -226,7 +212,7 @@ describe("Media", () => {
 
     it("renders only matching `greaterThanOrEqual` breakpoints", () => {
       const query = renderer.create(
-        <MediaContextProvider onlyRenderAt={["small", "medium"]}>
+        <MediaContextProvider onlyMatch={["small", "medium"]}>
           <Media greaterThanOrEqual="small">small</Media>
           <Media greaterThanOrEqual="medium">medium</Media>
           <Media greaterThanOrEqual="large">large</Media>
@@ -239,7 +225,7 @@ describe("Media", () => {
 
     it("renders only matching `between` breakpoints", () => {
       const query = renderer.create(
-        <MediaContextProvider onlyRenderAt={["medium", "large"]}>
+        <MediaContextProvider onlyMatch={["medium", "large"]}>
           <Media between={["extra-small", "medium"]}>
             extra-small - medium
           </Media>
@@ -251,30 +237,48 @@ describe("Media", () => {
       ).toEqual(["small - large"])
     })
 
-    xit("renders only matching interactions", () => {
-      // TODO:
+    it("renders only matching interactions", () => {
+      const query = renderer.create(
+        <MediaContextProvider onlyMatch={["hover"]}>
+          <Media interaction="hover">hover</Media>
+          <Media between={["small", "large"]}>small - large</Media>
+        </MediaContextProvider>
+      )
+      expect(
+        query.root.findAllByType("div").map(div => div.props.children)
+      ).toEqual(["hover"])
     })
 
     describe("client-side with dynamic media query API available", () => {
-      it("only renders the current breakpoint", () => {
-        mockCurrentDynamicBreakpoint("medium")
+      Object.entries({
+        breakpoint: "medium",
+        interaction: "hover",
+      }).forEach(([type, mediaQuery]) => {
+        it(`only renders the current ${type} media query`, () => {
+          mockCurrentDynamicBreakpoint(mediaQuery)
 
-        const query = renderer.create(
-          <MediaContextProvider onlyRenderAt={["small", "medium"]}>
-            <Media at="extra-small">
-              <span className="extra-small" />
-            </Media>
-            <Media at="medium">
-              <span className="medium" />
-            </Media>
-            <Media at="large">
-              <span className="large" />
-            </Media>
-          </MediaContextProvider>
-        )
+          const query = renderer.create(
+            <MediaContextProvider onlyMatch={["small", mediaQuery as any]}>
+              <Media at="extra-small">
+                <span className="extra-small" />
+              </Media>
+              <Media at="medium">
+                <span className="medium" />
+              </Media>
+              <Media at="large">
+                <span className="large" />
+              </Media>
+              <Media interaction="hover">
+                <span className="hover" />
+              </Media>
+            </MediaContextProvider>
+          )
 
-        expect(query.root.findAllByType("span").length).toEqual(1)
-        expect(query.root.findByProps({ className: "medium" })).not.toBeNull()
+          expect(query.root.findAllByType("span").length).toEqual(1)
+          expect(
+            query.root.findByProps({ className: mediaQuery })
+          ).not.toBeNull()
+        })
       })
 
       it("disables usage of dynamic API to further narrow down", () => {
@@ -282,7 +286,7 @@ describe("Media", () => {
 
         const query = renderer.create(
           <MediaContextProvider
-            onlyRenderAt={["extra-small", "medium", "large"]}
+            onlyMatch={["extra-small", "medium", "large"]}
             disableDynamicMediaQueries
           >
             <Media at="extra-small">
@@ -304,7 +308,7 @@ describe("Media", () => {
         mockCurrentDynamicBreakpoint("large")
 
         const query = renderer.create(
-          <MediaContextProvider onlyRenderAt={["small", "medium"]}>
+          <MediaContextProvider onlyMatch={["small", "medium"]}>
             <Media at="extra-small">
               <span className="extra-small" />
             </Media>
@@ -350,12 +354,10 @@ describe("Media", () => {
 })
 
 function mockCurrentDynamicBreakpoint(at) {
-  const breakpoints = new Breakpoints(config.breakpoints)
-
   window.matchMedia = jest.fn(mediaQuery => {
-    const key = Object.entries(breakpoints.getAtMediaQueries()).find(
-      ([_, query]) => mediaQuery === query
-    )[0]
+    const key = Object.entries(
+      mediaQueries.getDynamicResponsiveMediaQueries()
+    ).find(([_, query]) => mediaQuery === query)[0]
     // Return mock object that only matches the mocked breakpoint
     return {
       matches: key === at,
