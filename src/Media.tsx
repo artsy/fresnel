@@ -10,7 +10,10 @@ import { intersection, propKey, createClassName } from "./Utils"
  * component usage, so it can be used to apply to another element instead of the
  * default `div.
  */
-export type RenderProp = ((className: string) => React.ReactNode)
+export type RenderProp = ((
+  className: string,
+  renderChildren: boolean
+) => React.ReactNode)
 
 // TODO: All of these props should be mutually exclusive. Using a union should
 //       probably be made possible by https://github.com/Microsoft/TypeScript/pull/27408.
@@ -340,20 +343,21 @@ export function createMedia<
               className = createClassName(type, breakpoint)
             }
 
-            if (
-              onlyMatch &&
-              !mediaQueries.shouldRenderMediaQuery(
+            const renderChildren =
+              onlyMatch === undefined ||
+              mediaQueries.shouldRenderMediaQuery(
                 { ...breakpointProps, interaction },
                 onlyMatch
               )
-            ) {
-              return null
-            }
 
             if (props.children instanceof Function) {
-              return props.children(className)
+              return props.children(className, renderChildren)
             } else {
-              return <div className={className}>{props.children}</div>
+              return (
+                <div className={className}>
+                  {renderChildren ? props.children : null}
+                </div>
+              )
             }
           }}
         </MediaContext.Consumer>

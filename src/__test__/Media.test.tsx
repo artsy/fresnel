@@ -168,6 +168,30 @@ describe("Media", () => {
         media: "(max-width:767px)",
       })
     })
+
+    it("yields wether or not the element’s children should be rendered", () => {
+      const query = renderer.create(
+        <MediaContextProvider onlyMatch={["extra-small", "small"]}>
+          <Media at="extra-small">
+            {(_, renderChildren) => (
+              <span>{renderChildren && "extra-small"}</span>
+            )}
+          </Media>
+          <Media at="small">
+            {(_, renderChildren) => <span>{renderChildren && "small"}</span>}
+          </Media>
+          <Media at="medium">
+            {(_, renderChildren) => <span>{renderChildren && "medium"}</span>}
+          </Media>
+        </MediaContextProvider>
+      )
+      expect(
+        query.root
+          .findAllByType("span")
+          .map(div => div.props.children)
+          .filter(Boolean)
+      ).toEqual(["extra-small", "small"])
+    })
   })
 
   describe("with a context", () => {
@@ -180,7 +204,10 @@ describe("Media", () => {
         </MediaContextProvider>
       )
       expect(
-        query.root.findAllByType("div").map(div => div.props.children)
+        query.root
+          .findAllByType("div")
+          .map(div => div.props.children)
+          .filter(Boolean)
       ).toEqual(["extra-small", "small"])
     })
 
@@ -193,7 +220,10 @@ describe("Media", () => {
         </MediaContextProvider>
       )
       expect(
-        query.root.findAllByType("div").map(div => div.props.children)
+        query.root
+          .findAllByType("div")
+          .map(div => div.props.children)
+          .filter(Boolean)
       ).toEqual(["small", "medium"])
     })
 
@@ -206,7 +236,10 @@ describe("Media", () => {
         </MediaContextProvider>
       )
       expect(
-        query.root.findAllByType("div").map(div => div.props.children)
+        query.root
+          .findAllByType("div")
+          .map(div => div.props.children)
+          .filter(Boolean)
       ).toEqual(["small", "medium"])
     })
 
@@ -219,7 +252,10 @@ describe("Media", () => {
         </MediaContextProvider>
       )
       expect(
-        query.root.findAllByType("div").map(div => div.props.children)
+        query.root
+          .findAllByType("div")
+          .map(div => div.props.children)
+          .filter(Boolean)
       ).toEqual(["small", "medium"])
     })
 
@@ -233,7 +269,10 @@ describe("Media", () => {
         </MediaContextProvider>
       )
       expect(
-        query.root.findAllByType("div").map(div => div.props.children)
+        query.root
+          .findAllByType("div")
+          .map(div => div.props.children)
+          .filter(Boolean)
       ).toEqual(["small - large"])
     })
 
@@ -245,7 +284,10 @@ describe("Media", () => {
         </MediaContextProvider>
       )
       expect(
-        query.root.findAllByType("div").map(div => div.props.children)
+        query.root
+          .findAllByType("div")
+          .map(div => div.props.children)
+          .filter(Boolean)
       ).toEqual(["hover"])
     })
 
