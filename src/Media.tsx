@@ -6,9 +6,10 @@ import { MediaQueries } from "./MediaQueries"
 import { intersection, propKey, createClassName } from "./Utils"
 
 /**
- * A render prop that can be specified to retrieve the class name of the `Media`
- * component usage, so it can be used to apply to another element instead of the
- * default `div.
+ * A render prop that can be used to render a different container element than
+ * the default `div`.
+ *
+ * @see {@link MediaProps.children}.
  */
 export type RenderProp = ((
   className: string,
@@ -136,7 +137,7 @@ export interface MediaProps<B, I> extends MediaBreakpointProps<B> {
 
      ```tsx
      // With interactions defined like these
-     { hover: negate => `(hover: ${negate ? "hover" : "none"})` }
+     { hover: "(hover: hover)" }
 
      // Matches an input device that is capable of hovering
      <Media interaction="hover">ohai</Media>
@@ -145,37 +146,27 @@ export interface MediaProps<B, I> extends MediaBreakpointProps<B> {
   interaction?: I
 
   /**
-   * Either typical React nodes, in which case they will be wrapped in a `div`
-   * element that using styled-components has had the media query applied.
+   * The component(s) that should conditionally be shown, depending on the media
+   * query matching.
    *
-   * In case a different element is preferred or styling for both the matching
-   * and not matching states should be added, a render prop can be provided.
+   * In case a different element is preferred, a render prop can be provided
+   * that receives the class-name it should use to have the media query styling
+   * applied.
    *
-   * However, when doing this be sure to not create the styled component inline!
-   * Doing so will trigger re-renders of its children on each render pass.
-   * Instead define it once outside of your component’s render implementation
-   * and pass the styling in as a prop:
+   * Additionally, the render prop receives a boolean that indicates wether or
+   * not its children should be rendered, which will be `false` if the media
+   * query is not included in the `onlyMatch` list.
+   * (@see {@link MediaContextProviderProps.onlyMatch} for details)
    *
    * @example
    *
      ```tsx
-     const Container = styled.span<{ responsiveStyle: InterpolationValue[] }>`
-       ${props => props.responsiveStyle};
-       // Regular component styling
-       // ...
-     `
-
      const Component = () => (
        <Media greaterThan="xs">
-         {generatedStyle => (
-           <Container
-             responsiveStyle={generatedStyle(css`
-               // Optional styling that is applied to the matching state
-               font-family: "Comic Sans MS";
-             `)}
-           >
-             ohai
-           </Container>
+         {(className, renderChildren) => (
+           <span className={className}>
+             {renderChildren && "ohai"}
+           </span>
          )}
        </Media>
      )
@@ -187,15 +178,6 @@ export interface MediaProps<B, I> extends MediaBreakpointProps<B> {
 
 export interface MediaContextProviderProps<M> {
   /**
-   * Disables usage of browser MediaQuery API to only render at the current
-   * breakpoint.
-   *
-   * Disabling this means React components for all breakpoints will mount and
-   * shown/hidden only based on pure CSS media queries. Use this with caution.
-   */
-  disableDynamicMediaQueries?: boolean
-
-  /**
    * This list of breakpoints and interactions can be used to limit the rendered
    * output to these.
    *
@@ -204,11 +186,21 @@ export interface MediaContextProviderProps<M> {
    * rendered byte size.
    */
   onlyMatch?: M[]
+
+  /**
+   * Disables usage of browser MediaQuery API to only render at the current
+   * breakpoint.
+   *
+   * Use this with caution, as disabling this means React components for all
+   * breakpoints will be mounted client-side and all associated life-cycle hooks
+   * will be triggered, which could lead to unintended side-effects.
+   */
+  disableDynamicMediaQueries?: boolean
 }
 
 /**
- * This is used to generate a Media component and its context provider based on
- * your application’s breakpoints and interactions.
+ * This is used to generate a Media component, its context provider, and CSS
+ * rules based on your application’s breakpoints and interactions.
  *
  * @example
  *
@@ -228,6 +220,7 @@ export interface MediaContextProviderProps<M> {
 
    export const Media = MyAppMedia.Media
    export const MediaContextProvider = MyAppMedia.MediaContextProvider
+   export const MediaStyle = MyAppMedia.MediaStyle
    ```
  *
  */
@@ -294,7 +287,7 @@ export function createMedia<
   }
 
   // TODO: Ensure the component does not re-render if the instance’s query still
-  //       matches a new `renderOnlyAt` value.
+  //       matches a new `onlyMatch` value.
   const Media = class extends React.Component<MediaProps<B, I>> {
     constructor(props) {
       super(props)
