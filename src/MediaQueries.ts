@@ -1,5 +1,6 @@
 import { Breakpoints } from "./Breakpoints"
-import { createClassName, createStyleRule, intersection } from "./Utils"
+import { Interactions } from "./Interactions"
+import { intersection } from "./Utils"
 import { MediaBreakpointProps } from "./Media"
 
 /**
@@ -7,42 +8,47 @@ import { MediaBreakpointProps } from "./Media"
  * needed by the Media component. The data is generated on initialization so no
  * further runtime work is necessary.
  */
-export class MediaQueries extends Breakpoints {
+export class MediaQueries {
   static validKeys() {
-    return [...super.validKeys(), "interaction"]
+    return [...Breakpoints.validKeys(), ...Interactions.validKeys()]
   }
 
-  private _interactions: { [key: string]: string }
+  private _breakpoints: Breakpoints
+  private _interactions: Interactions
 
   constructor(
     breakpoints: { [key: string]: number },
     interactions: { [name: string]: string }
   ) {
-    super(breakpoints)
-    this._interactions = interactions
+    this._breakpoints = new Breakpoints(breakpoints)
+    this._interactions = new Interactions(interactions)
+  }
+
+  public getLargestBreakpoint() {
+    return this._breakpoints.getLargestBreakpoint()
   }
 
   public toStyle() {
     return [
-      ...super.toStyle(),
-      ...Object.entries(this._interactions).reduce((acc, [name, query]) => {
-        return [
-          ...acc,
-          createStyleRule(createClassName("interaction", name), query),
-        ]
-      }, []),
-    ]
+      // Don’t add any size to the layout
+      ".rrm-container{margin:0;padding:0;}",
+      ...this._breakpoints.toRuleSets(),
+      ...this._interactions.toRuleSets(),
+    ].join("\n")
   }
 
   public getMediaQueryTypes() {
-    return [...super.getMediaQueryTypes(), ...Object.keys(this._interactions)]
+    return [
+      ...this._breakpoints.getMediaQueryTypes(),
+      ...this._interactions.getMediaQueryTypes(),
+    ]
   }
 
   public getDynamicResponsiveMediaQueries() {
-    return Object.entries(this._interactions).reduce(
-      (acc, [name, query]) => ({ ...acc, [name]: query }),
-      super.getDynamicResponsiveMediaQueries()
-    )
+    return {
+      ...this._breakpoints.getDynamicResponsiveMediaQueries(),
+      ...this._interactions.getDynamicResponsiveMediaQueries(),
+    }
   }
 
   public shouldRenderMediaQuery(
@@ -51,12 +57,16 @@ export class MediaQueries extends Breakpoints {
   ): boolean {
     const { interaction, ...breakpointProps } = mediaQueryProps
     if (interaction) {
-      return !!(onlyMatch && onlyMatch.includes(interaction))
+      return this._interactions.shouldRenderMediaQuery(interaction, onlyMatch)
     }
+    // Remove any interaction possibilities from the list.
     const onlyMatchBreakpoints = intersection(
       onlyMatch,
-      super.getMediaQueryTypes()
+      this._breakpoints.getMediaQueryTypes()
     )
-    return super.shouldRenderMediaQuery(breakpointProps, onlyMatchBreakpoints)
+    return this._breakpoints.shouldRenderMediaQuery(
+      breakpointProps,
+      onlyMatchBreakpoints
+    )
   }
 }

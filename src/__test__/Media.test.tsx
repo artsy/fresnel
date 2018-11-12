@@ -14,7 +14,7 @@ const config = {
     large: 1120,
   },
   interactions: {
-    hover: `(hover:hover)`,
+    hover: `not all and (hover:hover)`,
   },
 }
 
@@ -59,15 +59,25 @@ describe("Media", () => {
     })
   })
 
+  describe("concerning styling", () => {
+    it("doesn’t add any size to the layout", () => {
+      const query = renderer
+        .create(<Media lessThan="small">ohai</Media>)
+        .toJSON()
+      expect(query.type).toEqual("div")
+      expect(query).toHaveStyleRule("margin", "0")
+      expect(query).toHaveStyleRule("padding", "0")
+    })
+  })
+
   describe("concerning breakpoints", () => {
     it("creates a container that will only display when the page size is less than the specified breakpoint", () => {
       const query = renderer
         .create(<Media lessThan="small">ohai</Media>)
         .toJSON()
       expect(query.type).toEqual("div")
-      expect(query).toHaveStyleRule("display", "none")
-      expect(query).toHaveStyleRule("display", "contents", {
-        media: "(max-width:767px)",
+      expect(query).toHaveStyleRule("display", "none", {
+        media: "not all and (max-width:767px)",
       })
     })
 
@@ -76,9 +86,8 @@ describe("Media", () => {
         .create(<Media greaterThan="medium">ohai</Media>)
         .toJSON()
       expect(query.type).toEqual("div")
-      expect(query).toHaveStyleRule("display", "none")
-      expect(query).toHaveStyleRule("display", "contents", {
-        media: "(min-width:1120px)",
+      expect(query).toHaveStyleRule("display", "none", {
+        media: "not all and (min-width:1120px)",
       })
     })
 
@@ -87,9 +96,8 @@ describe("Media", () => {
         .create(<Media greaterThanOrEqual="medium">ohai</Media>)
         .toJSON()
       expect(query.type).toEqual("div")
-      expect(query).toHaveStyleRule("display", "none")
-      expect(query).toHaveStyleRule("display", "contents", {
-        media: "(min-width:1024px)",
+      expect(query).toHaveStyleRule("display", "none", {
+        media: "not all and (min-width:1024px)",
       })
     })
 
@@ -98,9 +106,8 @@ describe("Media", () => {
         .create(<Media between={["small", "large"]}>ohai</Media>)
         .toJSON()
       expect(query.type).toEqual("div")
-      expect(query).toHaveStyleRule("display", "none")
-      expect(query).toHaveStyleRule("display", "contents", {
-        media: "(min-width:768px) and (max-width:1119px)",
+      expect(query).toHaveStyleRule("display", "none", {
+        media: "not all and (min-width:768px) and (max-width:1119px)",
       })
     })
 
@@ -146,9 +153,8 @@ describe("Media", () => {
         .create(<Media interaction="hover">ohai</Media>)
         .toJSON()
       expect(query.type).toEqual("div")
-      expect(query).toHaveStyleRule("display", "none")
-      expect(query).toHaveStyleRule("display", "contents", {
-        media: "(hover:hover)",
+      expect(query).toHaveStyleRule("display", "none", {
+        media: "not all and (hover:hover)",
       })
     })
   })
@@ -163,9 +169,8 @@ describe("Media", () => {
         )
         .toJSON()
       expect(query.type).toEqual("span")
-      expect(query).toHaveStyleRule("display", "none")
-      expect(query).toHaveStyleRule("display", "contents", {
-        media: "(max-width:767px)",
+      expect(query).toHaveStyleRule("display", "none", {
+        media: "not all and (max-width:767px)",
       })
     })
 
