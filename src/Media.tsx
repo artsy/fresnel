@@ -202,6 +202,10 @@ export interface MediaContextProviderProps<M> {
  * This is used to generate a Media component, its context provider, and CSS
  * rules based on your application’s breakpoints and interactions.
  *
+ * Note that the interaction queries are entirely up to you to define and they
+ * should be written in such a way that they match when you want the element to
+ * be hidden.
+ *
  * @example
  *
    ```tsx
@@ -214,7 +218,7 @@ export interface MediaContextProviderProps<M> {
        xl: 1192,
      },
      interactions: {
-       hover: negate => `(hover: ${negate ? "hover" : "none"})`
+       hover: `not all and (hover:hover)`
      },
    })
 
@@ -305,8 +309,8 @@ export function createMedia<
               className = createClassName("interaction", props.interaction)
             } else {
               if (props.at) {
-                const lastBreakpoint = mediaQueries.getLastBreakpoint()
-                if (props.at === lastBreakpoint) {
+                const largestBreakpoint = mediaQueries.getLargestBreakpoint()
+                if (props.at === largestBreakpoint) {
                   // TODO: We should look into making React’s __DEV__ available
                   //       and have webpack completely compile these away.
                   let ownerName = null
@@ -320,9 +324,10 @@ export function createMedia<
 
                   console.warn(
                     "[@artsy/react-responsive-media] " +
-                      "`at` is being used with the largest breakpoint. Consider " +
-                      `using <Media greaterThanOrEqual="${lastBreakpoint}"> to ` +
-                      `account for dimensions outside of this range.${
+                      "`at` is being used with the largest breakpoint. " +
+                      "Consider using `<Media greaterThanOrEqual=" +
+                      `"${largestBreakpoint}">\` to account for future ` +
+                      `breakpoint definitions outside of this range.${
                         ownerName
                           ? ` It is being used in the ${ownerName} component.`
                           : ""
@@ -347,7 +352,7 @@ export function createMedia<
               return props.children(className, renderChildren)
             } else {
               return (
-                <div className={className}>
+                <div className={`rrm-container ${className}`}>
                   {renderChildren ? props.children : null}
                 </div>
               )
@@ -361,7 +366,7 @@ export function createMedia<
   return {
     Media,
     MediaContextProvider,
-    MediaStyle: mediaQueries.toStyle().join("\n"),
+    MediaStyle: mediaQueries.toStyle(),
   }
 }
 
@@ -376,11 +381,6 @@ function validateProps(props) {
   } else if (selectedProps.length > 1) {
     throw new Error(
       `Only 1 of ${selectedProps.join(", ")} is allowed at a time.`
-    )
-  }
-  if (props.hasOwnProperty("not") && !props.interaction) {
-    throw new Error(
-      "The `not` prop is only allowed in combination with the `interaction` prop."
     )
   }
 }

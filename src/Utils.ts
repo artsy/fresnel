@@ -20,10 +20,10 @@ export function intersection(
 
 /**
  * Generate a style rule for a given class name that will hide the element
- * unless the given query matches.
+ * when the given query matches.
  */
-export function createStyleRule(className: string, query: string) {
-  return `.${className}{display:none;}@media ${query}{.${className}{display:contents;}}`
+export function createRuleSet(className: string, query: string) {
+  return `@media ${query}{.${className}{display:none;}}`
 }
 
 /**
