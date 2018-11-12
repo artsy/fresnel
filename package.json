@@ -21,7 +21,8 @@
     "test": "yarn type-check && yarn lint && yarn jest",
     "type-check": "tsc --emitDeclarationOnly --pretty",
     "type-declarations": "tsc --emitDeclarationOnly",
-    "watch": "concurrently --raw --kill-others 'yarn compile -w' 'tsc --emitDeclarationOnly -w'"
+    "watch": "concurrently --raw --kill-others 'yarn compile -w' 'tsc --emitDeclarationOnly -w'",
+    "example": "babel-node --extensions '.js,.jsx,.ts,.tsx' example/server.tsx"
   },
   "repository": {
     "type": "git",
@@ -42,18 +43,25 @@
   "devDependencies": {
     "@babel/cli": "^7.0.0",
     "@babel/core": "^7.0.0",
+    "@babel/node": "^7.0.0",
     "@babel/plugin-proposal-class-properties": "^7.1.0",
     "@babel/preset-env": "^7.0.0",
     "@babel/preset-react": "^7.0.0",
     "@babel/preset-typescript": "^7.0.0",
+    "@types/express": "^4.16.0",
     "@types/jest": "^23.1.0",
     "@types/node": "^10.3.0",
     "@types/react": "^16.4.13",
+    "@types/react-dom": "^16.0.9",
     "@types/react-test-renderer": "^16.0.3",
+    "@types/webpack-dev-server": "^3.1.1",
     "babel-core": "^7.0.0-bridge.0",
     "babel-jest": "^23.0.1",
+    "babel-loader": "^8.0.4",
+    "babel-preset-env": "^1.7.0",
     "concurrently": "^3.5.1",
     "conventional-changelog-ember": "^2.0.0",
+    "express": "^4.16.4",
     "husky": "^0.14.3",
     "jest": "^23.1.0",
     "jest-styled-components": "^6.2.2",
@@ -69,7 +77,9 @@
     "tslint-config-prettier": "^1.13.0",
     "tslint-react": "^3.6.0",
     "typescript": "^2.9.0",
-    "typescript-styled-plugin": "^0.6.3"
+    "typescript-styled-plugin": "^0.6.3",
+    "webpack": "^4.25.1",
+    "webpack-dev-server": "^3.1.10"
   },
   "lint-staged": {
     "*.@(ts|tsx)": [
