@@ -412,7 +412,7 @@ adhere to this convention will not trigger an NPM release.
 </details>
 
 [ci]: https://circleci.com/gh/artsy/react-responsive-media
-[ci-icon]: https://circleci.com/gh/artsy/responsive.svg?style=shield
+[ci-icon]: https://circleci.com/gh/artsy/react-responsive-media.svg?style=shield
 [npm]: https://www.npmjs.com/package/@artsy/react-responsive-media
 [npm-icon]: https://badge.fury.io/js/%40artsy%2Fresponsive.svg
 [react-responsive]: https://github.com/contra/react-responsive
@@ -422,4 +422,4 @@ adhere to this convention will not trigger an NPM release.
 [semantic-release]: https://github.com/semantic-release/semantic-release
 [release-commit-message-format]: https://github.com/semantic-release/semantic-release#commit-message-format
 [ember-release-format]: https://github.com/conventional-changelog/conventional-changelog/blob/master/packages/conventional-changelog-ember/readme.md
-[release-tags]: https://github.com/artsy/responsive/blob/master/package.json#L10
+[release-tags]: https://github.com/artsy/react-responsive-media/blob/master/package.json
