@@ -232,11 +232,16 @@ export function createMedia<
   C extends {
     breakpoints: { [key: string]: number }
     interactions: { [key: string]: string }
-  }
->(config: C) {
-  type B = keyof C["breakpoints"]
-  type I = keyof C["interactions"]
-
+  },
+  B extends keyof C["breakpoints"],
+  I extends keyof C["interactions"]
+>(
+  config: C
+): {
+  Media: React.ComponentType<MediaProps<B, I>>
+  MediaContextProvider: React.ComponentType<MediaContextProviderProps<B | I>>
+  MediaStyle: () => string
+} {
   const mediaQueries = new MediaQueries(config.breakpoints, config.interactions)
 
   const DynamicResponsive = createResponsiveComponents()
@@ -366,7 +371,7 @@ export function createMedia<
   return {
     Media,
     MediaContextProvider,
-    MediaStyle: mediaQueries.toStyle(),
+    MediaStyle: mediaQueries.toStyle.bind(mediaQueries),
   }
 }
 

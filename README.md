@@ -50,7 +50,7 @@ const { MediaContextProvider, Media, MediaStyle } = createMedia({
 
 const App = () => (
   <>
-    <Style>{MediaStyle}</Style>
+    <Style>{MediaStyle()}</Style>
     <MediaContextProvider>
       <Media at='sm'>
         <MobileApp />
@@ -200,8 +200,8 @@ const MyAppMediaComponents = createMedia({
 As you can see, breakpoints are defined by their _start_ offset, where the first
 one is expected to start at 0.
 
-Besides the `Media` and `MediaContextProvider` components, a `MediaStyle` string
-is returned which holds the CSS styling for all possible media queries that the
+Besides the `Media` and `MediaContextProvider` components, a `MediaStyle`
+function that produces the CSS styling for all possible media queries that the
 `Media` instance can make use of. Be sure to insert this with a `<style>`
 element into your document’s `<head>` element.
 
@@ -212,7 +212,7 @@ import { Home } from "./Home"
 
 const App = () => (
   <>
-    <Style>{MediaStyle}</Style>
+    <Style>{MediaStyle()}</Style>
     <MediaContextProvider>
       <Home />
     </MediaContextProvider>
