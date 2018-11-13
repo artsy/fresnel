@@ -24,7 +24,7 @@ const mediaQueries = new MediaQueries(config.breakpoints, config.interactions)
 describe("Media", () => {
   beforeEach(() => {
     injectGlobal`
-      ${MediaStyle}
+      ${MediaStyle()}
     `
   })
 

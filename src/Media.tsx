@@ -366,7 +366,7 @@ export function createMedia<
   return {
     Media,
     MediaContextProvider,
-    MediaStyle: mediaQueries.toStyle(),
+    MediaStyle: mediaQueries.toStyle.bind(mediaQueries),
   }
 }
 
