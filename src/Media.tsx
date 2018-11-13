@@ -155,7 +155,9 @@ export interface MediaProps<B, I> extends MediaBreakpointProps<B> {
    *
    * Additionally, the render prop receives a boolean that indicates wether or
    * not its children should be rendered, which will be `false` if the media
-   * query is not included in the `onlyMatch` list.
+   * query is not included in the `onlyMatch` list. Use this flag if your
+   * component’s children may be expensive to render and you want to avoid any
+   * unnecessary work.
    * (@see {@link MediaContextProviderProps.onlyMatch} for details)
    *
    * @example

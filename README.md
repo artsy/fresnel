@@ -66,6 +66,18 @@ const App = () => (
 )
 ```
 
+### Demo
+
+You can find an example in this repository and run it locally like so:
+
+```
+git clone https://github.com/artsy/react-responsive-media.git
+cd react-responsive-media
+yarn install
+yarn example
+open http://localhost:8080
+```
+
 ### Why not conditionally render?
 
 Other existing solutions take a conditionally rendered approach, such as
