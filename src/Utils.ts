@@ -23,7 +23,7 @@ export function intersection(
  * when the given query matches.
  */
 export function createRuleSet(className: string, query: string) {
-  return `@media ${query}{.${className}{display:none;}}`
+  return `@media ${query}{.${className}{display:none!important;}}`
 }
 
 /**
