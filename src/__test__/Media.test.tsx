@@ -76,7 +76,7 @@ describe("Media", () => {
         .create(<Media lessThan="small">ohai</Media>)
         .toJSON()
       expect(query.type).toEqual("div")
-      expect(query).toHaveStyleRule("display", "none", {
+      expect(query).toHaveStyleRule("display", "none!important", {
         media: "not all and (max-width:767px)",
       })
     })
@@ -86,7 +86,7 @@ describe("Media", () => {
         .create(<Media greaterThan="medium">ohai</Media>)
         .toJSON()
       expect(query.type).toEqual("div")
-      expect(query).toHaveStyleRule("display", "none", {
+      expect(query).toHaveStyleRule("display", "none!important", {
         media: "not all and (min-width:1120px)",
       })
     })
@@ -96,7 +96,7 @@ describe("Media", () => {
         .create(<Media greaterThanOrEqual="medium">ohai</Media>)
         .toJSON()
       expect(query.type).toEqual("div")
-      expect(query).toHaveStyleRule("display", "none", {
+      expect(query).toHaveStyleRule("display", "none!important", {
         media: "not all and (min-width:1024px)",
       })
     })
@@ -106,7 +106,7 @@ describe("Media", () => {
         .create(<Media between={["small", "large"]}>ohai</Media>)
         .toJSON()
       expect(query.type).toEqual("div")
-      expect(query).toHaveStyleRule("display", "none", {
+      expect(query).toHaveStyleRule("display", "none!important", {
         media: "not all and (min-width:768px) and (max-width:1119px)",
       })
     })
@@ -153,7 +153,7 @@ describe("Media", () => {
         .create(<Media interaction="hover">ohai</Media>)
         .toJSON()
       expect(query.type).toEqual("div")
-      expect(query).toHaveStyleRule("display", "none", {
+      expect(query).toHaveStyleRule("display", "none!important", {
         media: "not all and (hover:hover)",
       })
     })
@@ -169,7 +169,7 @@ describe("Media", () => {
         )
         .toJSON()
       expect(query.type).toEqual("span")
-      expect(query).toHaveStyleRule("display", "none", {
+      expect(query).toHaveStyleRule("display", "none!important", {
         media: "not all and (max-width:767px)",
       })
     })
