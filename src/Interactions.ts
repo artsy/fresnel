@@ -24,7 +24,7 @@ export class Interactions {
     }, [])
   }
 
-  public getMediaQueryTypes() {
+  public getInteractions() {
     return Object.keys(this._interactions)
   }
 

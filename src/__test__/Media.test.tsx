@@ -18,8 +18,44 @@ const config = {
   },
 }
 
-const { Media, MediaContextProvider, createMediaStyle } = createMedia(config)
+const {
+  Media,
+  MediaContextProvider,
+  createMediaStyle,
+  SortedBreakpoints,
+  findBreakpointsForWidth,
+} = createMedia(config)
+
 const mediaQueries = new MediaQueries(config.breakpoints, config.interactions)
+
+describe("utilities", () => {
+  it("returns a list of breakpoints sorted from small to large", () => {
+    expect(SortedBreakpoints).toEqual([
+      "extra-small",
+      "small",
+      "medium",
+      "large",
+    ])
+  })
+
+  it("returns a list of breakpoints that support the given width", () => {
+    expect(findBreakpointsForWidth(-42)).toEqual([])
+    expect(findBreakpointsForWidth(42)).toEqual(["extra-small"])
+    expect(findBreakpointsForWidth(767)).toEqual(["extra-small"])
+    expect(findBreakpointsForWidth(768)).toEqual(["extra-small", "small"])
+    expect(findBreakpointsForWidth(1042)).toEqual([
+      "extra-small",
+      "small",
+      "medium",
+    ])
+    expect(findBreakpointsForWidth(9999)).toEqual([
+      "extra-small",
+      "small",
+      "medium",
+      "large",
+    ])
+  })
+})
 
 describe("Media", () => {
   beforeEach(() => {

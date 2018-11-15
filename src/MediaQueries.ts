@@ -24,8 +24,16 @@ export class MediaQueries {
     this._interactions = new Interactions(interactions)
   }
 
+  public getSortedBreakpoints() {
+    return this._breakpoints.getSortedBreakpoints()
+  }
+
   public getLargestBreakpoint() {
     return this._breakpoints.getLargestBreakpoint()
+  }
+
+  public findBreakpointsForWidth(width: number) {
+    return this._breakpoints.findBreakpointsForWidth(width)
   }
 
   public toStyle() {
@@ -39,8 +47,8 @@ export class MediaQueries {
 
   public getMediaQueryTypes() {
     return [
-      ...this._breakpoints.getMediaQueryTypes(),
-      ...this._interactions.getMediaQueryTypes(),
+      ...this._breakpoints.getSortedBreakpoints(),
+      ...this._interactions.getInteractions(),
     ]
   }
 
@@ -62,7 +70,7 @@ export class MediaQueries {
     // Remove any interaction possibilities from the list.
     const onlyMatchBreakpoints = intersection(
       onlyMatch,
-      this._breakpoints.getMediaQueryTypes()
+      this._breakpoints.getSortedBreakpoints()
     )
     return this._breakpoints.shouldRenderMediaQuery(
       breakpointProps,

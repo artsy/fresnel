@@ -243,6 +243,8 @@ export function createMedia<
   Media: React.ComponentType<MediaProps<B, I>>
   MediaContextProvider: React.ComponentType<MediaContextProviderProps<B | I>>
   createMediaStyle: () => string
+  SortedBreakpoints: B[]
+  findBreakpointsForWidth: (width: number) => B[]
 } {
   const mediaQueries = new MediaQueries(config.breakpoints, config.interactions)
 
@@ -374,6 +376,10 @@ export function createMedia<
     Media,
     MediaContextProvider,
     createMediaStyle: mediaQueries.toStyle.bind(mediaQueries),
+    SortedBreakpoints: [...mediaQueries.getSortedBreakpoints()] as B[],
+    findBreakpointsForWidth: mediaQueries.findBreakpointsForWidth.bind(
+      mediaQueries
+    ),
   }
 }
 
