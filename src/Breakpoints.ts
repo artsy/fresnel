@@ -68,7 +68,7 @@ export class Breakpoints {
     }
   }
 
-  public getMediaQueryTypes() {
+  public getSortedBreakpoints() {
     return this._sortedBreakpoints
   }
 
@@ -81,6 +81,12 @@ export class Breakpoints {
 
   public getLargestBreakpoint() {
     return this._sortedBreakpoints[this._sortedBreakpoints.length - 1]
+  }
+
+  public findBreakpointsForWidth(width: number) {
+    return this._sortedBreakpoints.filter(
+      breakpoint => width >= this._breakpoints[breakpoint]
+    )
   }
 
   public toRuleSets() {
