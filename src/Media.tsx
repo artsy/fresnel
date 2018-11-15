@@ -200,6 +200,55 @@ export interface MediaContextProviderProps<M> {
   disableDynamicMediaQueries?: boolean
 }
 
+export interface CreateMediaConfig {
+  /**
+   * The breakpoint definitions for your application. Width definitions should
+   * start at 0.
+   *
+   * @see {@link createMedia}
+   */
+  breakpoints: { [key: string]: number }
+
+  /**
+   * The interaction definitions for your application.
+   */
+  interactions: { [key: string]: string }
+}
+
+export interface CreateMediaResults<B, I> {
+  /**
+   * The React component that you use throughout your application.
+   *
+   * @see {@link MediaBreakpointProps}
+   */
+  Media: React.ComponentType<MediaProps<B, I>>
+
+  /**
+   * The React Context provider component that you use to constrain rendering of
+   * breakpoints to a set list and to enable client-side dynamic constraining.
+   *
+   * @see {@link MediaContextProviderProps}
+   */
+  MediaContextProvider: React.ComponentType<MediaContextProviderProps<B | I>>
+
+  /**
+   * Generates a set of CSS rules that you should include in your application’s
+   * styling to enable the hiding behaviour of your `Media` component uses.
+   */
+  createMediaStyle: () => string
+
+  /**
+   * A list of your application’s breakpoints sorted from small to large.
+   */
+  SortedBreakpoints: B[]
+
+  /**
+   * Creates a list of your application’s breakpoints that support the given
+   * width.
+   */
+  findBreakpointsForWidth: (width: number) => B[]
+}
+
 /**
  * This is used to generate a Media component, its context provider, and CSS
  * rules based on your application’s breakpoints and interactions.
@@ -231,21 +280,10 @@ export interface MediaContextProviderProps<M> {
  *
  */
 export function createMedia<
-  C extends {
-    breakpoints: { [key: string]: number }
-    interactions: { [key: string]: string }
-  },
+  C extends CreateMediaConfig,
   B extends keyof C["breakpoints"],
   I extends keyof C["interactions"]
->(
-  config: C
-): {
-  Media: React.ComponentType<MediaProps<B, I>>
-  MediaContextProvider: React.ComponentType<MediaContextProviderProps<B | I>>
-  createMediaStyle: () => string
-  SortedBreakpoints: B[]
-  findBreakpointsForWidth: (width: number) => B[]
-} {
+>(config: C): CreateMediaResults<B, I> {
   const mediaQueries = new MediaQueries(config.breakpoints, config.interactions)
 
   const DynamicResponsive = createResponsiveComponents()
