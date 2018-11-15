@@ -18,13 +18,13 @@ const config = {
   },
 }
 
-const { Media, MediaContextProvider, MediaStyle } = createMedia(config)
+const { Media, MediaContextProvider, createMediaStyle } = createMedia(config)
 const mediaQueries = new MediaQueries(config.breakpoints, config.interactions)
 
 describe("Media", () => {
   beforeEach(() => {
     injectGlobal`
-      ${MediaStyle()}
+      ${createMediaStyle()}
     `
   })
 

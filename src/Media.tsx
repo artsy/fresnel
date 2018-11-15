@@ -226,7 +226,7 @@ export interface MediaContextProviderProps<M> {
 
    export const Media = MyAppMedia.Media
    export const MediaContextProvider = MyAppMedia.MediaContextProvider
-   export const MediaStyle = MyAppMedia.MediaStyle
+   export const createMediaStyle = MyAppMedia.createMediaStyle
    ```
  *
  */
@@ -242,7 +242,7 @@ export function createMedia<
 ): {
   Media: React.ComponentType<MediaProps<B, I>>
   MediaContextProvider: React.ComponentType<MediaContextProviderProps<B | I>>
-  MediaStyle: () => string
+  createMediaStyle: () => string
 } {
   const mediaQueries = new MediaQueries(config.breakpoints, config.interactions)
 
@@ -373,7 +373,7 @@ export function createMedia<
   return {
     Media,
     MediaContextProvider,
-    MediaStyle: mediaQueries.toStyle.bind(mediaQueries),
+    createMediaStyle: mediaQueries.toStyle.bind(mediaQueries),
   }
 }
 
