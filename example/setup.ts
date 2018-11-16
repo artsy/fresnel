@@ -16,6 +16,6 @@ const ExampleAppMedia = createMedia({
 
 export const Media = ExampleAppMedia.Media
 export const MediaContextProvider = ExampleAppMedia.MediaContextProvider
-export const MediaStyle = ExampleAppMedia.MediaStyle
+export const createMediaStyle = ExampleAppMedia.createMediaStyle
 
 export const SSRStyleID = "ssr-rrm-style"

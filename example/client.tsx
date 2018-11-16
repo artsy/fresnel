@@ -1,7 +1,7 @@
 import React from "react"
 import ReactDOM from "react-dom"
 import { App } from "./app"
-import { MediaStyle, SSRStyleID } from "./setup"
+import { createMediaStyle, SSRStyleID } from "./setup"
 
 if (document.getElementById(SSRStyleID)) {
   // rehydration
@@ -11,7 +11,7 @@ if (document.getElementById(SSRStyleID)) {
   const style = document.createElement("style")
   style.type = "text/css"
   style.id = SSRStyleID
-  style.innerText = MediaStyle()
+  style.innerText = createMediaStyle()
   document.getElementsByTagName("head")[0].appendChild(style)
   ReactDOM.render(<App />, document.getElementById("react-root"))
 }
