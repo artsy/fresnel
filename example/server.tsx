@@ -6,7 +6,7 @@ import express from "express"
 import ReactDOMServer from "react-dom/server"
 import React from "react"
 
-import { MediaStyle, SSRStyleID } from "./setup"
+import { createMediaStyle, SSRStyleID } from "./setup"
 import { App } from "./app"
 
 const app = express()
@@ -32,7 +32,7 @@ app.get("/ssr-only", (_req, res) => {
     <html>
       <head>
         <meta charset="UTF-8">
-        <style type="text/css">${MediaStyle()}</style>
+        <style type="text/css">${createMediaStyle()}</style>
       </head>
       <body>
         <div id="react-root">
@@ -49,7 +49,7 @@ app.get("/rehydration", (_req, res) => {
     <html>
       <head>
         <meta charset="UTF-8">
-        <style type="text/css" id="${SSRStyleID}">${MediaStyle()}</style>
+        <style type="text/css" id="${SSRStyleID}">${createMediaStyle()}</style>
       </head>
       <body>
         <div id="loading-indicator">Loading…</div>

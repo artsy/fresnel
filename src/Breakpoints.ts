@@ -6,6 +6,8 @@ import { propKey, createRuleSet, createClassName } from "./Utils"
  */
 export type MediaBreakpointKey = keyof MediaBreakpointProps
 
+type ValueBreakpointPropsTuple<T, B> = [T, MediaBreakpointProps<B>]
+
 type Tuple = [string, string]
 
 function breakpointKey(breakpoint: string | Tuple) {
@@ -16,7 +18,7 @@ function breakpointKey(breakpoint: string | Tuple) {
  * Encapsulates all breakpoint data needed by the Media component. The data is
  * generated on initialization so no further runtime work is necessary.
  */
-export class Breakpoints {
+export class Breakpoints<B extends string> {
   static validKeys() {
     return ["at", "lessThan", "greaterThan", "greaterThanOrEqual", "between"]
   }
@@ -68,25 +70,25 @@ export class Breakpoints {
     }
   }
 
-  public getSortedBreakpoints() {
-    return this._sortedBreakpoints
+  public get sortedBreakpoints() {
+    return this._sortedBreakpoints as B[]
   }
 
-  public getDynamicResponsiveMediaQueries() {
+  public get dynamicResponsiveMediaQueries() {
     return Array.from(this._mediaQueries.at.entries()).reduce(
       (acc, [k, v]) => ({ ...acc, [k]: v }),
       {}
     )
   }
 
-  public getLargestBreakpoint() {
+  public get largestBreakpoint() {
     return this._sortedBreakpoints[this._sortedBreakpoints.length - 1]
   }
 
-  public findBreakpointsForWidth(width: number) {
+  public findBreakpointsForWidth = (width: number) => {
     return this._sortedBreakpoints.filter(
       breakpoint => width >= this._breakpoints[breakpoint]
-    )
+    ) as B[]
   }
 
   public toRuleSets() {
@@ -149,6 +151,38 @@ export class Breakpoints {
         )
       }
     }
+  }
+
+  public valuesWithBreakpointProps = <T>(
+    values: T[]
+  ): Array<ValueBreakpointPropsTuple<T, B>> => {
+    type ValueBreakpoints = [T, string[]]
+    const max = values.length
+    const valueBreakpoints: ValueBreakpoints[] = []
+    let lastTuple: ValueBreakpoints
+    this._sortedBreakpoints.forEach((breakpoint, i) => {
+      const value = values[i]
+      if (i < max && (!lastTuple || lastTuple[0] !== value)) {
+        lastTuple = [value, [breakpoint]]
+        valueBreakpoints.push(lastTuple)
+      } else {
+        lastTuple[1].push(breakpoint)
+      }
+    })
+
+    return valueBreakpoints.map(([value, breakpoints], i) => {
+      const props: MediaBreakpointProps<any> = {}
+      if (i === valueBreakpoints.length - 1) {
+        props.greaterThanOrEqual = breakpoints[0]
+      } else if (breakpoints.length === 1) {
+        props.at = breakpoints[0]
+      } else {
+        // TODO: This is less than ideal, would be good to have a `through`
+        //       prop, which unlike `between` is inclusive.
+        props.between = [breakpoints[0], valueBreakpoints[i + 1][1][0]]
+      }
+      return [value, props] as ValueBreakpointPropsTuple<T, B>
+    })
   }
 
   private _normalizeProps(

@@ -8,12 +8,12 @@ import { MediaBreakpointProps } from "./Media"
  * needed by the Media component. The data is generated on initialization so no
  * further runtime work is necessary.
  */
-export class MediaQueries {
+export class MediaQueries<B extends string> {
   static validKeys() {
     return [...Breakpoints.validKeys(), ...Interactions.validKeys()]
   }
 
-  private _breakpoints: Breakpoints
+  private _breakpoints: Breakpoints<B>
   private _interactions: Interactions
 
   constructor(
@@ -24,19 +24,11 @@ export class MediaQueries {
     this._interactions = new Interactions(interactions)
   }
 
-  public getSortedBreakpoints() {
-    return this._breakpoints.getSortedBreakpoints()
+  public get breakpoints() {
+    return this._breakpoints
   }
 
-  public getLargestBreakpoint() {
-    return this._breakpoints.getLargestBreakpoint()
-  }
-
-  public findBreakpointsForWidth(width: number) {
-    return this._breakpoints.findBreakpointsForWidth(width)
-  }
-
-  public toStyle() {
+  public toStyle = () => {
     return [
       // Don’t add any size to the layout
       ".rrm-container{margin:0;padding:0;}",
@@ -45,17 +37,17 @@ export class MediaQueries {
     ].join("\n")
   }
 
-  public getMediaQueryTypes() {
+  public get mediaQueryTypes() {
     return [
-      ...this._breakpoints.getSortedBreakpoints(),
-      ...this._interactions.getInteractions(),
+      ...this._breakpoints.sortedBreakpoints,
+      ...this._interactions.interactions,
     ]
   }
 
-  public getDynamicResponsiveMediaQueries() {
+  public get dynamicResponsiveMediaQueries() {
     return {
-      ...this._breakpoints.getDynamicResponsiveMediaQueries(),
-      ...this._interactions.getDynamicResponsiveMediaQueries(),
+      ...this._breakpoints.dynamicResponsiveMediaQueries,
+      ...this._interactions.dynamicResponsiveMediaQueries,
     }
   }
 
@@ -70,7 +62,7 @@ export class MediaQueries {
     // Remove any interaction possibilities from the list.
     const onlyMatchBreakpoints = intersection(
       onlyMatch,
-      this._breakpoints.getSortedBreakpoints()
+      this._breakpoints.sortedBreakpoints
     )
     return this._breakpoints.shouldRenderMediaQuery(
       breakpointProps,
