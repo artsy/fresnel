@@ -6,8 +6,9 @@ import express from "express"
 import ReactDOMServer from "react-dom/server"
 import React from "react"
 
-import { createMediaStyle, SSRStyleID } from "./setup"
+import { createMediaStyle, MediaContextProvider, SSRStyleID } from "./setup"
 import { App } from "./app"
+import { onlyMatchListForUserAgent } from "./onlyMatchListForUserAgent"
 
 const app = express()
 
@@ -26,7 +27,8 @@ app.get("/", (_req, res) => {
   `)
 })
 
-app.get("/ssr-only", (_req, res) => {
+app.get("/ssr-only", (req, res) => {
+  const onlyMatch = onlyMatchListForUserAgent(req.header("User-Agent"))
   res.send(`
     <!DOCTYPE html>
     <html>
@@ -36,14 +38,19 @@ app.get("/ssr-only", (_req, res) => {
       </head>
       <body>
         <div id="react-root">
-          ${ReactDOMServer.renderToString(<App />)}
+          ${ReactDOMServer.renderToString(
+            <MediaContextProvider onlyMatch={onlyMatch}>
+              <App />
+            </MediaContextProvider>
+          )}
         </div>
       </body>
     </html>
   `)
 })
 
-app.get("/rehydration", (_req, res) => {
+app.get("/rehydration", (req, res) => {
+  const onlyMatch = onlyMatchListForUserAgent(req.header("User-Agent"))
   res.send(`
     <!DOCTYPE html>
     <html>
@@ -53,7 +60,13 @@ app.get("/rehydration", (_req, res) => {
       </head>
       <body>
         <div id="loading-indicator">Loading…</div>
-        <div id="react-root">${ReactDOMServer.renderToString(<App />)}</div>
+        <div id="react-root">
+          ${ReactDOMServer.renderToString(
+            <MediaContextProvider onlyMatch={onlyMatch}>
+              <App />
+            </MediaContextProvider>
+          )}
+        </div>
         <script>
           // This is to show that the layout already looks good while still
           // loading the JS bundle.
