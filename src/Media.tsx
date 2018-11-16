@@ -235,7 +235,7 @@ export interface CreateMediaResults<B, I> {
    * Generates a set of CSS rules that you should include in your application’s
    * styling to enable the hiding behaviour of your `Media` component uses.
    */
-  createMediaStyle: () => string
+  createMediaStyle(): string
 
   /**
    * A list of your application’s breakpoints sorted from small to large.
@@ -246,7 +246,17 @@ export interface CreateMediaResults<B, I> {
    * Creates a list of your application’s breakpoints that support the given
    * width.
    */
-  findBreakpointsForWidth: (width: number) => B[]
+  findBreakpointsForWidth(width: number): B[]
+
+  /**
+   * Maps a list of values for various breakpoints to props that can be used
+   * with the `Media` component.
+   *
+   * The values map to corresponding indices in the sorted breakpoints array. If
+   * less values are specified than the number of breakpoints your application
+   * has, the last value will be applied to all subsequent breakpoints.
+   */
+  valuesWithBreakpointProps<T>(values: T[]): Array<[T, MediaBreakpointProps<B>]>
 }
 
 /**
@@ -284,7 +294,10 @@ export function createMedia<
   B extends keyof C["breakpoints"],
   I extends keyof C["interactions"]
 >(config: C): CreateMediaResults<B, I> {
-  const mediaQueries = new MediaQueries(config.breakpoints, config.interactions)
+  const mediaQueries = new MediaQueries<B>(
+    config.breakpoints,
+    config.interactions
+  )
 
   const DynamicResponsive = createResponsiveComponents()
 
@@ -310,9 +323,9 @@ export function createMedia<
     } else {
       return (
         <DynamicResponsive.Provider
-          mediaQueries={mediaQueries.getDynamicResponsiveMediaQueries()}
+          mediaQueries={mediaQueries.dynamicResponsiveMediaQueries}
           initialMatchingMediaQueries={intersection(
-            mediaQueries.getMediaQueryTypes(),
+            mediaQueries.mediaQueryTypes,
             onlyMatch
           )}
         >
@@ -356,7 +369,8 @@ export function createMedia<
               className = createClassName("interaction", props.interaction)
             } else {
               if (props.at) {
-                const largestBreakpoint = mediaQueries.getLargestBreakpoint()
+                const largestBreakpoint =
+                  mediaQueries.breakpoints.largestBreakpoint
                 if (props.at === largestBreakpoint) {
                   // TODO: We should look into making React’s __DEV__ available
                   //       and have webpack completely compile these away.
@@ -413,11 +427,11 @@ export function createMedia<
   return {
     Media,
     MediaContextProvider,
-    createMediaStyle: mediaQueries.toStyle.bind(mediaQueries),
-    SortedBreakpoints: [...mediaQueries.getSortedBreakpoints()] as B[],
-    findBreakpointsForWidth: mediaQueries.findBreakpointsForWidth.bind(
-      mediaQueries
-    ),
+    createMediaStyle: mediaQueries.toStyle,
+    SortedBreakpoints: [...mediaQueries.breakpoints.sortedBreakpoints],
+    findBreakpointsForWidth: mediaQueries.breakpoints.findBreakpointsForWidth,
+    valuesWithBreakpointProps:
+      mediaQueries.breakpoints.valuesWithBreakpointProps,
   }
 }
 

@@ -24,11 +24,11 @@ export class Interactions {
     }, [])
   }
 
-  public getInteractions() {
+  public get interactions() {
     return Object.keys(this._interactions)
   }
 
-  public getDynamicResponsiveMediaQueries() {
+  public get dynamicResponsiveMediaQueries() {
     return Object.entries(this._interactions).reduce(
       (acc, [name, query]) => ({ ...acc, [name]: query }),
       {}

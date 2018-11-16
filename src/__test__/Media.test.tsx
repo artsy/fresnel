@@ -24,6 +24,7 @@ const {
   createMediaStyle,
   SortedBreakpoints,
   findBreakpointsForWidth,
+  valuesWithBreakpointProps,
 } = createMedia(config)
 
 const mediaQueries = new MediaQueries(config.breakpoints, config.interactions)
@@ -53,6 +54,25 @@ describe("utilities", () => {
       "small",
       "medium",
       "large",
+    ])
+  })
+
+  it("maps a list of responsive values to breakpoint props", () => {
+    expect(valuesWithBreakpointProps([1])).toEqual([
+      [1, { greaterThanOrEqual: "extra-small" }],
+    ])
+    expect(valuesWithBreakpointProps([1, 2])).toEqual([
+      [1, { at: "extra-small" }],
+      [2, { greaterThanOrEqual: "small" }],
+    ])
+    expect(valuesWithBreakpointProps([1, 2, 2, 3])).toEqual([
+      [1, { at: "extra-small" }],
+      [2, { between: ["small", "large"] }],
+      [3, { greaterThanOrEqual: "large" }],
+    ])
+    expect(valuesWithBreakpointProps([2, 2, 2, 3])).toEqual([
+      [2, { between: ["extra-small", "large"] }],
+      [3, { greaterThanOrEqual: "large" }],
     ])
   })
 })
@@ -438,9 +458,9 @@ describe("Media", () => {
 
 function mockCurrentDynamicBreakpoint(at) {
   window.matchMedia = jest.fn(mediaQuery => {
-    const key = Object.entries(
-      mediaQueries.getDynamicResponsiveMediaQueries()
-    ).find(([_, query]) => mediaQuery === query)[0]
+    const key = Object.entries(mediaQueries.dynamicResponsiveMediaQueries).find(
+      ([_, query]) => mediaQuery === query
+    )[0]
     // Return mock object that only matches the mocked breakpoint
     return {
       matches: key === at,
