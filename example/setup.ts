@@ -17,5 +17,7 @@ const ExampleAppMedia = createMedia({
 export const Media = ExampleAppMedia.Media
 export const MediaContextProvider = ExampleAppMedia.MediaContextProvider
 export const createMediaStyle = ExampleAppMedia.createMediaStyle
+export const findBreakpointsForWidth = ExampleAppMedia.findBreakpointsForWidth
+export const SortedBreakpoints = ExampleAppMedia.SortedBreakpoints
 
 export const SSRStyleID = "ssr-rrm-style"
