@@ -85,10 +85,37 @@ export class Breakpoints<B extends string> {
     return this._sortedBreakpoints[this._sortedBreakpoints.length - 1]
   }
 
-  public findBreakpointsForWidth = (width: number) => {
-    return this._sortedBreakpoints.filter(
-      breakpoint => width >= this._breakpoints[breakpoint]
-    ) as B[]
+  public findBreakpointsForWidths = (
+    fromWidth: number,
+    throughWidth: number
+  ) => {
+    const fromBreakpoint = this.findBreakpointAtWidth(fromWidth)
+    if (!fromBreakpoint) {
+      return undefined
+    }
+    const throughBreakpoint = this.findBreakpointAtWidth(throughWidth)
+    if (!throughBreakpoint || fromBreakpoint === throughBreakpoint) {
+      return [fromBreakpoint] as B[]
+    } else {
+      return this._sortedBreakpoints.slice(
+        this._sortedBreakpoints.indexOf(fromBreakpoint),
+        this._sortedBreakpoints.indexOf(throughBreakpoint) + 1
+      ) as B[]
+    }
+  }
+
+  public findBreakpointAtWidth = (width: number) => {
+    return this._sortedBreakpoints.find((breakpoint, i) => {
+      const nextBreakpoint = this._sortedBreakpoints[i + 1]
+      if (nextBreakpoint) {
+        return (
+          width >= this._breakpoints[breakpoint] &&
+          width < this._breakpoints[nextBreakpoint]
+        )
+      } else {
+        return width >= this._breakpoints[breakpoint]
+      }
+    }) as B | undefined
   }
 
   public toRuleSets() {
