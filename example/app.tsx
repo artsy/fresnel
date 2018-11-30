@@ -34,6 +34,35 @@ const LargeStyle: CSSProperties = {
   backgroundColor: "red",
 }
 
+// From https://www.smashingmagazine.com/2013/07/simple-responsive-images-with-css-background-images/
+const Img: React.SFC<
+  { src: string; aspectRatio: number } & React.HTMLProps<HTMLSpanElement>
+> = ({ src, aspectRatio, style, ...props }) => (
+  <span
+    {...props}
+    style={{
+      width: "100%",
+      display: "inline-block",
+      fontSize: "0",
+      lineHeight: "0",
+      verticalAlign: "middle",
+      backgroundSize: "100%",
+      backgroundPosition: "50% 50%",
+      backgroundRepeat: "no-repeat",
+      backgroundImage: `url(${src})`,
+      ...style,
+    }}
+  >
+    <span
+      style={{
+        display: "block",
+        height: "0",
+        paddingTop: `${(aspectRatio * 100).toFixed(2)}%`,
+      }}
+    />
+  </span>
+)
+
 export const App: React.SFC = () => (
   <div>
     <div>
@@ -133,6 +162,30 @@ export const App: React.SFC = () => (
         >
           Oh well hello there, touch devices!
         </div>
+      </Media>
+    </div>
+    <div>
+      <h1>Example of not loading hidden images</h1>
+      <Media lessThan="md">
+        <Img
+          aspectRatio={1.261044176706827}
+          src="https://d32dm0rphc51dk.cloudfront.net/JAo7pAN1p63YwolybeZgOg/small.jpg"
+          style={{ width: "100px" }}
+        />
+      </Media>
+      <Media at="md">
+        <Img
+          aspectRatio={1.261044176706827}
+          src="https://d32dm0rphc51dk.cloudfront.net/JAo7pAN1p63YwolybeZgOg/medium.jpg"
+          style={{ width: "400px" }}
+        />
+      </Media>
+      <Media at="lg">
+        <Img
+          aspectRatio={1.261044176706827}
+          src="https://d32dm0rphc51dk.cloudfront.net/JAo7pAN1p63YwolybeZgOg/large.jpg"
+          style={{ width: "800px" }}
+        />
       </Media>
     </div>
   </div>
