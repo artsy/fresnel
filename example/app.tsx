@@ -35,7 +35,7 @@ const LargeStyle: CSSProperties = {
 }
 
 export const App: React.SFC = () => (
-  <div style={{ width: "400px" }}>
+  <div>
     <div>
       <h1>
         Default <code>&lt;div&gt;</code> container
