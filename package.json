@@ -41,6 +41,7 @@
     "react": "^16.3.0"
   },
   "devDependencies": {
+    "@artsy/detect-responsive-traits": "^0.0.1",
     "@babel/cli": "^7.0.0",
     "@babel/core": "^7.0.0",
     "@babel/node": "^7.0.0",
@@ -48,6 +49,7 @@
     "@babel/preset-env": "^7.0.0",
     "@babel/preset-react": "^7.0.0",
     "@babel/preset-typescript": "^7.0.0",
+    "@types/chalk": "^2.2.0",
     "@types/express": "^4.16.0",
     "@types/jest": "^23.1.0",
     "@types/node": "^10.3.0",
@@ -59,6 +61,7 @@
     "babel-jest": "^23.0.1",
     "babel-loader": "^8.0.4",
     "babel-preset-env": "^1.7.0",
+    "chalk": "^2.4.1",
     "concurrently": "^3.5.1",
     "conventional-changelog-ember": "^2.0.0",
     "express": "^4.16.4",

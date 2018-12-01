@@ -2,67 +2,85 @@ import Webpack from "webpack"
 import WebpackDevServer from "webpack-dev-server"
 import webpackConfig from "./webpack.config"
 import express from "express"
-
 import ReactDOMServer from "react-dom/server"
 import React from "react"
+import chalk from "chalk"
 
-import { createMediaStyle, MediaContextProvider, SSRStyleID } from "./setup"
+import { findDevice } from "@artsy/detect-responsive-traits"
+
+import {
+  createMediaStyle,
+  findBreakpointsForWidths,
+  findBreakpointAtWidth,
+  MediaContextProvider,
+  SortedBreakpoints,
+  SSRStyleID,
+} from "./setup"
 import { App } from "./app"
-import { onlyMatchListForUserAgent } from "./onlyMatchListForUserAgent"
 
 const app = express()
 
-app.get("/", (_req, res) => {
-  res.send(`
-    <!DOCTYPE html>
-    <html>
-      <body>
-        <ul>
-          <li><a href="/ssr-only">server-side rendering <em>only</em></a></li>
-          <li><a href="/client-only">client-side rendering <em>only</em></a></li>
-          <li><a href="/rehydration">server-side rendering <em>and</em> client-side rehydration</a></li>
-        </ul>
-      </body>
-    </html>
-  `)
-})
+/**
+ * Find the breakpoints and interactions that the server should render
+ */
+function onlyMatchListForUserAgent(userAgent: string): OnlyMatchList {
+  const device = findDevice(userAgent)
+  if (!device) {
+    log(userAgent)
+    return null
+  } else {
+    const supportsHover = device.touch ? "notHover" : "hover"
+    const onlyMatch: OnlyMatchList = device.resizable
+      ? [
+          supportsHover,
+          ...findBreakpointsForWidths(device.minWidth, device.maxWidth),
+        ]
+      : [
+          supportsHover,
+          findBreakpointAtWidth(device.minWidth),
+          findBreakpointAtWidth(device.maxWidth),
+        ]
+    log(userAgent, onlyMatch, device.description)
+    return onlyMatch
+  }
+}
 
+/**
+ * Demonstrate server-side _only_ rendering
+ */
 app.get("/ssr-only", (req, res) => {
-  const onlyMatch = onlyMatchListForUserAgent(req.header("User-Agent"))
-  res.send(`
-    <!DOCTYPE html>
-    <html>
-      <head>
-        <meta charset="UTF-8">
-        <style type="text/css">${createMediaStyle()}</style>
-      </head>
-      <body>
+  res.send(
+    template({
+      includeCSS: true,
+      body: `
         <div id="react-root">
           ${ReactDOMServer.renderToString(
-            <MediaContextProvider onlyMatch={onlyMatch}>
+            <MediaContextProvider
+              onlyMatch={onlyMatchListForUserAgent(req.header("User-Agent"))}
+            >
               <App />
             </MediaContextProvider>
           )}
         </div>
-      </body>
-    </html>
-  `)
+      `,
+    })
+  )
 })
 
+/**
+ * Demonstrate server-side rendering _with_ client-side JS rehydration
+ */
 app.get("/rehydration", (req, res) => {
-  const onlyMatch = onlyMatchListForUserAgent(req.header("User-Agent"))
-  res.send(`
-    <!DOCTYPE html>
-    <html>
-      <head>
-        <meta charset="UTF-8">
-        <style type="text/css" id="${SSRStyleID}">${createMediaStyle()}</style>
-      </head>
-      <body>
+  res.send(
+    template({
+      includeCSS: true,
+      body: `
         <div id="loading-indicator">Loading…</div>
         <div id="react-root">
           ${ReactDOMServer.renderToString(
-            <MediaContextProvider onlyMatch={onlyMatch}>
+            <MediaContextProvider
+              onlyMatch={onlyMatchListForUserAgent(req.header("User-Agent"))}
+            >
               <App />
             </MediaContextProvider>
           )}
@@ -77,19 +95,19 @@ app.get("/rehydration", (req, res) => {
             document.getElementById("loading-indicator").remove();
           }, 1000)
         </script>
-      </body>
-    </html>
-  `)
+      `,
+    })
+  )
 })
 
+/**
+ * Demonstrate client-side JS _only_ rendering
+ */
 app.get("/client-only", (_req, res) => {
-  res.send(`
-    <!DOCTYPE html>
-    <html>
-      <head>
-        <meta charset="UTF-8">
-      </head>
-      <body>
+  res.send(
+    template({
+      includeCSS: false,
+      body: `
         <div id="react-root">Loading…</div>
         <script>
           setTimeout(function () {
@@ -98,10 +116,59 @@ app.get("/client-only", (_req, res) => {
             document.getElementsByTagName("head")[0].appendChild(script);
           }, 1000)
         </script>
-      </body>
-    </html>
-  `)
+      `,
+    })
+  )
 })
+
+/**
+ * Misc things that are not of interest for demonstrating react-responsive-media
+ */
+
+// TODO: Simplify this hideous typing.
+type OnlyMatchList = Array<"hover" | "notHover" | (typeof SortedBreakpoints)[0]>
+
+app.get("/", (_req, res) => {
+  res.send(
+    template({
+      includeCSS: false,
+      body: `
+        <ul>
+          <li><a href="/ssr-only">server-side rendering <em>only</em></a></li>
+          <li><a href="/client-only">client-side rendering <em>only</em></a></li>
+          <li><a href="/rehydration">server-side rendering <em>and</em> client-side rehydration</a></li>
+        </ul>
+      `,
+    })
+  )
+})
+
+const template = ({ includeCSS, body }) => `
+  <!DOCTYPE html>
+  <html>
+    <head>
+      <meta charset="UTF-8">
+      <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5">
+      ${
+        includeCSS
+          ? `<style type="text/css" id="${SSRStyleID}">${createMediaStyle()}</style>`
+          : ""
+      }
+    </head>
+    <body>
+      ${body}
+    </body>
+  </html>
+`
+
+function log(userAgent: string, onlyMatch?: string[], device?: string) {
+  // tslint:disable-next-line:no-console
+  console.log(
+    `Render: ${chalk.green(onlyMatch ? onlyMatch.join(", ") : "ALL")}\n` +
+      `Device: ${device ? chalk.green(device) : chalk.red("n/a")}\n` +
+      `User-Agent: ${chalk.yellow(userAgent)}\n`
+  )
+}
 
 const compiler = Webpack(webpackConfig)
 const devServerOptions = Object.assign({}, webpackConfig.devServer, {

@@ -23,7 +23,8 @@ const {
   MediaContextProvider,
   createMediaStyle,
   SortedBreakpoints,
-  findBreakpointsForWidth,
+  findBreakpointAtWidth,
+  findBreakpointsForWidths,
   valuesWithBreakpointProps,
 } = createMedia(config)
 
@@ -39,18 +40,25 @@ describe("utilities", () => {
     ])
   })
 
-  it("returns a list of breakpoints that support the given width", () => {
-    expect(findBreakpointsForWidth(-42)).toEqual([])
-    expect(findBreakpointsForWidth(42)).toEqual(["extra-small"])
-    expect(findBreakpointsForWidth(767)).toEqual(["extra-small"])
-    expect(findBreakpointsForWidth(768)).toEqual(["extra-small", "small"])
-    expect(findBreakpointsForWidth(1042)).toEqual([
+  it("returns the breakpoint that supports the given width", () => {
+    expect(findBreakpointAtWidth(-42)).toEqual(undefined)
+    expect(findBreakpointAtWidth(42)).toEqual("extra-small")
+    expect(findBreakpointAtWidth(767)).toEqual("extra-small")
+    expect(findBreakpointAtWidth(768)).toEqual("small")
+    expect(findBreakpointAtWidth(1042)).toEqual("medium")
+    expect(findBreakpointAtWidth(9999)).toEqual("large")
+  })
+
+  it("returns the breakpoints from the first through the last given widths", () => {
+    expect(findBreakpointsForWidths(-42, -21)).toEqual(undefined)
+    expect(findBreakpointsForWidths(42, 767)).toEqual(["extra-small"])
+    expect(findBreakpointsForWidths(42, 768)).toEqual(["extra-small", "small"])
+    expect(findBreakpointsForWidths(42, 1042)).toEqual([
       "extra-small",
       "small",
       "medium",
     ])
-    expect(findBreakpointsForWidth(9999)).toEqual([
-      "extra-small",
+    expect(findBreakpointsForWidths(768, 9999)).toEqual([
       "small",
       "medium",
       "large",

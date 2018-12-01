@@ -244,9 +244,14 @@ export interface CreateMediaResults<B, I> {
 
   /**
    * Creates a list of your application’s breakpoints that support the given
-   * width.
+   * widths and everything in between.
    */
-  findBreakpointsForWidth(width: number): B[]
+  findBreakpointsForWidths(fromWidth: number, throughWidth: number): B[]
+
+  /**
+   * Finds the breakpoint that matches the given width.
+   */
+  findBreakpointAtWidth(width: number): B | undefined
 
   /**
    * Maps a list of values for various breakpoints to props that can be used
@@ -429,7 +434,8 @@ export function createMedia<
     MediaContextProvider,
     createMediaStyle: mediaQueries.toStyle,
     SortedBreakpoints: [...mediaQueries.breakpoints.sortedBreakpoints],
-    findBreakpointsForWidth: mediaQueries.breakpoints.findBreakpointsForWidth,
+    findBreakpointAtWidth: mediaQueries.breakpoints.findBreakpointAtWidth,
+    findBreakpointsForWidths: mediaQueries.breakpoints.findBreakpointsForWidths,
     valuesWithBreakpointProps:
       mediaQueries.breakpoints.valuesWithBreakpointProps,
   }
