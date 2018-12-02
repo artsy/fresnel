@@ -35,7 +35,7 @@ export function createClassName(
   return [
     "rrm",
     ...components.reduce(
-      (acc, breakpoint) =>
+      (acc: string[], breakpoint) =>
         Array.isArray(breakpoint)
           ? [...acc, ...breakpoint]
           : [...acc, breakpoint],

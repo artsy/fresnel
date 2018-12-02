@@ -15,7 +15,8 @@
     "outDir": "dist",
     "rootDir": "src",
     "skipLibCheck": true,
-    "target": "es2015"
+    "target": "es2015",
+    "strict": true
   },
   "exclude": ["node_modules/*", "dist", "example", "src/**/__test__/*"]
 }

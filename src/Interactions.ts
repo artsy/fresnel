@@ -16,12 +16,15 @@ export class Interactions {
   }
 
   public toRuleSets() {
-    return Object.entries(this._interactions).reduce((acc, [name, query]) => {
-      return [
-        ...acc,
-        createRuleSet(createClassName("interaction", name), query),
-      ]
-    }, [])
+    return Object.entries(this._interactions).reduce(
+      (acc: string[], [name, query]) => {
+        return [
+          ...acc,
+          createRuleSet(createClassName("interaction", name), query),
+        ]
+      },
+      []
+    )
   }
 
   public get interactions() {

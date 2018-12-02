@@ -246,7 +246,10 @@ export interface CreateMediaResults<B, I> {
    * Creates a list of your application’s breakpoints that support the given
    * widths and everything in between.
    */
-  findBreakpointsForWidths(fromWidth: number, throughWidth: number): B[]
+  findBreakpointsForWidths(
+    fromWidth: number,
+    throughWidth: number
+  ): B[] | undefined
 
   /**
    * Finds the breakpoint that matches the given width.
@@ -403,7 +406,7 @@ export function createMedia<
               }
 
               const type = propKey(breakpointProps)
-              const breakpoint = breakpointProps[type]
+              const breakpoint = breakpointProps[type]!
               className = createClassName(type, breakpoint)
             }
 
