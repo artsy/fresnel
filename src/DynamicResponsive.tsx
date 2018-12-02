@@ -55,7 +55,7 @@ export function createResponsiveComponents<M extends string>() {
     > {
       constructor(props: ResponsiveProviderProps<M>) {
         super(props)
-        let mediaQueryMatchers: MediaQueryMatchers
+        let mediaQueryMatchers: MediaQueryMatchers | undefined = undefined
         let mediaQueryMatches: MediaQueryMatches
 
         if (this.isSupportedEnvironment()) {
@@ -63,11 +63,11 @@ export function createResponsiveComponents<M extends string>() {
           mediaQueryMatches = this.checkMatchers(mediaQueryMatchers)
         } else {
           mediaQueryMatches = Object.keys(props.mediaQueries).reduce(
-            (matches, key: M) => ({
+            (matches, key) => ({
               ...matches,
               [key]:
                 !!props.initialMatchingMediaQueries &&
-                props.initialMatchingMediaQueries.includes(key),
+                props.initialMatchingMediaQueries.includes(key as M),
             }),
             {}
           )
@@ -119,7 +119,7 @@ export function createResponsiveComponents<M extends string>() {
        */
       mediaQueryStatusChangedCallback = () => {
         const mediaQueryMatches = this.checkMatchers(
-          this.state.mediaQueryMatchers
+          this.state.mediaQueryMatchers!
         )
         this.setState({
           mediaQueryMatches,

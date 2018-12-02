@@ -6,7 +6,7 @@
     "jsx-boolean-value": [true, "never"],
     "jsx-no-lambda": false,
     "jsx-no-bind": false,
-    "max-classes-per-file": [false],
+    "max-classes-per-file": false,
     "member-access": [false],
     "member-ordering": false,
     "no-console": [true, "log", "error"],
@@ -25,6 +25,7 @@
         "types": { "visibilities": ["exported"] },
         "variables": { "visibilities": ["exported"] }
       }
-    ]
+    ],
+    "no-unnecessary-initializer": false
   }
 }
