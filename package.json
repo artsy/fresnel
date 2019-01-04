@@ -10,6 +10,7 @@
   "scripts": {
     "clean": "rm -rf dist",
     "compile": "babel src --out-dir dist -s --source-map --extensions '.ts,.tsx' --ignore src/**/__tests__",
+    "example": "babel-node --extensions '.js,.jsx,.ts,.tsx' example/server.tsx",
     "lint": "tslint -c tslint.json --project tsconfig.json",
     "precommit": "lint-staged",
     "prepush": "yarn run type-check",
@@ -17,12 +18,12 @@
     "prettier": "prettier",
     "prettier-project": "yarn prettier-write 'src/**/*.{ts,tsx}'",
     "prettier-write": "yarn prettier --write",
+    "release": "auto shipit",
     "semantic-release": "semantic-release",
     "test": "yarn type-check && yarn lint && yarn jest",
     "type-check": "tsc --emitDeclarationOnly --pretty",
     "type-declarations": "tsc --emitDeclarationOnly",
-    "watch": "concurrently --raw --kill-others 'yarn compile -w' 'tsc --emitDeclarationOnly -w'",
-    "example": "babel-node --extensions '.js,.jsx,.ts,.tsx' example/server.tsx"
+    "watch": "concurrently --raw --kill-others 'yarn compile -w' 'tsc --emitDeclarationOnly -w'"
   },
   "repository": {
     "type": "git",
@@ -57,6 +58,7 @@
     "@types/react-dom": "^16.0.9",
     "@types/react-test-renderer": "^16.0.3",
     "@types/webpack-dev-server": "^3.1.1",
+    "auto-release-cli": "^0.37.9",
     "babel-core": "^7.0.0-bridge.0",
     "babel-jest": "^23.0.1",
     "babel-loader": "^8.0.4",
