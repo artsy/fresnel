@@ -1,5 +1,6 @@
 {
   "no-version-prefix": true,
+  "onlyPublishWithReleaseLabel": true,
   "name": "Artsy",
   "email": "it@artsymail.com",
   "labels": {
