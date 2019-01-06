@@ -1,6 +1,6 @@
 {
   "name": "@artsy/react-responsive-media",
-  "version": "2.0.0-beta.5",
+  "version": "2.0.0",
   "description": "A declarative SSR-compatible approach to CSS media query based responsive layouts.",
   "main": "dist/index.js",
   "files": [
