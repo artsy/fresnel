@@ -8,5 +8,5 @@
     "minor": "Version: Minor",
     "patch": "Version: Patch",
   },
-  "noReleaseLabels": ["Version: Trivial", "Skip Release"]
+  "skipReleaseLabels": ["Version: Trivial", "Skip Release"]
 }
