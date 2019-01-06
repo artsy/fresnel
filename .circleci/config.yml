@@ -1,79 +1,59 @@
-defaults: &defaults
-  working_directory: ~/artsy/react-responsive-media
-  docker:
-    - image: circleci/node:8
+version: 2.1
 
-save_cache: &save_cache
-  save_cache:
-    key: yarn-deps-{{ checksum "yarn.lock" }}
-    paths:
-      - ./node_modules
+orbs:
+  node: artsy/node@0.1.0
+  yarn: artsy/yarn@0.0.2
 
-restore_cache: &restore_cache
-  restore_cache:
-    keys:
-      - yarn-deps-{{ checksum "yarn.lock" }}
-      - yarn-deps-
-
-verify_dependencies: &verify_dependencies
-  run: yarn --check-files
-
-filter_master: &filter_master
-  filters:
-    branches:
-      only:
-        - master
-
-version: 2
 jobs:
-  update-cache:
-    <<: *defaults
-    steps:
-      - checkout
-      - <<: *restore_cache
-      - <<: *verify_dependencies
-      - <<: *save_cache
-  type-check:
-    <<: *defaults
-    steps:
-      - checkout
-      - <<: *restore_cache
-      - <<: *verify_dependencies
-      - run: yarn type-check
   lint:
-    <<: *defaults
+    executor: node/build
     steps:
-      - checkout
-      - <<: *restore_cache
-      - <<: *verify_dependencies
+      - yarn/setup
       - run: yarn lint
-  test:
-    <<: *defaults
+  type-check:
+    executor: node/build
     steps:
-      - checkout
-      - <<: *restore_cache
-      - <<: *verify_dependencies
-      - run: yarn jest
+      - yarn/setup
+      - run: yarn type-check
   deploy:
-    <<: *defaults
+    executor: node/build
     steps:
-      - checkout
-      - <<: *restore_cache
+      - add_ssh_keys
+      - yarn/setup
+      # Setup the .npmrc with the proper registry and auth token to publish
       - run: echo "//registry.npmjs.org/:_authToken=$NPM_TOKEN" >> ~/.npmrc
-      - run: yarn semantic-release
+      - run: yarn release
+  test:
+    executor: node/build
+    steps:
+      - yarn/setup
+      # Runs jest tests with 6 concurrent workers. Without limiting it to 6
+      # workers Jest will spawn many memory hungry workers and ultimately
+      # starve the job for memory.
+      - run: yarn test -w 6
+  update-cache:
+    executor: node/build
+    steps:
+      - yarn/update_dependencies
+
 workflows:
-  version: 2
   build_and_verify:
     jobs:
       - update-cache
-      - type-check
       - lint
+      - type-check
       - test
       - deploy:
+          # The deploy job is the _only_ job that should have access to our npm
+          # tokens. We include a context that has our publish credentials
+          # explicitly in this step. https://circleci.com/docs/2.0/contexts/
           context: npm-deploy
-          <<: *filter_master
+          filters:
+            branches:
+              only:
+                - master
           requires:
-            - update-cache
+            - test
             - lint
             - type-check
-            - test
+            - update-cache

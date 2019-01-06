@@ -387,14 +387,17 @@ if you have suggestions.
 
 <details>
 
-`react-responsive-media` uses [auto-release](https://github.com/intuit/auto-release#readme) to automatically release on every PR. Every PR should have a label that matches one of the following
+This project uses [auto-release](https://github.com/intuit/auto-release#readme) to automatically release on every PR. Every PR should have a label that matches one of the following
 
 - Version: Trivial
 - Version: Patch
 - Version: Minor
 - Version: Major
 
-No release will happen on a `Trivial` update.
+Major, minor, and patch will cause a new release to be generated. Use major for breaking changes, minor for new non-breaking features,
+and patch for bug fixes. Trivial will not cause a release and should be used when updating documentation or non-project code.
+
+If you don't want to release on a particular PR but the changes aren't trivial then use the `Skip Release` tag along side the appropriate version tag.
 
 </details>
 
