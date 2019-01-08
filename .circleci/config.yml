@@ -2,7 +2,7 @@ version: 2.1
 
 orbs:
   node: artsy/node@0.1.0
-  yarn: artsy/yarn@0.0.5
+  yarn: artsy/yarn@0.0.7
 
 jobs:
   lint:
