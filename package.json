@@ -60,7 +60,7 @@
     "@types/react-dom": "^16.0.9",
     "@types/react-test-renderer": "^16.0.3",
     "@types/webpack-dev-server": "^3.1.1",
-    "auto-release-cli": "2.1.4",
+    "auto-release-cli": "2.2.0",
     "babel-core": "^7.0.0-bridge.0",
     "babel-jest": "^23.0.1",
     "babel-loader": "^8.0.4",
