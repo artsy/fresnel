@@ -44,7 +44,7 @@
     "react": "^16.3.0"
   },
   "devDependencies": {
-    "@artsy/detect-responsive-traits": "0.0.1",
+    "@artsy/detect-responsive-traits": "0.0.2",
     "@babel/cli": "^7.0.0",
     "@babel/core": "^7.0.0",
     "@babel/node": "^7.0.0",
