@@ -2,7 +2,7 @@
 # yarn lockfile v1
 
 
-"@artsy/auto-config@^0.0.8":
+"@artsy/auto-config@0.0.8":
   version "0.0.8"
   resolved "https://registry.yarnpkg.com/@artsy/auto-config/-/auto-config-0.0.8.tgz#8ed725ea865a2dd976e0b7da954c313d04b24f64"
   integrity sha512-18INV7f1pqYYNxtlo/Ai9Sa24IrH/q/S+2flUw2/bWku9wAdjuRMB16+HhENO4mcQMIjw5LkfFxtrKVzpvganQ==
