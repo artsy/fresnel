@@ -39,7 +39,7 @@ import React from "react"
 import { Style } from "react-head"
 import { createMedia } from '@artsy/react-responsive-media'
 
-const { MediaContextProvider, Media, MediaStyle } = createMedia({
+const { MediaContextProvider, Media, createMediaStyle } = createMedia({
   breakpoints: {
     sm: 0,
     md: 768
@@ -50,7 +50,7 @@ const { MediaContextProvider, Media, MediaStyle } = createMedia({
 
 const App = () => (
   <>
-    <Style>{MediaStyle()}</Style>
+    <Style>{createMediaStyle()}</Style>
     <MediaContextProvider>
       <Media at='sm'>
         <MobileApp />
