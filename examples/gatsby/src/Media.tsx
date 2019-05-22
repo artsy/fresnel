@@ -1,4 +1,4 @@
-import { createMedia } from "../../../src/index"
+import { createMedia } from "@artsy/react-responsive-media"
 
 const ExampleAppMedia = createMedia({
   breakpoints: {
@@ -9,4 +9,7 @@ const ExampleAppMedia = createMedia({
   },
 })
 
-export const { Media, MediaContextProvider, createMediaStyle } = ExampleAppMedia
+// Make styles for injection into the header of the page
+export const mediaStyles = ExampleAppMedia.createMediaStyle()
+
+export const { Media, MediaContextProvider } = ExampleAppMedia

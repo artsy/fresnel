@@ -4,8 +4,8 @@ import { Media } from "../Media"
 export default function IndexPage() {
   return (
     <>
-      <Media at="xs">Hello mobile view</Media>
-      <Media greaterThan="xs">Hello destop view!</Media>
+      <Media at="xs">Hello mobile!</Media>
+      <Media greaterThan="xs">Hello desktop!</Media>
     </>
   )
 }

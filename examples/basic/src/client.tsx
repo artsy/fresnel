@@ -1,6 +1,6 @@
 import React from "react"
 import ReactDOM from "react-dom"
-import { createMedia } from "../../../src/index"
+import { createMedia } from "@artsy/react-responsive-media"
 
 const ExampleAppMedia = createMedia({
   breakpoints: {

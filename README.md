@@ -8,120 +8,17 @@
   yarn add @artsy/react-responsive-media
 ```
 
-## Basic Usage
+**Table of Contents**
 
-```js
-import { createMedia } from "@artsy/fresnel"
-
-const ExampleAppMedia = createMedia({
-  breakpoints: {
-    xs: 0,
-    sm: 768,
-    md: 1000,
-    lg: 1200,
-  },
-})
-
-const { Media, MediaContextProvider } = ExampleAppMedia
-
-const App = () => {
-  return (
-    <MediaContextProvider>
-      <Media at="xs">Hello mobile!</Media>
-      <Media greaterThan="xs">Hello desktop!</Media>
-    </MediaContextProvider>
-  )
-}
-```
-
-## Server-side Rendering (SSR) Usage
-
-First, configure `@artsy/fresnel` in a `Media` file that can be shared across the app:
-
-```js
-// Media.tsx
-
-import { createMedia } from "@artsy/fresnel"
-
-const ExampleAppMedia = createMedia({
-  breakpoints: {
-    xs: 0,
-    sm: 768,
-    md: 1000,
-    lg: 1200,
-  },
-  interactions: {},
-})
-
-export const { Media, MediaContextProvider, createMediaStyle } = ExampleAppMedia
-```
-
-Create a new `App` file which will be the launching point for our application:
-
-```js
-import React from "react"
-import { Media, MediaContextProvider } from "./Media"
-
-export const App = () => {
-  return (
-    <MediaContextProvider>
-      <Media at="xs">Hello mobile!</Media>
-      <Media greaterThan="xs">Hello desktop!</Media>
-    </MediaContextProvider>
-  )
-}
-```
-
-Mount `<App />` on the client:
-
-```js
-// client.tsx
-
-import React from "react"
-import ReactDOM from "react-dom"
-import { App } from "./App"
-
-ReactDOM.render(<App />, document.getElementById("react"))
-```
-
-Then on the server, setup SSR rendering and call `createMediaStyle`, injecting the necessary css into the header:
-
-```js
-// server.tsx
-
-import React from "react"
-import ReactDOMServer from "react-dom/server"
-import express from "express"
-
-import { App } from "./App"
-import { createMediaStyle } from "./Media"
-
-const app = express()
-
-app.get("/", (_req, res) => {
-  const html = ReactDOMServer.renderToString(<App />)
-
-  res.send(`
-    <html>
-      <head>
-        <title>@artsy/fresnel - SSR Example</title>
-        <style type="text/css">${createMediaStyle()}</style>
-      </head>
-      <body>
-        <div id='react'>${html}</div>
-
-        <script src='/assets/app.js'></script>
-      </body>
-    </html>
-  `)
-})
-
-app.listen(3000, () => {
-  console.warn("\nApp started at http://localhost:3000 \n")
-})
-```
-
-And that's it! To test, disable JS and scale your browser window down to a mobile size; it will correctly render without the need to use a user-agent or other server-side "hints".
+- [Overview](#overview)
+- [Basic Example](#basic-example)
+- [Server-side Rendering (SSR)](#server-side-rendering-ssr-usage)
+- [Usage with Gatsby](#usage-with-gatsby)
+- [Example Apps](#example-apps)
+- [Why not conditionally render?](#why-not-conditionally-render)
+- [API](#api)
+- [Pros vs Cons](#pros-vs-cons)
+- [Development](#development)
 
 ## Overview
 
@@ -147,11 +44,12 @@ directly in CSS/HTML:
 ```
 
 By hooking into a breakpoint definition, `@artsy/react-responsive-media` takes
-this imperative approach and makes it declarative:
+this imperative approach and makes it declarative.
 
-```js
+## Basic Example
+
+```tsx
 import React from "react"
-import { Style } from "react-head"
 import { createMedia } from '@artsy/react-responsive-media'
 
 const { MediaContextProvider, Media, createMediaStyle } = createMedia({
@@ -164,36 +62,125 @@ const { MediaContextProvider, Media, createMediaStyle } = createMedia({
 })
 
 const App = () => (
-  <>
-    <Style>{createMediaStyle()}</Style>
-    <MediaContextProvider>
-      <Media at='sm'>
-        <MobileApp />
-      </Media>
-      <Media at='md'>
-        <TabletApp />
-      </Media>
-      <Media greaterThanOrEqual='lg'>
-        <DesktopApp />
-      </Media>
-    </MediaContextProvider>
-  </>
+  <MediaContextProvider>
+    <Media at='sm'>
+      <MobileApp />
+    </Media>
+    <Media at='md'>
+      <TabletApp />
+    </Media>
+    <Media greaterThanOrEqual='lg'>
+      <DesktopApp />
+    </Media>
+  </MediaContextProvider>
 )
 ```
 
-### Demo
+## Server-side Rendering (SSR) Usage
 
-You can find an example in this repository and run it locally like so:
+First, configure `@artsy/fresnel` in a `Media` file that can be shared across the app:
 
+```tsx
+// Media.tsx
+
+import { createMedia } from "@artsy/fresnel"
+
+const ExampleAppMedia = createMedia({
+  breakpoints: {
+    xs: 0,
+    sm: 768,
+    md: 1000,
+    lg: 1200,
+  },
+  interactions: {},
+})
+
+export const { Media, MediaContextProvider, createMediaStyle } = ExampleAppMedia
 ```
-git clone https://github.com/artsy/react-responsive-media.git
-cd react-responsive-media
-yarn install
-yarn example
-open http://localhost:8080
+
+Create a new `App` file which will be the launching point for our application:
+
+```tsx
+import React from "react"
+import { Media, MediaContextProvider } from "./Media"
+
+export const App = () => {
+  return (
+    <MediaContextProvider>
+      <Media at="xs">Hello mobile!</Media>
+      <Media greaterThan="xs">Hello desktop!</Media>
+    </MediaContextProvider>
+  )
+}
 ```
 
-### Why not conditionally render?
+Mount `<App />` on the client:
+
+```tsx
+// client.tsx
+
+import React from "react"
+import ReactDOM from "react-dom"
+import { App } from "./App"
+
+ReactDOM.render(<App />, document.getElementById("react"))
+```
+
+Then on the server, setup SSR rendering and call `createMediaStyle`, injecting the necessary css into the header:
+
+```tsx
+// server.tsx
+
+import React from "react"
+import ReactDOMServer from "react-dom/server"
+import express from "express"
+
+import { App } from "./App"
+import { createMediaStyle } from "./Media"
+
+const app = express()
+
+app.get("/", (_req, res) => {
+  const html = ReactDOMServer.renderToString(<App />)
+
+  res.send(`
+    <html>
+      <head>
+        <title>@artsy/fresnel - SSR Example</title>
+        <style type="text/css">${createMediaStyle()}</style>
+      </head>
+      <body>
+        <div id="react">${html}</div>
+
+        <script src='/assets/app.js'></script>
+      </body>
+    </html>
+  `)
+})
+
+app.listen(3000, () => {
+  console.warn("\nApp started at http://localhost:3000 \n")
+})
+```
+
+And that's it! To test, disable JS and scale your browser window down to a mobile size; it will correctly render without the need to use a user-agent or other server-side "hints".
+
+## Usage with Gatsby
+
+`@artsy/fresnel` works great with Gatsby's static hybrid approach to rendering. See the [Gatsby Example](`/examples/gatsby`) for a simple implementation.
+
+## Example Apps
+
+There are three examples one can look explore in the `/examples` folder:
+
+- [Basic]('/examples/basic)
+- [Server-side Rendering]('/examples/ssr-rendering)
+- [Gatsby]('/examples/gatsby)
+- [Kitchen Sink]('/examples/kitchen-sink)
+
+While the `Basic` and `SSR` examples will get one pretty far, `@artsy/fresnel` can do _a lot_, and can be used as a tool to build other tools. For an exhaustive deep-dive into its features, check out the `Kitchen Sink` app.
+
+## Why not conditionally render?
 
 Other existing solutions take a conditionally rendered approach, such as
 [`react-responsive`][react-responsive] or [`react-media`][react-media], so where
@@ -206,7 +193,7 @@ But first, what is conditional rendering?
 In the React ecosystem a common approach to writing declarative responsive
 components is to use the browser’s [`matchMedia` api][match-media-api]:
 
-```js
+```tsx
 <Responsive>
   {({ xs }) => {
     if (xs) {
@@ -445,14 +432,6 @@ viewport width is between 768 and 1192 points:
 ```tsx
 <Media between={["md", "xl"]}>...</Media>
 ```
-
-## Server-side rendering
-
-TODO
-
-## Client-side rendering
-
-TODO
 
 ## Pros vs Cons
 

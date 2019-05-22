@@ -1,11 +1,12 @@
 import React from "react"
 import PropTypes from "prop-types"
-import { createMediaStyle } from "./Media"
+import { mediaStyles } from "./Media"
 
 export default function HTML(props) {
   return (
     <html {...props.htmlAttributes}>
       <head>
+        <title>@artsy/fresnel | Gatsby Example</title>
         <meta charSet="utf-8" />
         <meta httpEquiv="x-ua-compatible" content="ie=edge" />
         <meta
@@ -14,7 +15,7 @@ export default function HTML(props) {
         />
 
         {/* Inject @artsy/fresnel styles in to the head */}
-        <style>{createMediaStyle()}</style>
+        <style>{mediaStyles}</style>
 
         {props.headComponents}
       </head>

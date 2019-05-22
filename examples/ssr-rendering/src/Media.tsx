@@ -7,7 +7,9 @@ const ExampleAppMedia = createMedia({
     md: 1000,
     lg: 1200,
   },
-  interactions: {},
 })
 
-export const { Media, MediaContextProvider, createMediaStyle } = ExampleAppMedia
+// Make styles for injection into the header of the page
+export const mediaStyles = ExampleAppMedia.createMediaStyle()
+
+export const { Media, MediaContextProvider } = ExampleAppMedia
