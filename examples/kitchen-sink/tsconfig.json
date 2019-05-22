@@ -1,7 +1,23 @@
 {
-  "extends": "../tsconfig.json",
   "compilerOptions": {
-    "rootDirs": ["../example", "../src"],
-    "resolveJsonModule": true
-  }
+    "allowSyntheticDefaultImports": true,
+    "baseUrl": "src",
+    "declaration": true,
+    "experimentalDecorators": true,
+    "jsx": "react",
+    "keyofStringsOnly": true,
+    "lib": ["dom", "es2015", "es2016", "es2017"],
+    "module": "commonjs",
+    "moduleResolution": "node",
+    "noImplicitAny": false,
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+    "outDir": "dist",
+    "resolveJsonModule": true,
+    "rootDir": "src",
+    "skipLibCheck": true,
+    "target": "es2015",
+    "strict": true
+  },
+  "exclude": ["node_modules/*", "dist", "examples/*", "src/**/__test__/*"]
 }

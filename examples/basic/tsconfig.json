@@ -18,5 +18,5 @@
     "target": "es2015",
     "strict": true
   },
-  "exclude": ["node_modules/*", "dist", "example", "src/**/__test__/*"]
+  "exclude": ["node_modules/*", "dist", "examples/*", "src/**/__test__/*"]
 }

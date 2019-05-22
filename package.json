@@ -13,7 +13,7 @@
   "scripts": {
     "clean": "rm -rf dist",
     "compile": "babel src --out-dir dist -s --source-map --extensions '.ts,.tsx' --ignore src/**/__tests__",
-    "example": "babel-node --extensions '.js,.jsx,.ts,.tsx' example/server.tsx",
+    "kitchen-sink": "cd examples/kitchen-sink && yarn start",
     "lint": "tslint -c tslint.json --project tsconfig.json",
     "precommit": "lint-staged",
     "prepush": "yarn run type-check",

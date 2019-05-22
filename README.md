@@ -44,15 +44,16 @@ directly in CSS/HTML:
 ```
 
 By hooking into a breakpoint definition, `@artsy/react-responsive-media` takes
-this imperative approach and makes it declarative.
+this imperative approach and makes it declarative:
 
 ## Basic Example
 
 ```tsx
 import React from "react"
+import ReactDOM from 'react-dom
 import { createMedia } from '@artsy/react-responsive-media'
 
-const { MediaContextProvider, Media, createMediaStyle } = createMedia({
+const { MediaContextProvider, Media  } = createMedia({
   breakpoints: {
     sm: 0,
     md: 768
@@ -74,6 +75,8 @@ const App = () => (
     </Media>
   </MediaContextProvider>
 )
+
+ReactDOM.render(<App />, document.getElementById("react"))
 ```
 
 ## Server-side Rendering (SSR) Usage

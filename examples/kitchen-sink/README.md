@@ -7,5 +7,6 @@ This example demonstrates all the different features available inside the librar
 To run the example:
 
 ```
+yarn install
 yarn example
 ```

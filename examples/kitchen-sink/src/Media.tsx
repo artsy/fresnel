@@ -1,4 +1,4 @@
-import { createMedia } from "../src/Media"
+import { createMedia } from "@artsy/react-responsive-media"
 
 const ExampleAppMedia = createMedia({
   breakpoints: {
@@ -14,10 +14,11 @@ const ExampleAppMedia = createMedia({
   },
 })
 
+export const mediaStyle = ExampleAppMedia.createMediaStyle()
+
 export const {
   Media,
   MediaContextProvider,
-  createMediaStyle,
   findBreakpointsForWidths,
   findBreakpointAtWidth,
   SortedBreakpoints,

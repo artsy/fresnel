@@ -1,5 +1,5 @@
 import React, { CSSProperties } from "react"
-import { Media } from "./setup"
+import { Media } from "./Media"
 
 const Box: CSSProperties = {
   width: "200px",
