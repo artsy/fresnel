@@ -310,8 +310,7 @@ export function createMedia<
   const DynamicResponsive = createResponsiveComponents()
 
   const MediaContext = React.createContext<MediaContextProviderProps<B | I>>({})
-  MediaContext.Consumer.displayName = "Media.Context"
-  MediaContext.Provider.displayName = "Media.Context"
+  MediaContext.displayName = "Media.Context"
 
   const MediaContextProvider: React.SFC<MediaContextProviderProps<B | I>> = ({
     disableDynamicMediaQueries,
