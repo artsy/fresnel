@@ -72,7 +72,7 @@
     "jest": "^23.1.0",
     "jest-styled-components": "^6.2.2",
     "lint-staged": "^7.2.0",
-    "prettier": "^1.12.1",
+    "prettier": "^1.17.1",
     "react": "^16.8",
     "react-dom": "^16.8",
     "react-test-renderer": "^16.8",
@@ -97,7 +97,8 @@
     "semi": false,
     "singleQuote": false,
     "trailingComma": "es5",
-    "bracketSpacing": true
+    "bracketSpacing": true,
+    "proseWrap": "always"
   },
   "jest": {
     "transform": {

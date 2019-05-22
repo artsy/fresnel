@@ -44,14 +44,14 @@ directly in CSS/HTML:
 ```
 
 By hooking into a breakpoint definition, `@artsy/react-responsive-media` takes
-this imperative approach and makes it declarative:
+this imperative approach and makes it declarative.
 
 ## Basic Example
 
 ```tsx
 import React from "react"
-import ReactDOM from 'react-dom
-import { createMedia } from '@artsy/react-responsive-media'
+import ReactDOM from "react-dom"
+import { createMedia } from "@artsy/react-responsive-media"
 
 const { MediaContextProvider, Media  } = createMedia({
   breakpoints: {
@@ -81,7 +81,35 @@ ReactDOM.render(<App />, document.getElementById("react"))
 
 ## Server-side Rendering (SSR) Usage
 
-First, configure `@artsy/fresnel` in a `Media` file that can be shared across the app:
+The first important thing to note is that when server-rendering with
+`@artsy/fresnel`, all breakpoints get rendered by the server. Each Media
+component is wrapped by plain CSS that will only show that breakpoint if it
+matches the user's current browser size. This means that the client can
+accurately start rendering the HTML/CSS while it receives it, which is long
+before the React application has booted. This improves perceived performance for
+end-users.
+
+Why not just the one that the current device needs? A couple reasons. First, we
+can't accurately identify which breakpoint your device needs on the server. We
+could use a library to sniff the browser user-agent, but those aren't always
+accurate, and they wouldn't give us all the information we need to know when we
+are server-rendering.
+
+What this means in practice is we can automatically match layouts for mobile,
+difficult-to-infer "in between" sizes, or whatever outlandish media query one
+might need to design for because we don't need JS or server-side "hints" to
+determine whether a media query is active or not. Once client-side JS boots and
+React attaches, it simply washes over and removes markup that is unneeded, via a
+`matchMedia` call.
+
+This is a unique solution to the long-standing problem of how best to design
+for, and respond to, layouts that can be viewed on any kind of device, and at
+any size, but which also need to be server-side rendered.
+
+### SSR Example
+
+First, configure `@artsy/fresnel` in a `Media` file that can be shared across
+the app:
 
 ```tsx
 // Media.tsx
@@ -95,15 +123,18 @@ const ExampleAppMedia = createMedia({
     md: 1000,
     lg: 1200,
   },
-  interactions: {},
 })
 
-export const { Media, MediaContextProvider, createMediaStyle } = ExampleAppMedia
+// Generate CSS to be injected into the head
+export const mediaStyle = ExampleAppMedia.createMediaStyle()
+export const { Media, MediaContextProvider } = ExampleAppMedia
 ```
 
 Create a new `App` file which will be the launching point for our application:
 
 ```tsx
+// App.tsx
+
 import React from "react"
 import { Media, MediaContextProvider } from "./Media"
 
@@ -129,7 +160,8 @@ import { App } from "./App"
 ReactDOM.render(<App />, document.getElementById("react"))
 ```
 
-Then on the server, setup SSR rendering and call `createMediaStyle`, injecting the necessary css into the header:
+Then on the server, setup SSR rendering and pass `mediaStyle` into a `<style>`
+tag in the header:
 
 ```tsx
 // server.tsx
@@ -139,7 +171,7 @@ import ReactDOMServer from "react-dom/server"
 import express from "express"
 
 import { App } from "./App"
-import { createMediaStyle } from "./Media"
+import { mediaStyle } from "./Media"
 
 const app = express()
 
@@ -150,7 +182,9 @@ app.get("/", (_req, res) => {
     <html>
       <head>
         <title>@artsy/fresnel - SSR Example</title>
-        <style type="text/css">${createMediaStyle()}</style>
+
+        <!–– Inject the generated styles into the page head -->
+        <style type="text/css">${mediaStyle}</style>
       </head>
       <body>
         <div id="react">${html}</div>
@@ -166,11 +200,14 @@ app.listen(3000, () => {
 })
 ```
 
-And that's it! To test, disable JS and scale your browser window down to a mobile size; it will correctly render without the need to use a user-agent or other server-side "hints".
+And that's it! To test, disable JS and scale your browser window down to a
+mobile size; it will correctly render without the need to use a user-agent or
+other server-side "hints".
 
 ## Usage with Gatsby
 
-`@artsy/fresnel` works great with Gatsby's static hybrid approach to rendering. See the [Gatsby Example](`/examples/gatsby`) for a simple implementation.
+`@artsy/fresnel` works great with Gatsby's static hybrid approach to rendering.
+See the [Gatsby Example](`/examples/gatsby`) for a simple implementation.
 
 ## Example Apps
 
@@ -181,7 +218,9 @@ There are three examples one can look explore in the `/examples` folder:
 - [Gatsby]('/examples/gatsby)
 - [Kitchen Sink]('/examples/kitchen-sink)
 
-While the `Basic` and `SSR` examples will get one pretty far, `@artsy/fresnel` can do _a lot_, and can be used as a tool to build other tools. For an exhaustive deep-dive into its features, check out the `Kitchen Sink` app.
+While the `Basic` and `SSR` examples will get one pretty far, `@artsy/fresnel`
+can do _a lot_, and can be used as a tool to build other tools. For an
+exhaustive deep-dive into its features, check out the `Kitchen Sink` app.
 
 ## Why not conditionally render?
 
@@ -356,10 +395,10 @@ a list of media queries to match. By default _all_ will be rendered.
 
 #### disableDynamicMediaQueries
 
-By default, when rendered client-side, the browser’s
-[`matchMedia` api][match-media-api] will be used to _further_ constrain the
-`onlyMatch` list to only the currently matching media queries. This is done to
-avoid triggering mount related life-cycle hooks of hidden components.
+By default, when rendered client-side, the browser’s [`matchMedia`
+api][match-media-api] will be used to _further_ constrain the `onlyMatch` list
+to only the currently matching media queries. This is done to avoid triggering
+mount related life-cycle hooks of hidden components.
 
 Disabling this behaviour is mostly intended for debugging purposes.
 
@@ -446,12 +485,15 @@ Pros:
 
 Cons:
 
-- Pages now include markup for _all_ breakpoints, which increases the page size.
+- If utilizing SSR rendering features, when the markup is passed down from the
+  server to the client it includes _all_ breakpoints, which increases the page
+  size. (However, once the client mounts, the unused breakpoint markup is
+  cleared from the DOM.)
 - The current media query is no longer something components can access; it is
   determined only by the props of the `<Media>` component they find themselves
   in.
 
-That last con presents an interesting problem. How might we represent a
+That last point presents an interesting problem. How might we represent a
 component that gets styled differently at different breakpoints? (Let’s imagine
 a `matchMedia` example.)
 
@@ -484,17 +526,22 @@ if you have suggestions.
 
 <details>
 
-This project uses [auto-release](https://github.com/intuit/auto-release#readme) to automatically release on every PR. Every PR should have a label that matches one of the following
+This project uses [auto-release](https://github.com/intuit/auto-release#readme)
+to automatically release on every PR. Every PR should have a label that matches
+one of the following
 
 - Version: Trivial
 - Version: Patch
 - Version: Minor
 - Version: Major
 
-Major, minor, and patch will cause a new release to be generated. Use major for breaking changes, minor for new non-breaking features,
-and patch for bug fixes. Trivial will not cause a release and should be used when updating documentation or non-project code.
+Major, minor, and patch will cause a new release to be generated. Use major for
+breaking changes, minor for new non-breaking features, and patch for bug fixes.
+Trivial will not cause a release and should be used when updating documentation
+or non-project code.
 
-If you don't want to release on a particular PR but the changes aren't trivial then use the `Skip Release` tag along side the appropriate version tag.
+If you don't want to release on a particular PR but the changes aren't trivial
+then use the `Skip Release` tag along side the appropriate version tag.
 
 </details>
 
@@ -504,6 +551,8 @@ If you don't want to release on a particular PR but the changes aren't trivial t
 [npm-icon]: https://badge.fury.io/js/%40artsy%2Freact-responsive-media.svg
 [react-responsive]: https://github.com/contra/react-responsive
 [react-media]: https://github.com/ReactTraining/react-media
-[match-media-api]: https://developer.mozilla.org/en-US/docs/Web/API/Window/matchMedia
+[match-media-api]:
+  https://developer.mozilla.org/en-US/docs/Web/API/Window/matchMedia
 [new-issue]: https://github.com/artsy/react-responsive-media/issues/new
-[release-tags]: https://github.com/artsy/react-responsive-media/blob/master/package.json
+[release-tags]:
+  https://github.com/artsy/react-responsive-media/blob/master/package.json
