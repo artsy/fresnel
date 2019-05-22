@@ -1,3 +1,23 @@
+# v2.0.2 (Wed May 22 2019)
+
+#### 🐛  Bug Fix
+
+- Make `interactions` optional [#82](https://github.com/artsy/react-responsive-media/pull/82) ([@damassi](https://github.com/damassi))
+
+#### 🏠  Internal
+
+- Update to renovate lib workflow [#79](https://github.com/artsy/react-responsive-media/pull/79) ([@zephraph](https://github.com/zephraph))
+- Update dependency @artsy/auto-config to v1 [#76](https://github.com/artsy/react-responsive-media/pull/76) ([@renovate-bot](https://github.com/renovate-bot))
+- Update dependency @artsy/auto-config to v0.1.2 [#75](https://github.com/artsy/react-responsive-media/pull/75) ([@renovate-bot](https://github.com/renovate-bot))
+
+#### Authors: 3
+
+- Christopher Pappas ([@damassi](https://github.com/damassi))
+- Justin Bennett ([@zephraph](https://github.com/zephraph))
+- Renovate Bot ([@renovate-bot](https://github.com/renovate-bot))
+
+---
+
 # v2.0.1 (Tue Apr 23 2019)
 
 #### 🐛  Bug Fix
