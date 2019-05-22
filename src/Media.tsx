@@ -212,7 +212,7 @@ export interface CreateMediaConfig {
   /**
    * The interaction definitions for your application.
    */
-  interactions: { [key: string]: string }
+  interactions?: { [key: string]: string }
 }
 
 export interface CreateMediaResults<B, I> {
@@ -304,7 +304,7 @@ export function createMedia<
 >(config: C): CreateMediaResults<B, I> {
   const mediaQueries = new MediaQueries<B>(
     config.breakpoints,
-    config.interactions
+    config.interactions || {}
   )
 
   const DynamicResponsive = createResponsiveComponents()
