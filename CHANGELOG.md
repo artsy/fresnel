@@ -1,3 +1,15 @@
+# v2.0.3 (Wed May 22 2019)
+
+#### 🐛  Bug Fix
+
+- [Media] Suppress hydration warning when not matching breakpoint. [#83](https://github.com/artsy/react-responsive-media/pull/83) ([@alloy](https://github.com/alloy))
+
+#### Authors: 1
+
+- Eloy Durán ([@alloy](https://github.com/alloy))
+
+---
+
 # v2.0.2 (Wed May 22 2019)
 
 #### 🐛  Bug Fix
