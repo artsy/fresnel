@@ -40,8 +40,7 @@ const shallowEqual = (a: MediaQueryMatches, b: MediaQueryMatches) => {
 /** TODO */
 export function createResponsiveComponents<M extends string>() {
   const ResponsiveContext = React.createContext({})
-  ResponsiveContext.Consumer.displayName = "Media.DynamicContext"
-  ResponsiveContext.Provider.displayName = "Media.DynamicContext"
+  ResponsiveContext.displayName = "Media.DynamicContext"
 
   const ResponsiveConsumer: React.SFC<
     React.ConsumerProps<MediaQueryMatches<M>>

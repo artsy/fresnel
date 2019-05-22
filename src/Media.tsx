@@ -310,8 +310,7 @@ export function createMedia<
   const DynamicResponsive = createResponsiveComponents()
 
   const MediaContext = React.createContext<MediaContextProviderProps<B | I>>({})
-  MediaContext.Consumer.displayName = "Media.Context"
-  MediaContext.Provider.displayName = "Media.Context"
+  MediaContext.displayName = "Media.Context"
 
   const MediaContextProvider: React.SFC<MediaContextProviderProps<B | I>> = ({
     disableDynamicMediaQueries,
@@ -358,8 +357,6 @@ export function createMedia<
     }
   }
 
-  // TODO: Ensure the component does not re-render if the instance’s query still
-  //       matches a new `onlyMatch` value.
   const Media = class extends React.Component<MediaProps<B, I>> {
     constructor(props) {
       super(props)
@@ -421,7 +418,10 @@ export function createMedia<
               return props.children(className, renderChildren)
             } else {
               return (
-                <div className={`rrm-container ${className}`}>
+                <div
+                  className={`rrm-container ${className}`}
+                  suppressHydrationWarning={!renderChildren}
+                >
                   {renderChildren ? props.children : null}
                 </div>
               )
