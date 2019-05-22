@@ -14,6 +14,8 @@ yarn start
 #### Example Breakdown
 
 ```js
+import { createMedia } from "@artsy/fresnel"
+
 const ExampleAppMedia = createMedia({
   breakpoints: {
     xs: 0,

@@ -18,7 +18,7 @@ First, configure `@artsy/fresnel` in a `Media.tsx` file that can be shared acros
 ```js
 // Media.tsx
 
-import { createMedia } from "@artsy/react-responsive-media"
+import { createMedia } from "@artsy/fresnel"
 
 const ExampleAppMedia = createMedia({
   breakpoints: {

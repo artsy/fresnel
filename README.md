@@ -8,6 +8,121 @@
   yarn add @artsy/react-responsive-media
 ```
 
+## Basic Usage
+
+```js
+import { createMedia } from "@artsy/fresnel"
+
+const ExampleAppMedia = createMedia({
+  breakpoints: {
+    xs: 0,
+    sm: 768,
+    md: 1000,
+    lg: 1200,
+  },
+})
+
+const { Media, MediaContextProvider } = ExampleAppMedia
+
+const App = () => {
+  return (
+    <MediaContextProvider>
+      <Media at="xs">Hello mobile!</Media>
+      <Media greaterThan="xs">Hello desktop!</Media>
+    </MediaContextProvider>
+  )
+}
+```
+
+## Server-side Rendering (SSR) Usage
+
+First, configure `@artsy/fresnel` in a `Media` file that can be shared across the app:
+
+```js
+// Media.tsx
+
+import { createMedia } from "@artsy/fresnel"
+
+const ExampleAppMedia = createMedia({
+  breakpoints: {
+    xs: 0,
+    sm: 768,
+    md: 1000,
+    lg: 1200,
+  },
+  interactions: {},
+})
+
+export const { Media, MediaContextProvider, createMediaStyle } = ExampleAppMedia
+```
+
+Create a new `App` file which will be the launching point for our application:
+
+```js
+import React from "react"
+import { Media, MediaContextProvider } from "./Media"
+
+export const App = () => {
+  return (
+    <MediaContextProvider>
+      <Media at="xs">Hello mobile!</Media>
+      <Media greaterThan="xs">Hello desktop!</Media>
+    </MediaContextProvider>
+  )
+}
+```
+
+Mount `<App />` on the client:
+
+```js
+// client.tsx
+
+import React from "react"
+import ReactDOM from "react-dom"
+import { App } from "./App"
+
+ReactDOM.render(<App />, document.getElementById("react"))
+```
+
+Then on the server, setup SSR rendering and call `createMediaStyle`, injecting the necessary css into the header:
+
+```js
+// server.tsx
+
+import React from "react"
+import ReactDOMServer from "react-dom/server"
+import express from "express"
+
+import { App } from "./App"
+import { createMediaStyle } from "./Media"
+
+const app = express()
+
+app.get("/", (_req, res) => {
+  const html = ReactDOMServer.renderToString(<App />)
+
+  res.send(`
+    <html>
+      <head>
+        <title>@artsy/fresnel - SSR Example</title>
+        <style type="text/css">${createMediaStyle()}</style>
+      </head>
+      <body>
+        <div id='react'>${html}</div>
+
+        <script src='/assets/app.js'></script>
+      </body>
+    </html>
+  `)
+})
+
+app.listen(3000, () => {
+  console.warn("\nApp started at http://localhost:3000 \n")
+})
+```
+
+And that's it! To test, disable JS and scale your browser window down to a mobile size; it will correctly render without the need to use a user-agent or other server-side "hints".
+
 ## Overview
 
 When writing responsive components it's common to use media queries to adjust
