@@ -1,0 +1,35 @@
+{
+  "name": "@artsy/fresnel-example-basic",
+  "private": true,
+  "description": "Example app showing basic features of fresnel",
+  "version": "0.1.0",
+  "author": "Artsy Inc",
+  "dependencies": {
+    "gatsby": "^2.5.7",
+    "gatsby-plugin-typescript": "^2.0.14",
+    "react": "^16.8.6",
+    "react-dom": "^16.8.6"
+  },
+  "devDependencies": {
+    "prettier": "^1.17.1"
+  },
+  "keywords": [
+    "gatsby"
+  ],
+  "license": "MIT",
+  "scripts": {
+    "build": "gatsby build",
+    "develop": "gatsby develop",
+    "format": "prettier --write src/**/*.{js,jsx}",
+    "start": "yarn develop",
+    "serve": "gatsby serve",
+    "test": "echo \"Write tests! -> https://gatsby.dev/unit-testing\""
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/gatsbyjs/gatsby-starter-default"
+  },
+  "bugs": {
+    "url": "https://github.com/gatsbyjs/gatsby/issues"
+  }
+}
