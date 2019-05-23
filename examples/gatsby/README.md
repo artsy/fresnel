@@ -1,6 +1,6 @@
-# @artsy/fresnel
+### @artsy/fresnel
 
-### Gatsby Example
+# Gatsby Example
 
 ```
 yarn install

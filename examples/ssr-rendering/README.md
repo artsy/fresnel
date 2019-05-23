@@ -2,7 +2,8 @@
 
 # Server-side Rendering Example
 
-This example how to setup `@artsy/fresnel` for server-side rendering, via Express.
+This example shows how to setup `@artsy/fresnel` for server-side rendering, via
+Express.
 
 To run the example:
 

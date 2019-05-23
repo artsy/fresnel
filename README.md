@@ -82,29 +82,20 @@ ReactDOM.render(<App />, document.getElementById("react"))
 ## Server-side Rendering (SSR) Usage
 
 The first important thing to note is that when server-rendering with
-`@artsy/fresnel`, all breakpoints get rendered by the server. Each Media
+`@artsy/fresnel`, all breakpoints get rendered by the server. Each `Media`
 component is wrapped by plain CSS that will only show that breakpoint if it
 matches the user's current browser size. This means that the client can
-accurately start rendering the HTML/CSS while it receives it, which is long
-before the React application has booted. This improves perceived performance for
-end-users.
+accurately start rendering the HTML/CSS while it receives the markup, which is
+long before the React application has booted. This improves perceived
+performance for end-users.
 
-Why not just the one that the current device needs? A couple reasons. First, we
-can't accurately identify which breakpoint your device needs on the server. We
-could use a library to sniff the browser user-agent, but those aren't always
-accurate, and they wouldn't give us all the information we need to know when we
-are server-rendering.
-
-What this means in practice is we can automatically match layouts for mobile,
-difficult-to-infer "in between" sizes, or whatever outlandish media query one
-might need to design for because we don't need JS or server-side "hints" to
-determine whether a media query is active or not. Once client-side JS boots and
-React attaches, it simply washes over and removes markup that is unneeded, via a
+Why not just render the one that the current device needs? A couple of reasons.
+First, we can't accurately identify which breakpoint your device needs on the
+server. We could use a library to sniff the browser user-agent, but those aren't
+always accurate, and they wouldn't give us all the information we need to know
+when we are server-rendering. Once client-side JS boots and React attaches, it
+simply washes over the DOM and removes markup that is unneeded, via a
 `matchMedia` call.
-
-This is a unique solution to the long-standing problem of how best to design
-for, and respond to, layouts that can be viewed on any kind of device, and at
-any size, but which also need to be server-side rendered.
 
 ### SSR Example
 
@@ -201,8 +192,8 @@ app.listen(3000, () => {
 ```
 
 And that's it! To test, disable JS and scale your browser window down to a
-mobile size; it will correctly render without the need to use a user-agent or
-other server-side "hints".
+mobile size and reload; it will correctly render the mobile layout without the
+need to use a user-agent or other server-side "hints".
 
 ## Usage with Gatsby
 
@@ -211,16 +202,16 @@ See the [Gatsby Example](`/examples/gatsby`) for a simple implementation.
 
 ## Example Apps
 
-There are three examples one can look explore in the `/examples` folder:
+There are four examples one can explore in the `/examples` folder:
 
-- [Basic]('/examples/basic)
-- [Server-side Rendering]('/examples/ssr-rendering)
-- [Gatsby]('/examples/gatsby)
-- [Kitchen Sink]('/examples/kitchen-sink)
+- [Basic](examples/basic)
+- [Server-side Rendering](examples/ssr-rendering)
+- [Gatsby](examples/gatsby)
+- [Kitchen Sink](examples/kitchen-sink)
 
 While the `Basic` and `SSR` examples will get one pretty far, `@artsy/fresnel`
-can do _a lot_, and can be used as a tool to build other tools. For an
-exhaustive deep-dive into its features, check out the `Kitchen Sink` app.
+can do a lot more . For an exhaustive deep-dive into its features, check out the
+[Kitchen Sink]('examples/kitchen-sink) app.
 
 ## Why not conditionally render?
 
@@ -314,7 +305,8 @@ approach:
 </td></tr>
 </table>
 
-See [#server-side-rendering][] for a complete example.
+See the [server-side rendering](#server-side-rendering) section for a complete
+example.
 
 ## API
 
