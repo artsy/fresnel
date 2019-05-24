@@ -355,7 +355,22 @@ one is expected to start at 0.
 ### MediaContextProvider
 
 The `MediaContextProvider` component influences how `Media` components will be
-rendered.
+rendered. Mount it at the root of your component tree:
+
+```tsx
+// App.tsx
+
+import React from "react"
+import { MediaContextProvider } from "./Media"
+
+export const App = () => {
+  return (
+    <MediaContextProvider>
+      ... 
+    </MediaContextProvider>
+  )
+}
+```
 
 ### Media
 
@@ -363,6 +378,22 @@ The `Media` component created for your application has a few mutually exclusive
 props that make up the API you’ll use to declare your responsive layouts. These
 props all operate based on the named breakpoints that were provided when you
 created the media components.
+
+```tsx
+// App.tsx
+
+import React from "react"
+import { Media } from "./Media"
+
+export const HomePage = () => {
+  return (
+    <>
+      <Media at="xs">Hello mobile!</Media>
+      <Media greaterThan="xs">Hello desktop!</Media>
+    </>
+  )
+}
+```
 
 The examples given for each prop use breakpoint definitions as defined in the
 above ‘Setup’ section.
