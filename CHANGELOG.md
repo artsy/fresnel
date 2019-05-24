@@ -1,3 +1,15 @@
+# v1.0.3 (Fri May 24 2019)
+
+#### ⚠️  Pushed to master
+
+- Add additional code examples  ([@damassi.pappas@gmail.com](https://github.com/damassi.pappas@gmail.com))
+
+#### Authors: 1
+
+- [@damassi.pappas@gmail.com](https://github.com/damassi.pappas@gmail.com)
+
+---
+
 # v1.0.2 (Fri May 24 2019)
 
 #### ⚠️  Pushed to master
