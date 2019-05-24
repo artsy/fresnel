@@ -1,3 +1,52 @@
+# v1.0.0 (Fri May 24 2019)
+
+### Release Notes
+
+_From #88_
+
+<details>
+<summary>webpack/webpack-dev-server</summary>
+
+### [`v3.1.11`](https://togithub.com/webpack/webpack-dev-server/blob/master/CHANGELOG.md#&#8203;3112httpsgithubcomwebpackwebpack-dev-servercomparev3111v3112-2018-12-22)
+
+[Compare Source](https://togithub.com/webpack/webpack-dev-server/compare/v3.1.10...v3.1.11)
+
+##### Bug Fixes
+
+-   regression in `checkHost` for checking Origin header ([#&#8203;1606](https://togithub.com/webpack/webpack-dev-server/issues/1606)) ([8bb3ca8](https://togithub.com/webpack/webpack-dev-server/commit/8bb3ca8))
+
+</details>
+
+---
+
+---
+
+#### 💥  Breaking Change
+
+- Empty commit to bump major version [#85](https://github.com/artsy/fresnel/pull/85) ([@pepopowitz](https://github.com/pepopowitz))
+
+#### 🐛  Bug Fix
+
+- Update dep webpack-dev-server from 3.1.10 to v3.1.11 [SECURITY] [#88](https://github.com/artsy/fresnel/pull/88) ([@renovate-bot](https://github.com/renovate-bot))
+
+#### 🏠  Internal
+
+- Bump yarn orb [#87](https://github.com/artsy/fresnel/pull/87) ([@zephraph](https://github.com/zephraph))
+- Pin dependencies [#86](https://github.com/artsy/fresnel/pull/86) ([@renovate-bot](https://github.com/renovate-bot))
+
+#### ⚠️  Pushed to master
+
+- [example] Update packages after rename  ([@alloy](https://github.com/alloy))
+
+#### Authors: 4
+
+- Steven Hicks ([@pepopowitz](https://github.com/pepopowitz))
+- Renovate Bot ([@renovate-bot](https://github.com/renovate-bot))
+- Justin Bennett ([@zephraph](https://github.com/zephraph))
+- [@alloy](https://github.com/alloy)
+
+---
+
 # v0.0.1 (Fri May 24 2019)
 
 Renamed project to Fresnel. [#77](https://github.com/artsy/fresnel/issues/77)
