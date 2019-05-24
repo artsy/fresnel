@@ -1,6 +1,6 @@
 import Webpack from "webpack"
 import WebpackDevServer from "webpack-dev-server"
-import webpackConfig from "./webpack.config"
+import webpackConfig from "../webpack.config"
 import express from "express"
 import ReactDOMServer from "react-dom/server"
 import React from "react"
@@ -9,13 +9,13 @@ import chalk from "chalk"
 import { findDevice } from "@artsy/detect-responsive-traits"
 
 import {
-  createMediaStyle,
+  mediaStyle,
   findBreakpointsForWidths,
   findBreakpointAtWidth,
   MediaContextProvider,
   SortedBreakpoints,
   SSRStyleID,
-} from "./setup"
+} from "./Media"
 import { App } from "./app"
 
 const app = express()
@@ -27,13 +27,13 @@ function onlyMatchListForUserAgent(userAgent: string): OnlyMatchList {
   const device = findDevice(userAgent)
   if (!device) {
     log(userAgent)
-    return null
+    return undefined
   } else {
     const supportsHover = device.touch ? "notHover" : "hover"
-    const onlyMatch: OnlyMatchList = device.resizable
+    const onlyMatch: any = device.resizable
       ? [
           supportsHover,
-          ...findBreakpointsForWidths(device.minWidth, device.maxWidth),
+          ...(findBreakpointsForWidths(device.minWidth, device.maxWidth) as []),
         ]
       : [
           supportsHover,
@@ -56,7 +56,9 @@ app.get("/ssr-only", (req, res) => {
         <div id="react-root">
           ${ReactDOMServer.renderToString(
             <MediaContextProvider
-              onlyMatch={onlyMatchListForUserAgent(req.header("User-Agent"))}
+              onlyMatch={onlyMatchListForUserAgent(req.header(
+                "User-Agent"
+              ) as string)}
             >
               <App />
             </MediaContextProvider>
@@ -79,7 +81,9 @@ app.get("/rehydration", (req, res) => {
         <div id="react-root">
           ${ReactDOMServer.renderToString(
             <MediaContextProvider
-              onlyMatch={onlyMatchListForUserAgent(req.header("User-Agent"))}
+              onlyMatch={onlyMatchListForUserAgent(req.header(
+                "User-Agent"
+              ) as string)}
             >
               <App />
             </MediaContextProvider>
@@ -126,7 +130,9 @@ app.get("/client-only", (_req, res) => {
  */
 
 // TODO: Simplify this hideous typing.
-type OnlyMatchList = Array<"hover" | "notHover" | (typeof SortedBreakpoints)[0]>
+type OnlyMatchList =
+  | Array<"hover" | "notHover" | (typeof SortedBreakpoints)[0]>
+  | undefined
 
 app.get("/", (_req, res) => {
   res.send(
@@ -151,7 +157,7 @@ const template = ({ includeCSS, body }) => `
       <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5">
       ${
         includeCSS
-          ? `<style type="text/css" id="${SSRStyleID}">${createMediaStyle()}</style>`
+          ? `<style type="text/css" id="${SSRStyleID}">${mediaStyle}</style>`
           : ""
       }
     </head>

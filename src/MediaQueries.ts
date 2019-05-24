@@ -21,7 +21,7 @@ export class MediaQueries<B extends string> {
     interactions: { [name: string]: string }
   ) {
     this._breakpoints = new Breakpoints(breakpoints)
-    this._interactions = new Interactions(interactions)
+    this._interactions = new Interactions(interactions || {})
   }
 
   public get breakpoints() {

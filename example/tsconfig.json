@@ -1,7 +1,0 @@
-{
-  "extends": "../tsconfig.json",
-  "compilerOptions": {
-    "rootDirs": ["../example", "../src"],
-    "resolveJsonModule": true
-  }
-}

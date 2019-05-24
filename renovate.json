@@ -2,6 +2,9 @@
   "extends": [
     "@artsy:lib"
   ],
+  "ignoreDeps": [
+    "@artsy/react-responsive-media"
+  ],
   "assignees": [
     "zephraph"
   ]

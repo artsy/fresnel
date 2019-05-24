@@ -13,6 +13,7 @@
     "noUnusedLocals": true,
     "noUnusedParameters": true,
     "outDir": "dist",
+    "resolveJsonModule": true,
     "rootDir": "src",
     "skipLibCheck": true,
     "target": "es2015",

@@ -3,7 +3,7 @@ import Webpack from "webpack"
 const config: Webpack.Configuration = {
   mode: "development",
   context: __dirname,
-  entry: "./client.tsx?http://localhost:8080",
+  entry: "./src/client.tsx?http://localhost:8080",
   output: {
     path: __dirname,
     filename: "bundle.js",
