@@ -1,3 +1,15 @@
+# v1.0.1 (Fri May 24 2019)
+
+#### ⚠️  Pushed to master
+
+- Fix link in README  ([@damassi.pappas@gmail.com](https://github.com/damassi.pappas@gmail.com))
+
+#### Authors: 1
+
+- [@damassi.pappas@gmail.com](https://github.com/damassi.pappas@gmail.com)
+
+---
+
 # v1.0.0 (Fri May 24 2019)
 
 ### Release Notes
