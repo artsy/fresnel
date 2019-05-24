@@ -7,7 +7,7 @@
     "start": "babel-node --extensions '.ts,.tsx,.js,.jsx' src/server.tsx"
   },
   "dependencies": {
-    "@artsy/react-responsive-media": "^2.0.3",
+    "@artsy/fresnel": "^0.0.1",
     "@babel/node": "^7.4.5",
     "express": "^4.17.0",
     "react": "^16.8.6",

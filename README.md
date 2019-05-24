@@ -1,11 +1,16 @@
-# @artsy/react-responsive-media
+# @artsy/fresnel
 
 [![CircleCI][ci-icon]][ci] [![npm version][npm-icon]][npm]
+
+> The Fresnel equations describe the reflection of light when incident on an
+> interface between different optical media.
+
+– https://en.wikipedia.org/wiki/Fresnel_equations
 
 ## Installation
 
 ```sh
-  yarn add @artsy/react-responsive-media
+  yarn add @artsy/fresnel
 ```
 
 **Table of Contents**
@@ -43,15 +48,15 @@ directly in CSS/HTML:
 <div class="my-container" />
 ```
 
-By hooking into a breakpoint definition, `@artsy/react-responsive-media` takes
-this declarative approach and brings it into the React world.
+By hooking into a breakpoint definition, `@artsy/fresnel` takes this declarative
+approach and brings it into the React world.
 
 ## Basic Example
 
 ```tsx
 import React from "react"
 import ReactDOM from "react-dom"
-import { createMedia } from "@artsy/react-responsive-media"
+import { createMedia } from "@artsy/fresnel"
 
 const { MediaContextProvider, Media  } = createMedia({
   breakpoints: {
@@ -536,14 +541,13 @@ then use the `Skip Release` tag along side the appropriate version tag.
 
 </details>
 
-[ci]: https://circleci.com/gh/artsy/react-responsive-media
-[ci-icon]: https://circleci.com/gh/artsy/react-responsive-media.svg?style=shield
-[npm]: https://www.npmjs.com/package/@artsy/react-responsive-media
-[npm-icon]: https://badge.fury.io/js/%40artsy%2Freact-responsive-media.svg
+[ci]: https://circleci.com/gh/artsy/fresnel
+[ci-icon]: https://circleci.com/gh/artsy/fresnel.svg?style=shield
+[npm]: https://www.npmjs.com/package/@artsy/fresnel
+[npm-icon]: https://badge.fury.io/js/%40artsy%2Ffresnel.svg
 [react-responsive]: https://github.com/contra/react-responsive
 [react-media]: https://github.com/ReactTraining/react-media
 [match-media-api]:
   https://developer.mozilla.org/en-US/docs/Web/API/Window/matchMedia
-[new-issue]: https://github.com/artsy/react-responsive-media/issues/new
-[release-tags]:
-  https://github.com/artsy/react-responsive-media/blob/master/package.json
+[new-issue]: https://github.com/artsy/fresnel/issues/new
+[release-tags]: https://github.com/artsy/fresnel/blob/master/package.json

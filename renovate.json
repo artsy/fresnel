@@ -3,7 +3,7 @@
     "@artsy:lib"
   ],
   "ignoreDeps": [
-    "@artsy/react-responsive-media"
+    "@artsy/fresnel"
   ],
   "assignees": [
     "zephraph"

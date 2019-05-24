@@ -126,7 +126,7 @@ app.get("/client-only", (_req, res) => {
 })
 
 /**
- * Misc things that are not of interest for demonstrating react-responsive-media
+ * Misc things that are not of interest for demonstrating fresnel
  */
 
 // TODO: Simplify this hideous typing.

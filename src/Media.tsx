@@ -389,7 +389,7 @@ export function createMedia<
                   }
 
                   console.warn(
-                    "[@artsy/react-responsive-media] " +
+                    "[@artsy/fresnel] " +
                       "`at` is being used with the largest breakpoint. " +
                       "Consider using `<Media greaterThanOrEqual=" +
                       `"${largestBreakpoint}">\` to account for future ` +
@@ -419,7 +419,7 @@ export function createMedia<
             } else {
               return (
                 <div
-                  className={`rrm-container ${className}`}
+                  className={`fresnel-container ${className}`}
                   suppressHydrationWarning={!renderChildren}
                 >
                   {renderChildren ? props.children : null}

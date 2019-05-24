@@ -1,7 +1,7 @@
 {
-  "name": "@artsy/react-responsive-media",
-  "version": "2.0.3",
-  "description": "A declarative SSR-compatible approach to CSS media query based responsive layouts.",
+  "name": "@artsy/fresnel",
+  "version": "0.0.1",
+  "description": "An SSR compatible approach to CSS media query based responsive layouts for React.",
   "main": "dist/index.js",
   "files": [
     "dist"
@@ -29,7 +29,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+ssh://git@github.com/artsy/react-responsive-media.git"
+    "url": "git+ssh://git@github.com/artsy/fresnel.git"
   },
   "authors": [
     "Eloy Durán <eloy.de.enige@gmail.com>",
@@ -37,9 +37,9 @@
   ],
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/artsy/react-responsive-media/issues"
+    "url": "https://github.com/artsy/fresnel/issues"
   },
-  "homepage": "https://github.com/artsy/react-responsive-media#readme",
+  "homepage": "https://github.com/artsy/fresnel#readme",
   "peerDependencies": {
     "react": "^16.3.0"
   },
