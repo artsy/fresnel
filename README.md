@@ -309,7 +309,7 @@ approach:
 </td></tr>
 </table>
 
-See the [server-side rendering](examples/ssr-rendering) app for a working 
+See the [server-side rendering](examples/ssr-rendering) app for a working
 example.
 
 ## API
@@ -362,11 +362,7 @@ import React from "react"
 import { MediaContextProvider } from "./Media"
 
 export const App = () => {
-  return (
-    <MediaContextProvider>
-      ... 
-    </MediaContextProvider>
-  )
+  return <MediaContextProvider>...</MediaContextProvider>
 }
 ```
 
@@ -398,9 +394,12 @@ above ‘Setup’ section.
 
 > Note: This is only used when SSR rendering
 
-Besides the `Media` and `MediaContextProvider` components, there's a `createMediaStyle`
-function (if SSR rendering) that produces the CSS styling for all possible media queries that the
-`Media` instance can make use of while markup is being passed from the server to the client during hydration. Be sure to insert this within a `<style>` tag [in your document’s `<head>`](https://github.com/artsy/fresnel/blob/master/examples/ssr-rendering/src/server.tsx#L28).
+Besides the `Media` and `MediaContextProvider` components, there's a
+`createMediaStyle` function that produces the CSS styling for all possible media
+queries that the `Media` instance can make use of while markup is being passed
+from the server to the client during hydration. Be sure to insert this within a
+`<style>` tag
+[in your document’s `<head>`](https://github.com/artsy/fresnel/blob/master/examples/ssr-rendering/src/server.tsx#L28).
 
 It’s advisable to do this setup in its own module so that it can be easily
 imported throughout your application:
