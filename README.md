@@ -44,7 +44,7 @@ directly in CSS/HTML:
 ```
 
 By hooking into a breakpoint definition, `@artsy/react-responsive-media` takes
-this imperative approach and makes it declarative.
+this declarative approach and brings it into the React world.
 
 ## Basic Example
 
@@ -89,13 +89,12 @@ accurately start rendering the HTML/CSS while it receives the markup, which is
 long before the React application has booted. This improves perceived
 performance for end-users.
 
-Why not just render the one that the current device needs? A couple of reasons.
-First, we can't accurately identify which breakpoint your device needs on the
-server. We could use a library to sniff the browser user-agent, but those aren't
-always accurate, and they wouldn't give us all the information we need to know
-when we are server-rendering. Once client-side JS boots and React attaches, it
-simply washes over the DOM and removes markup that is unneeded, via a
-`matchMedia` call.
+Why not just render the one that the current device needs? We can't accurately
+identify which breakpoint your device needs on the server. We could use a
+library to sniff the browser user-agent, but those aren't always accurate, and
+they wouldn't give us all the information we need to know when we are
+server-rendering. Once client-side JS boots and React attaches, it simply washes
+over the DOM and removes markup that is unneeded, via a `matchMedia` call.
 
 ### SSR Example
 
@@ -198,7 +197,7 @@ need to use a user-agent or other server-side "hints".
 ## Usage with Gatsby
 
 `@artsy/fresnel` works great with Gatsby's static hybrid approach to rendering.
-See the [Gatsby Example](`/examples/gatsby`) for a simple implementation.
+See the [Gatsby Example](examples/gatsby) for a simple implementation.
 
 ## Example Apps
 
@@ -241,8 +240,8 @@ components is to use the browser’s [`matchMedia` api][match-media-api]:
 On the client, when a given breakpoint is matched React conditionally renders a
 tree.
 
-However, this approach suffers from a few flaws when used in conjunction with
-server-side rendering (SSR):
+However, this approach has some limitations for what we wanted to achieve with
+our server-side rendering setup:
 
 - It's impossible to reliably know the user's current breakpoint during the
   server render phase since that requires a browser.
