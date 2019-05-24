@@ -31,7 +31,7 @@ export class MediaQueries<B extends string> {
   public toStyle = () => {
     return [
       // Don’t add any size to the layout
-      ".rrm-container{margin:0;padding:0;}",
+      ".fresnel-container{margin:0;padding:0;}",
       ...this._breakpoints.toRuleSets(),
       ...this._interactions.toRuleSets(),
     ].join("\n")

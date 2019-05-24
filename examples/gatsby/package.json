@@ -5,7 +5,7 @@
   "version": "0.1.0",
   "author": "Artsy Inc",
   "dependencies": {
-    "@artsy/react-responsive-media": "^2.0.3",
+    "@artsy/fresnel": "^0.0.1",
     "gatsby": "^2.5.7",
     "gatsby-plugin-typescript": "^2.0.14",
     "react": "^16.8.6",

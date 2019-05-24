@@ -1,4 +1,4 @@
-import { createMedia } from "@artsy/react-responsive-media"
+import { createMedia } from "@artsy/fresnel"
 
 const ExampleAppMedia = createMedia({
   breakpoints: {
@@ -24,4 +24,4 @@ export const {
   SortedBreakpoints,
 } = ExampleAppMedia
 
-export const SSRStyleID = "ssr-rrm-style"
+export const SSRStyleID = "ssr-fresnel-style"
