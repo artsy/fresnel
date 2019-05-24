@@ -335,7 +335,7 @@ And the following interactions:
 You would then produce the set of media components like so:
 
 ```tsx
-const MyAppMediaComponents = createMedia({
+const ExampleAppMedia = createMedia({
   breakpoints: {
     sm: 0,
     md: 768
@@ -352,37 +352,48 @@ const MyAppMediaComponents = createMedia({
 As you can see, breakpoints are defined by their _start_ offset, where the first
 one is expected to start at 0.
 
-Besides the `Media` and `MediaContextProvider` components, a `MediaStyle`
-function that produces the CSS styling for all possible media queries that the
-`Media` instance can make use of. Be sure to insert this with a `<style>`
-element into your document’s `<head>` element.
+### MediaContextProvider
 
-```tsx
-import { Style } from "react-head"
-import { MediaContextProvider } from "./Responsive"
-import { Home } from "./Home"
+The `MediaContextProvider` component influences how `Media` components will be
+rendered.
 
-const App = () => (
-  <>
-    <Style>{MediaStyle()}</Style>
-    <MediaContextProvider>
-      <Home />
-    </MediaContextProvider>
-  </>
-)
-```
+### Media
+
+The `Media` component created for your application has a few mutually exclusive
+props that make up the API you’ll use to declare your responsive layouts. These
+props all operate based on the named breakpoints that were provided when you
+created the media components.
+
+The examples given for each prop use breakpoint definitions as defined in the
+above ‘Setup’ section.
+
+#### createMediaStyle
+
+> Note: This is only used when SSR rendering
+
+Besides the `Media` and `MediaContextProvider` components, there's a `createMediaStyle`
+function (if SSR rendering) that produces the CSS styling for all possible media queries that the
+`Media` instance can make use of while markup is being passed from the server to the client during hydration. Be sure to insert this within a `<style>` tag [in your document’s `<head>`](https://github.com/artsy/fresnel/blob/master/examples/ssr-rendering/src/server.tsx#L28).
 
 It’s advisable to do this setup in its own module so that it can be easily
 imported throughout your application:
 
 ```tsx
-export const { MediaContextProvider, Media, MediaStyle } = MyAppMediaComponents
+import { createMedia } from "@artsy/fresnel"
+
+const ExampleAppMedia = createMedia({
+  breakpoints: {
+    xs: 0,
+    sm: 768,
+    md: 1000,
+    lg: 1200,
+  },
+})
+
+// Generate CSS to be injected into the head
+export const mediaStyle = ExampleAppMedia.createMediaStyle()
+export const { Media, MediaContextProvider } = ExampleAppMedia
 ```
-
-### MediaContextProvider
-
-The `MediaContextProvider` component influences how `Media` components will be
-rendered.
 
 #### onlyMatch
 
@@ -397,16 +408,6 @@ to only the currently matching media queries. This is done to avoid triggering
 mount related life-cycle hooks of hidden components.
 
 Disabling this behaviour is mostly intended for debugging purposes.
-
-### Media
-
-The `Media` component created for your application has a few mutually exclusive
-props that make up the API you’ll use to declare your responsive layouts. These
-props all operate based on the named breakpoints that were provided when you
-created the media components.
-
-The examples given for each prop use breakpoint definitions as defined in the
-above ‘Setup’ section.
 
 #### at
 
