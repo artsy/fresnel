@@ -358,8 +358,6 @@ The `MediaContextProvider` component influences how `Media` components will be
 rendered. Mount it at the root of your component tree:
 
 ```tsx
-// App.tsx
-
 import React from "react"
 import { MediaContextProvider } from "./Media"
 
@@ -380,8 +378,6 @@ props all operate based on the named breakpoints that were provided when you
 created the media components.
 
 ```tsx
-// App.tsx
-
 import React from "react"
 import { Media } from "./Media"
 
