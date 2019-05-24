@@ -2,10 +2,10 @@
 # yarn lockfile v1
 
 
-"@artsy/react-responsive-media@^2.0.3":
-  version "2.0.3"
-  resolved "https://registry.yarnpkg.com/@artsy/react-responsive-media/-/react-responsive-media-2.0.3.tgz#d7955ba00d9ee6d1885e687f3e125bed747d69cc"
-  integrity sha512-+6aHZhUv1BVEYh63wBeWDj6Gtzb2ucTkneCnkus6va7VciLVfmpzYEUKUpE9b9lWG2u7JmpE9ER6wBpEuZciSg==
+"@artsy/fresnel@^0.0.1":
+  version "0.0.1"
+  resolved "https://registry.yarnpkg.com/@artsy/fresnel/-/fresnel-0.0.1.tgz#b3f5e8f4a20cef4733678eb4b7c0f12623dda305"
+  integrity sha512-JhQRI+0/gsHcQIY+r84hK2EsxBGrvg3ymdLWqs2f7ZJTKjS4tk0u44dpJ4r7E0Ez5nLzsOQLOzBaYI27JXrlMg==
 
 "@babel/code-frame@^7.0.0":
   version "7.0.0"
