@@ -309,7 +309,7 @@ approach:
 </td></tr>
 </table>
 
-See the [server-side rendering](#server-side-rendering) section for a complete
+See the [server-side rendering](examples/ssr-rendering) app for a working 
 example.
 
 ## API
