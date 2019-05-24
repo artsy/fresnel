@@ -1,3 +1,7 @@
+# v0.0.1 (Fri May 24 2019)
+
+Renamed project to Fresnel. [#77](https://github.com/artsy/fresnel/issues/77)
+
 # rrm-v2.0.3 (Wed May 22 2019)
 
 #### 🐛  Bug Fix
