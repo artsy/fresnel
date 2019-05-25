@@ -335,6 +335,8 @@ And the following interactions:
 You would then produce the set of media components like so:
 
 ```tsx
+// Media.tsx
+
 const ExampleAppMedia = createMedia({
   breakpoints: {
     sm: 0,
@@ -347,6 +349,8 @@ const ExampleAppMedia = createMedia({
     notHover: "(hover: none)",
   },
 })
+
+export const { Media, MediaContextProvider, createMediaStyle } = ExampleAppMedia
 ```
 
 As you can see, breakpoints are defined by their _start_ offset, where the first
