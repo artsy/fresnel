@@ -215,7 +215,7 @@ There are four examples one can explore in the `/examples` folder:
 
 While the `Basic` and `SSR` examples will get one pretty far, `@artsy/fresnel`
 can do a lot more . For an exhaustive deep-dive into its features, check out the
-[Kitchen Sink]('examples/kitchen-sink) app.
+[Kitchen Sink](examples/kitchen-sink) app.
 
 ## Why not conditionally render?
 
