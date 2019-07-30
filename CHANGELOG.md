@@ -1,3 +1,23 @@
+# v1.0.5 (Tue Jul 30 2019)
+
+#### 🐛  Bug Fix
+
+- Fix Kitchen Sink example app link typo [#93](https://github.com/artsy/fresnel/pull/93) ([@dblandin](https://github.com/dblandin))
+
+#### 🏠  Internal
+
+- Update yarn orb to v2.1.0 [#92](https://github.com/artsy/fresnel/pull/92) ([@renovate-bot](https://github.com/renovate-bot))
+- Clarify README api [#90](https://github.com/artsy/fresnel/pull/90) ([@damassi](https://github.com/damassi))
+- Update README [#89](https://github.com/artsy/fresnel/pull/89) ([@damassi](https://github.com/damassi))
+
+#### Authors: 3
+
+- Devon Blandin ([@dblandin](https://github.com/dblandin))
+- Renovate Bot ([@renovate-bot](https://github.com/renovate-bot))
+- Christopher Pappas ([@damassi](https://github.com/damassi))
+
+---
+
 # v1.0.4 (Fri May 24 2019)
 
 #### ⚠️  Pushed to master
