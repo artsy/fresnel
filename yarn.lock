@@ -2,10 +2,10 @@
 # yarn lockfile v1
 
 
-"@artsy/auto-config@1.0.0":
-  version "1.0.0"
-  resolved "https://registry.yarnpkg.com/@artsy/auto-config/-/auto-config-1.0.0.tgz#85d39cffd893fb0aa903ff8a17b3cf3baf3d8646"
-  integrity sha512-C7Y7H6qgmrBAL0lp/EGxsEBUNDzgxkB2TnQW3lW37Q6YZiIKYpjGmu0aNHa/HEsY0LTRg2LzF25y1FU+3iAKwQ==
+"@artsy/auto-config@1.0.1":
+  version "1.0.1"
+  resolved "https://registry.yarnpkg.com/@artsy/auto-config/-/auto-config-1.0.1.tgz#781aaaf026d2d06520005ced032ebca284935e8c"
+  integrity sha512-S6tw+x7CmTQQutt2Xqla4Y+3/Wr4RVjaZ5WYmv2V4D0ZUc/lk5UQKpI9akxlgOd5tMUcqBDPRGK6SF5pGNYP8g==
 
 "@artsy/detect-responsive-traits@0.0.4":
   version "0.0.4"
