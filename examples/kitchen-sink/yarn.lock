@@ -2,10 +2,10 @@
 # yarn lockfile v1
 
 
-"@artsy/detect-responsive-traits@0.0.4":
-  version "0.0.4"
-  resolved "https://registry.yarnpkg.com/@artsy/detect-responsive-traits/-/detect-responsive-traits-0.0.4.tgz#933c66db24e70186c20e83017af39794a920ef0e"
-  integrity sha512-3LfmVWQdTQLjorlNv02y+qdD3h3RS57M46P/PBlG+nHjzUFtNk2B9NAKPurTzDubjlPYx1FUTH+EPm3ZaoTipg==
+"@artsy/detect-responsive-traits@0.0.5":
+  version "0.0.5"
+  resolved "https://registry.yarnpkg.com/@artsy/detect-responsive-traits/-/detect-responsive-traits-0.0.5.tgz#abf85959f8567816babec6f582b744f58c98b726"
+  integrity sha512-axgW5YuqSpPzHb27yo2jmPHz/N9eN2hh2E+Mub5BKuu/jHZI+iDTdw0OZ3I+z7Z9WKBh+FPVx4gpza5w7slJNA==
 
 "@artsy/fresnel@^0.0.1":
   version "0.0.1"
