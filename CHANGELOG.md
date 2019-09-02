@@ -1,3 +1,21 @@
+# v1.0.6 (Mon Sep 02 2019)
+
+#### 🐛  Bug Fix
+
+- Fix kitchen-sink example [#97](https://github.com/artsy/fresnel/pull/97) ([@javiercr](https://github.com/javiercr))
+- Update README.md [#96](https://github.com/artsy/fresnel/pull/96) ([@javiercr](https://github.com/javiercr))
+
+#### 🏠  Internal
+
+- Update dep @artsy/auto-config from 1.0.0 to v1.0.1 [#94](https://github.com/artsy/fresnel/pull/94) ([@renovate-bot](https://github.com/renovate-bot))
+
+#### Authors: 2
+
+- Javier Cuevas ([@javiercr](https://github.com/javiercr))
+- Renovate Bot ([@renovate-bot](https://github.com/renovate-bot))
+
+---
+
 # v1.0.5 (Tue Jul 30 2019)
 
 #### 🐛  Bug Fix
