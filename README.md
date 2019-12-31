@@ -18,7 +18,7 @@
 - [Overview](#overview)
 - [Basic Example](#basic-example)
 - [Server-side Rendering (SSR)](#server-side-rendering-ssr-usage)
-- [Usage with Gatsby](#usage-with-gatsby)
+- [Usage with Gatsby or Next](#usage-with-gatsby-or-next)
 - [Example Apps](#example-apps)
 - [Why not conditionally render?](#why-not-conditionally-render)
 - [API](#api)
@@ -58,24 +58,24 @@ import React from "react"
 import ReactDOM from "react-dom"
 import { createMedia } from "@artsy/fresnel"
 
-const { MediaContextProvider, Media  } = createMedia({
+const { MediaContextProvider, Media } = createMedia({
   breakpoints: {
     sm: 0,
     md: 768,
     lg: 1024,
-    xl: 1192
+    xl: 1192,
   },
 })
 
 const App = () => (
   <MediaContextProvider>
-    <Media at='sm'>
+    <Media at="sm">
       <MobileApp />
     </Media>
-    <Media at='md'>
+    <Media at="md">
       <TabletApp />
     </Media>
-    <Media greaterThanOrEqual='lg'>
+    <Media greaterThanOrEqual="lg">
       <DesktopApp />
     </Media>
   </MediaContextProvider>
@@ -116,7 +116,7 @@ const ExampleAppMedia = createMedia({
     sm: 0,
     md: 768,
     lg: 1024,
-    xl: 1192
+    xl: 1192,
   },
 })
 
@@ -199,10 +199,10 @@ And that's it! To test, disable JS and scale your browser window down to a
 mobile size and reload; it will correctly render the mobile layout without the
 need to use a user-agent or other server-side "hints".
 
-## Usage with Gatsby
+## Usage with Gatsby or Next
 
-`@artsy/fresnel` works great with Gatsby's static hybrid approach to rendering.
-See the [Gatsby Example](examples/gatsby) for a simple implementation.
+`@artsy/fresnel` works great with Gatsby or Next.js's static hybrid approach to
+rendering. See the examples below for a simple implementation.
 
 ## Example Apps
 
@@ -211,6 +211,7 @@ There are four examples one can explore in the `/examples` folder:
 - [Basic](examples/basic)
 - [Server-side Rendering](examples/ssr-rendering)
 - [Gatsby](examples/gatsby)
+- [Next](examples/nextjs)
 - [Kitchen Sink](examples/kitchen-sink)
 
 While the `Basic` and `SSR` examples will get one pretty far, `@artsy/fresnel`
@@ -416,7 +417,7 @@ const ExampleAppMedia = createMedia({
     sm: 0,
     md: 768,
     lg: 1024,
-    xl: 1192
+    xl: 1192,
   },
 })
 
@@ -453,10 +454,14 @@ viewport width is between 0 and 768 (768 not included) points:
 <Media at="sm">...</Media>
 ```
 
-The corresponding css rule: 
+The corresponding css rule:
 
 ```css
-@media not all and (min-width:0px) and (max-width:767px) {.fresnel-at-sm{display:none!important;}}
+@media not all and (min-width: 0px) and (max-width: 767px) {
+  .fresnel-at-sm {
+    display: none !important;
+  }
+}
 ```
 
 #### lessThan
@@ -471,10 +476,14 @@ viewport width is between 0 and 1024 (1024 not included) points:
 <Media lessThan="lg">...</Media>
 ```
 
-The corresponding css rule: 
+The corresponding css rule:
 
 ```css
-@media not all and (max-width:1023px){.fresnel-lessThan-lg{display:none!important;}}
+@media not all and (max-width: 1023px) {
+  .fresnel-lessThan-lg {
+    display: none !important;
+  }
+}
 ```
 
 #### greaterThan
@@ -489,10 +498,14 @@ viewport width is equal or greater than 1024 points:
 <Media greaterThan="md">...</Media>
 ```
 
-The corresponding css rule: 
+The corresponding css rule:
 
 ```css
-@media not all and (min-width:1024px){.fresnel-greaterThan-md{display:none!important;}}
+@media not all and (min-width: 1024px) {
+  .fresnel-greaterThan-md {
+    display: none !important;
+  }
+}
 ```
 
 #### greaterThanOrEqual
@@ -507,10 +520,14 @@ viewport width is 768 points or up:
 <Media greaterThanOrEqual="md">...</Media>
 ```
 
-The corresponding css rule: 
+The corresponding css rule:
 
 ```css
-@media not all and (min-width:768px){.fresnel-greaterThanOrEqual-md{display:none!important;}}
+@media not all and (min-width: 768px) {
+  .fresnel-greaterThanOrEqual-md {
+    display: none !important;
+  }
+}
 ```
 
 #### between
@@ -526,10 +543,14 @@ viewport width is between 768 and 1192 (1192 not included) points:
 <Media between={["md", "xl"]}>...</Media>
 ```
 
-The corresponding css rule: 
+The corresponding css rule:
 
 ```css
-@media not all and (min-width:768px) and (max-width:1191px){.fresnel-between-md-xl{display:none!important;}}
+@media not all and (min-width: 768px) and (max-width: 1191px) {
+  .fresnel-between-md-xl {
+    display: none !important;
+  }
+}
 ```
 
 ## Pros vs Cons
