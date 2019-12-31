@@ -1,3 +1,15 @@
+# v1.0.9 (Tue Dec 31 2019)
+
+#### 🐛  Bug Fix
+
+- Documentation corrections. [#107](https://github.com/artsy/fresnel/pull/107) ([@RussCoder](https://github.com/RussCoder))
+
+#### Authors: 1
+
+- [@RussCoder](https://github.com/RussCoder)
+
+---
+
 # v1.0.8 (Tue Dec 31 2019)
 
 #### 🐛  Bug Fix
