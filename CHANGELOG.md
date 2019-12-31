@@ -1,3 +1,25 @@
+# v1.0.8 (Tue Dec 31 2019)
+
+#### 🐛  Bug Fix
+
+- Add Next.js example [#108](https://github.com/artsy/fresnel/pull/108) ([@damassi](https://github.com/damassi))
+
+#### 🏠  Internal
+
+- Update dep typescript from 3.7.3 to v3.7.4 [#105](https://github.com/artsy/fresnel/pull/105) ([@renovate-bot](https://github.com/renovate-bot))
+- Update dep typescript from 3.7.2 to v3.7.3 [#104](https://github.com/artsy/fresnel/pull/104) ([@renovate-bot](https://github.com/renovate-bot))
+- Update dep typescript from 2.9.2 to v3 [#102](https://github.com/artsy/fresnel/pull/102) ([@renovate-bot](https://github.com/renovate-bot))
+- Update yarn orb to v2.1.1 [#100](https://github.com/artsy/fresnel/pull/100) ([@renovate-bot](https://github.com/renovate-bot))
+- Update dep @artsy/detect-responsive-traits from 0.0.4 to v0.0.5 [#99](https://github.com/artsy/fresnel/pull/99) ([@renovate-bot](https://github.com/renovate-bot))
+- Pin dependencies [#98](https://github.com/artsy/fresnel/pull/98) ([@renovate-bot](https://github.com/renovate-bot))
+
+#### Authors: 2
+
+- Christopher Pappas ([@damassi](https://github.com/damassi))
+- Renovate Bot ([@renovate-bot](https://github.com/renovate-bot))
+
+---
+
 # v1.0.7 (Mon Sep 02 2019)
 
 
