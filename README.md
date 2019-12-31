@@ -113,10 +113,10 @@ import { createMedia } from "@artsy/fresnel"
 
 const ExampleAppMedia = createMedia({
   breakpoints: {
-    xs: 0,
-    sm: 768,
-    md: 1000,
-    lg: 1200,
+    sm: 0,
+    md: 768,
+    lg: 1024,
+    xl: 1192
   },
 })
 
@@ -136,8 +136,8 @@ import { Media, MediaContextProvider } from "./Media"
 export const App = () => {
   return (
     <MediaContextProvider>
-      <Media at="xs">Hello mobile!</Media>
-      <Media greaterThan="xs">Hello desktop!</Media>
+      <Media at="sm">Hello mobile!</Media>
+      <Media greaterThan="sm">Hello desktop!</Media>
     </MediaContextProvider>
   )
 }
@@ -232,8 +232,8 @@ components is to use the browser’s [`matchMedia` api][match-media-api]:
 
 ```tsx
 <Responsive>
-  {({ xs }) => {
-    if (xs) {
+  {({ sm }) => {
+    if (sm) {
       return <MobileApp />
     } else {
       return <DesktopApp />
@@ -285,8 +285,8 @@ approach:
 
 ```tsx
 <Responsive>
-  {({ xs }) => {
-    if (xs) return <SmallArticleItem {...props} />
+  {({ sm }) => {
+    if (sm) return <SmallArticleItem {...props} />
     else return <LargeArticleItem {...props} />
   }}
 </Responsive>
@@ -297,10 +297,10 @@ approach:
 
 ```tsx
 <>
-  <Media at="xs">
+  <Media at="sm">
     <SmallArticleItem {...props} />
   </Media>
-  <Media greaterThan="xs">
+  <Media greaterThan="sm">
     <LargeArticleItem {...props} />
   </Media>
 </>
@@ -322,9 +322,9 @@ your application.
 
 For example, consider an application that has the following breakpoints:
 
-- A viewport width between 1 and 768 points, named `sm`.
-- A viewport width between 768 and 1024 points, named `md`.
-- A viewport width between 1024 and 1192 points, named `lg`.
+- A viewport width between 0 and 768 (768 not included) points, named `sm`.
+- A viewport width between 768 and 1024 (1024 not included) points, named `md`.
+- A viewport width between 1024 and 1192 (1192 not included) points, named `lg`.
 - A viewport width from 1192 points and above, named `xl`.
 
 And the following interactions:
@@ -384,8 +384,8 @@ import { Media } from "./Media"
 export const HomePage = () => {
   return (
     <>
-      <Media at="xs">Hello mobile!</Media>
-      <Media greaterThan="xs">Hello desktop!</Media>
+      <Media at="sm">Hello mobile!</Media>
+      <Media greaterThan="sm">Hello desktop!</Media>
     </>
   )
 }
@@ -413,10 +413,10 @@ import { createMedia } from "@artsy/fresnel"
 
 const ExampleAppMedia = createMedia({
   breakpoints: {
-    xs: 0,
-    sm: 768,
-    md: 1000,
-    lg: 1200,
+    sm: 0,
+    md: 768,
+    lg: 1024,
+    xl: 1192
   },
 })
 
@@ -447,10 +447,16 @@ start offset of the breakpoint, but less than the next breakpoint, if one
 exists.
 
 For example, children of this `Media` declaration will only be visible if the
-viewport width is between 0 and 768 points:
+viewport width is between 0 and 768 (768 not included) points:
 
 ```tsx
 <Media at="sm">...</Media>
+```
+
+The corresponding css rule: 
+
+```css
+@media not all and (min-width:0px) and (max-width:767px) {.fresnel-at-sm{display:none!important;}}
 ```
 
 #### lessThan
@@ -459,22 +465,34 @@ Use this to declare that children should only be visible while the viewport
 width is less than the start offset of the specified breakpoint.
 
 For example, children of this `Media` declaration will only be visible if the
-viewport width is between 0 and 1024 points:
+viewport width is between 0 and 1024 (1024 not included) points:
 
 ```tsx
 <Media lessThan="lg">...</Media>
 ```
 
+The corresponding css rule: 
+
+```css
+@media not all and (max-width:1023px){.fresnel-lessThan-lg{display:none!important;}}
+```
+
 #### greaterThan
 
 Use this to declare that children should only be visible while the viewport
-width is greater than the start offset of the _next_ breakpoint.
+width is equal or greater than the start offset of the _next_ breakpoint.
 
 For example, children of this `Media` declaration will only be visible if the
-viewport width is greater than 1024 points:
+viewport width is equal or greater than 1024 points:
 
 ```tsx
 <Media greaterThan="md">...</Media>
+```
+
+The corresponding css rule: 
+
+```css
+@media not all and (min-width:1024px){.fresnel-greaterThan-md{display:none!important;}}
 ```
 
 #### greaterThanOrEqual
@@ -489,6 +507,12 @@ viewport width is 768 points or up:
 <Media greaterThanOrEqual="md">...</Media>
 ```
 
+The corresponding css rule: 
+
+```css
+@media not all and (min-width:768px){.fresnel-greaterThanOrEqual-md{display:none!important;}}
+```
+
 #### between
 
 Use this to declare that children should only be visible while the viewport
@@ -496,10 +520,16 @@ width is equal to the start offset of the first specified breakpoint but less
 than the start offset of the second specified breakpoint.
 
 For example, children of this `Media` declaration will only be visible if the
-viewport width is between 768 and 1192 points:
+viewport width is between 768 and 1192 (1192 not included) points:
 
 ```tsx
 <Media between={["md", "xl"]}>...</Media>
+```
+
+The corresponding css rule: 
+
+```css
+@media not all and (min-width:768px) and (max-width:1191px){.fresnel-between-md-xl{display:none!important;}}
 ```
 
 ## Pros vs Cons
@@ -525,15 +555,15 @@ component that gets styled differently at different breakpoints? (Let’s imagin
 a `matchMedia` example.)
 
 ```tsx
-<Sans size={xs ? 2 : 3}>
+<Sans size={sm ? 2 : 3}>
 ```
 
 ```tsx
 <>
-  <Media at="xs">
-    {this.getComponent('xs')
+  <Media at="sm">
+    {this.getComponent('sm')
   </Media>
-  <Media greaterThan="xs">
+  <Media greaterThan="sm">
     {this.getComponent()
   </Media>
 </>
@@ -541,8 +571,8 @@ a `matchMedia` example.)
 
 ```tsx
 getComponent(breakpoint?: string) {
-  const xs = breakpoint === 'xs'
-  return <Sans size={xs ? 2 : 3} />
+  const sm = breakpoint === 'sm'
+  return <Sans size={sm ? 2 : 3} />
 }
 ```
 

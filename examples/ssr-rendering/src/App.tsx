@@ -4,8 +4,8 @@ import { Media, MediaContextProvider } from "./Media"
 export const App = () => {
   return (
     <MediaContextProvider>
-      <Media at="xs">Hello mobile!</Media>
-      <Media greaterThan="xs">Hello desktop!</Media>
+      <Media at="sm">Hello mobile!</Media>
+      <Media greaterThan="sm">Hello desktop!</Media>
     </MediaContextProvider>
   )
 }
