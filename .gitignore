@@ -2,6 +2,7 @@
 .awcache
 .cache-loader/
 .env
+.next
 .storybook/.DS_Store
 .storybook/manager.js
 .vscode/cSpell.json
