@@ -1,3 +1,15 @@
+# v1.0.12 (Tue Dec 31 2019)
+
+#### ⚠️  Pushed to master
+
+- Add Next example to README  (damassi.pappas@gmail.com)
+
+#### Authors: 1
+
+- Christopher Pappas (damassi.pappas@gmail.com)
+
+---
+
 # v1.0.9 (Tue Dec 31 2019)
 
 #### 🐛  Bug Fix
