@@ -1,3 +1,20 @@
+# v1.1.0 (Tue Feb 11 2020)
+
+#### 🚀  Enhancement
+
+- [Feature] Allow classNames to be passed to <Media> container [#114](https://github.com/artsy/fresnel/pull/114) ([@damassi](https://github.com/damassi))
+
+#### 🏠  Internal
+
+- Update dep typescript from 3.7.4 to v3.7.5 [#109](https://github.com/artsy/fresnel/pull/109) ([@renovate-bot](https://github.com/renovate-bot))
+
+#### Authors: 2
+
+- Christopher Pappas ([@damassi](https://github.com/damassi))
+- WhiteSource Renovate ([@renovate-bot](https://github.com/renovate-bot))
+
+---
+
 # v1.0.13 (Mon Jan 06 2020)
 
 
