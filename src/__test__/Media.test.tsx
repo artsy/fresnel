@@ -134,6 +134,17 @@ describe("Media", () => {
       expect(query).toHaveStyleRule("margin", "0")
       expect(query).toHaveStyleRule("padding", "0")
     })
+
+    it("applies additional classNames passed as props", () => {
+      const query = renderer
+        .create(
+          <Media lessThan="small" className="foo">
+            ohai
+          </Media>
+        )
+        .toJSON()
+      expect(query.props.className).toContain("foo")
+    })
   })
 
   describe("concerning breakpoints", () => {

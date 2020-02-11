@@ -11,10 +11,10 @@ import { intersection, propKey, createClassName } from "./Utils"
  *
  * @see {@link MediaProps.children}.
  */
-export type RenderProp = ((
+export type RenderProp = (
   className: string,
   renderChildren: boolean
-) => React.ReactNode)
+) => React.ReactNode
 
 // TODO: All of these props should be mutually exclusive. Using a union should
 //       probably be made possible by https://github.com/Microsoft/TypeScript/pull/27408.
@@ -176,6 +176,11 @@ export interface MediaProps<B, I> extends MediaBreakpointProps<B> {
    *
    */
   children: React.ReactNode | RenderProp
+
+  /**
+   * Additional classNames to passed down and applied to Media container
+   */
+  className?: string
 }
 
 export interface MediaContextProviderProps<M> {
@@ -363,13 +368,22 @@ export function createMedia<
       validateProps(props)
     }
 
+    static defaultProps = {
+      className: "",
+    }
+
     render() {
       const props = this.props
       return (
         <MediaContext.Consumer>
           {({ onlyMatch } = {}) => {
             let className: string | null
-            const { children, interaction, ...breakpointProps } = props
+            const {
+              children,
+              className: passedClassName,
+              interaction,
+              ...breakpointProps
+            } = props
             if (props.interaction) {
               className = createClassName("interaction", props.interaction)
             } else {
@@ -419,7 +433,7 @@ export function createMedia<
             } else {
               return (
                 <div
-                  className={`fresnel-container ${className}`}
+                  className={`fresnel-container ${className} ${passedClassName}`}
                   suppressHydrationWarning={!renderChildren}
                 >
                   {renderChildren ? props.children : null}
