@@ -1,7 +1,7 @@
 version: 2.1
 
 orbs:
-  yarn: artsy/yarn@3.0.0
+  yarn: artsy/yarn@4.0.0
 
 workflows:
   build_and_verify:
