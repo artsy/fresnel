@@ -1,7 +1,8 @@
 version: 2.1
 
 orbs:
-  yarn: artsy/yarn@3.0.0
+  yarn: artsy/yarn@4.0.0
+  auto: artsy/auto@1.0.1
 
 workflows:
   build_and_verify:
@@ -19,10 +20,17 @@ workflows:
       - yarn/test:
           requires:
             - yarn/workflow-queue
-      - yarn/auto-release:
-          # The deploy job is the _only_ job that should have access to our npm
-          # tokens. We include a context that has our publish credentials
-          # explicitly in this step. https://circleci.com/docs/2.0/contexts/
+      - auto/publish-canary:
+          context: npm-deploy
+          filters:
+            branches:
+              ignore: master
+          requires:
+            - yarn/test
+            - yarn/lint
+            - yarn/type-check
+            - yarn/update-cache
+      - auto/publish:
           context: npm-deploy
           filters:
             branches:
