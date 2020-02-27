@@ -405,7 +405,7 @@ export const HomePage = () => {
   return (
     <>
       <Media at="sm">Hello mobile!</Media>
-      <Media greaterThan="xs">
+      <Media greaterThan="sm">
         {(mediaClassNames) => {
           return (
             <MySpecialComponent className={mediaClassNames}>
