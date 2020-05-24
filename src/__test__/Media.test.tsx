@@ -251,19 +251,24 @@ describe("Media", () => {
       })
     })
 
-    it("yields wether or not the element’s children should be rendered", () => {
+    it("is not used when children should not be rendered", () => {
+      const renderSmall = jest.fn()
+      const renderMedium = jest.fn()
+
       const query = renderer.create(
         <MediaContextProvider onlyMatch={["extra-small", "small"]}>
-          <Media at="extra-small">
-            {(_, renderChildren) => (
-              <span>{renderChildren && "extra-small"}</span>
-            )}
-          </Media>
+          <Media at="extra-small">{() => <span>extra-small</span>}</Media>
           <Media at="small">
-            {(_, renderChildren) => <span>{renderChildren && "small"}</span>}
+            {() => {
+              renderSmall()
+              return <span>small</span>
+            }}
           </Media>
           <Media at="medium">
-            {(_, renderChildren) => <span>{renderChildren && "medium"}</span>}
+            {() => {
+              renderMedium()
+              return <span>medium</span>
+            }}
           </Media>
         </MediaContextProvider>
       )
@@ -273,6 +278,9 @@ describe("Media", () => {
           .map(div => div.props.children)
           .filter(Boolean)
       ).toEqual(["extra-small", "small"])
+
+      expect(renderSmall).toHaveBeenCalled()
+      expect(renderMedium).not.toHaveBeenCalled()
     })
   })
 
@@ -490,41 +498,6 @@ describe("Media", () => {
         expect(spy).not.toHaveBeenCalled()
         done()
       })
-    })
-
-    // This is the best we can do until we figure out a way to reproduce a
-    // warning, as per above.
-    it("does not warn about Media components that do not match and are empty", () => {
-      mockCurrentDynamicBreakpoint("medium")
-
-      const query = (renderer
-        .create(
-          <MediaContextProvider>
-            <Media at="extra-small">
-              <span className="extra-small" />
-            </Media>
-            <Media at="medium">
-              <span className="medium" />
-            </Media>
-            <Media at="large">
-              <span className="large" />
-            </Media>
-          </MediaContextProvider>
-        )
-        .toJSON() as any) as ReactTestRendererJSON[]
-
-      expect(
-        query.find(e => e.props.className.includes("extra-small")).props
-          .suppressHydrationWarning
-      ).toEqual(true)
-      expect(
-        query.find(e => e.props.className.includes("medium")).props
-          .suppressHydrationWarning
-      ).toEqual(false)
-      expect(
-        query.find(e => e.props.className.includes("large")).props
-          .suppressHydrationWarning
-      ).toEqual(true)
     })
   })
 
