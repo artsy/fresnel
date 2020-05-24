@@ -358,6 +358,17 @@ describe("Media", () => {
       ).toEqual(["small - large"])
     })
 
+    it("is does not render unnecessary divs", () => {
+      const query = renderer.create(
+        <MediaContextProvider onlyMatch={["extra-small", "small"]}>
+          <Media at="extra-small">extra-small</Media>
+          <Media at="small">small</Media>
+          <Media at="medium">medium</Media>
+        </MediaContextProvider>
+      )
+      expect(query.root.findAllByType("div").length).toEqual(2)
+    })
+
     it("renders only matching interactions", () => {
       const query = renderer.create(
         <MediaContextProvider onlyMatch={["hover"]}>
