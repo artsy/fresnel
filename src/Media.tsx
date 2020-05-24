@@ -11,10 +11,7 @@ import { intersection, propKey, createClassName } from "./Utils"
  *
  * @see {@link MediaProps.children}.
  */
-export type RenderProp = (
-  className: string,
-  renderChildren: boolean
-) => React.ReactNode
+export type RenderProp = (className: string) => React.ReactNode
 
 // TODO: All of these props should be mutually exclusive. Using a union should
 //       probably be made possible by https://github.com/Microsoft/TypeScript/pull/27408.
@@ -153,11 +150,6 @@ export interface MediaProps<B, I> extends MediaBreakpointProps<B> {
    * that receives the class-name it should use to have the media query styling
    * applied.
    *
-   * Additionally, the render prop receives a boolean that indicates wether or
-   * not its children should be rendered, which will be `false` if the media
-   * query is not included in the `onlyMatch` list. Use this flag if your
-   * component’s children may be expensive to render and you want to avoid any
-   * unnecessary work.
    * (@see {@link MediaContextProviderProps.onlyMatch} for details)
    *
    * @example
@@ -428,15 +420,18 @@ export function createMedia<
                 onlyMatch
               )
 
+            if (!renderChildren) {
+              return null
+            }
+
             if (props.children instanceof Function) {
-              return props.children(className, renderChildren)
+              return props.children(className)
             } else {
               return (
                 <div
                   className={`fresnel-container ${className} ${passedClassName}`}
-                  suppressHydrationWarning={!renderChildren}
                 >
-                  {renderChildren ? props.children : null}
+                  {props.children}
                 </div>
               )
             }
