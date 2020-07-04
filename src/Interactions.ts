@@ -1,12 +1,16 @@
 import { createClassName, createRuleSet } from "./Utils"
 
+export enum InteractionKey {
+  interaction = "interaction",
+}
+
 /**
  * Encapsulates all interaction data needed by the Media component. The data is
  * generated on initialization so no further runtime work is necessary.
  */
 export class Interactions {
   static validKeys() {
-    return ["interaction"]
+    return [InteractionKey.interaction]
   }
 
   private _interactions: { [key: string]: string }
@@ -20,7 +24,10 @@ export class Interactions {
       (acc: string[], [name, query]) => {
         return [
           ...acc,
-          createRuleSet(createClassName("interaction", name), query),
+          createRuleSet(
+            createClassName(InteractionKey.interaction, name),
+            query
+          ),
         ]
       },
       []

@@ -4,6 +4,7 @@ import React from "react"
 import { createResponsiveComponents } from "./DynamicResponsive"
 import { MediaQueries } from "./MediaQueries"
 import { intersection, propKey, createClassName } from "./Utils"
+import { BreakpointKey } from "./Breakpoints"
 
 /**
  * A render prop that can be used to render a different container element than
@@ -240,7 +241,7 @@ export interface CreateMediaResults<B, I> {
    * Generates a set of CSS rules that you should include in your application’s
    * styling to enable the hiding behaviour of your `Media` component uses.
    */
-  createMediaStyle(): string
+  createMediaStyle(breakpointKeys?: BreakpointKey[]): string
 
   /**
    * A list of your application’s breakpoints sorted from small to large.
@@ -458,7 +459,7 @@ export function createMedia<
   }
 }
 
-const MutuallyExclusiveProps = MediaQueries.validKeys()
+const MutuallyExclusiveProps: string[] = MediaQueries.validKeys()
 
 function validateProps(props) {
   const selectedProps = Object.keys(props).filter(prop =>

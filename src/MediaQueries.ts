@@ -1,4 +1,4 @@
-import { Breakpoints } from "./Breakpoints"
+import { Breakpoints, BreakpointKey } from "./Breakpoints"
 import { Interactions } from "./Interactions"
 import { intersection } from "./Utils"
 import { MediaBreakpointProps } from "./Media"
@@ -28,11 +28,11 @@ export class MediaQueries<B extends string> {
     return this._breakpoints
   }
 
-  public toStyle = () => {
+  public toStyle = (breakpointKeys?: BreakpointKey[]) => {
     return [
       // Don’t add any size to the layout
       ".fresnel-container{margin:0;padding:0;}",
-      ...this._breakpoints.toRuleSets(),
+      ...this._breakpoints.toRuleSets(breakpointKeys),
       ...this._interactions.toRuleSets(),
     ].join("\n")
   }
