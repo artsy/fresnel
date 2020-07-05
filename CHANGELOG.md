@@ -1,3 +1,42 @@
+# v1.2.0 (Sun Jul 05 2020)
+
+#### 🚀  Enhancement
+
+- Allow style rules subsetting [#140](https://github.com/artsy/fresnel/pull/140) ([@Autarc](https://github.com/Autarc))
+
+#### ⚠️  Pushed to `master`
+
+- Trivial docs update for accuracy ([@pepopowitz](https://github.com/pepopowitz))
+
+#### 🏠  Internal
+
+- Update auto orb to v1.0.2 [#123](https://github.com/artsy/fresnel/pull/123) ([@renovate-bot](https://github.com/renovate-bot))
+- Update dep typescript from 3.9.5 to v3.9.6 [#139](https://github.com/artsy/fresnel/pull/139) ([@renovate-bot](https://github.com/renovate-bot))
+- Update dep typescript from 3.9.2 to v3.9.3 [#133](https://github.com/artsy/fresnel/pull/133) ([@renovate-bot](https://github.com/renovate-bot))
+- Update dep typescript from 3.8.3 to v3.9.2 [#131](https://github.com/artsy/fresnel/pull/131) ([@renovate-bot](https://github.com/renovate-bot))
+- Update auto orb from 1.2.1 to v1.3.2 [#130](https://github.com/artsy/fresnel/pull/130) ([@renovate-bot](https://github.com/renovate-bot))
+- Update auto orb from 1.2.0 to v1.2.1 [#128](https://github.com/artsy/fresnel/pull/128) ([@renovate-bot](https://github.com/renovate-bot))
+- Update auto orb from 1.1.0 to v1.2.0 [#126](https://github.com/artsy/fresnel/pull/126) ([@renovate-bot](https://github.com/renovate-bot))
+- Update auto orb to v1.1.0 [#124](https://github.com/artsy/fresnel/pull/124) ([@renovate-bot](https://github.com/renovate-bot))
+- Update dep typescript from 3.9.3 to v3.9.5 [#138](https://github.com/artsy/fresnel/pull/138) ([@renovate-bot](https://github.com/renovate-bot))
+- Update yarn orb to v4.0.2 [#122](https://github.com/artsy/fresnel/pull/122) ([@renovate-bot](https://github.com/renovate-bot))
+- Update dep typescript from 3.8.2 to v3.8.3 [#121](https://github.com/artsy/fresnel/pull/121) ([@renovate-bot](https://github.com/renovate-bot))
+- Update yarn orb to v4.0.1 [#120](https://github.com/artsy/fresnel/pull/120) ([@renovate-bot](https://github.com/renovate-bot))
+- Update dep typescript from 3.7.5 to v3.8.2 [#119](https://github.com/artsy/fresnel/pull/119) ([@renovate-bot](https://github.com/renovate-bot))
+- Update yarn orb to v4 [#118](https://github.com/artsy/fresnel/pull/118) ([@renovate-bot](https://github.com/renovate-bot) [@zephraph](https://github.com/zephraph) [@renovate[bot]](https://github.com/renovate[bot]))
+- Pin dep @artsy/auto-config from ^1.0.2 to 1.0.2 [#117](https://github.com/artsy/fresnel/pull/117) ([@renovate-bot](https://github.com/renovate-bot))
+- Update yarn orb to v3 [#116](https://github.com/artsy/fresnel/pull/116) ([@renovate-bot](https://github.com/renovate-bot) [@zephraph](https://github.com/zephraph) [@renovate[bot]](https://github.com/renovate[bot]))
+
+#### Authors: 5
+
+- [@renovate[bot]](https://github.com/renovate[bot])
+- Justin Bennett ([@zephraph](https://github.com/zephraph))
+- Stefan Dühring ([@Autarc](https://github.com/Autarc))
+- Steven Hicks ([@pepopowitz](https://github.com/pepopowitz))
+- WhiteSource Renovate ([@renovate-bot](https://github.com/renovate-bot))
+
+---
+
 # v1.1.0 (Tue Feb 11 2020)
 
 #### 🚀  Enhancement
