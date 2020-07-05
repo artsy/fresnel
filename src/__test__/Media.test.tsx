@@ -4,6 +4,7 @@ import React from "react"
 import renderer, { ReactTestRendererJSON } from "react-test-renderer"
 import { injectGlobal } from "styled-components"
 import { createMedia } from "../Media"
+import { BreakpointKey } from "../Breakpoints"
 import { MediaQueries } from "../MediaQueries"
 import ReactDOMServer from "react-dom/server"
 import ReactDOM from "react-dom"
@@ -144,6 +145,18 @@ describe("Media", () => {
         )
         .toJSON()
       expect(query.props.className).toContain("foo")
+    })
+
+    it("includes only style rules for specified breakpoint keys", () => {
+      const defaultMediaStyles = createMediaStyle()
+      expect(defaultMediaStyles).toContain(".fresnel-between-small-large")
+
+      const subsetMediaStyles = createMediaStyle([
+        BreakpointKey.at,
+        BreakpointKey.greaterThan,
+      ])
+      expect(subsetMediaStyles).not.toContain(".fresnel-between-small-large")
+      expect(subsetMediaStyles).toContain(".fresnel-at-extra-small")
     })
   })
 

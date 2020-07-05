@@ -426,8 +426,9 @@ export const HomePage = () => {
 Besides the `Media` and `MediaContextProvider` components, there's a
 `createMediaStyle` function that produces the CSS styling for all possible media
 queries that the `Media` instance can make use of while markup is being passed
-from the server to the client during hydration. Be sure to insert this within a
-`<style>` tag
+from the server to the client during hydration. If only a subset of breakpoint
+keys is used those can be optional specified as a parameter to minimize the
+output. Be sure to insert this within a `<style>` tag
 [in your document’s `<head>`](https://github.com/artsy/fresnel/blob/master/examples/ssr-rendering/src/server.tsx#L28).
 
 It’s advisable to do this setup in its own module so that it can be easily
@@ -446,7 +447,7 @@ const ExampleAppMedia = createMedia({
 })
 
 // Generate CSS to be injected into the head
-export const mediaStyle = ExampleAppMedia.createMediaStyle()
+export const mediaStyle = ExampleAppMedia.createMediaStyle() // optional: .createMediaStyle(['at'])
 export const { Media, MediaContextProvider } = ExampleAppMedia
 ```
 

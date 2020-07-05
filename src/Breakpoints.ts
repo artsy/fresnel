@@ -14,24 +14,32 @@ function breakpointKey(breakpoint: string | Tuple) {
   return Array.isArray(breakpoint) ? breakpoint.join("-") : breakpoint
 }
 
+export enum BreakpointKey {
+  at = "at",
+  lessThan = "lessThan",
+  greaterThan = "greaterThan",
+  greaterThanOrEqual = "greaterThanOrEqual",
+  between = "between",
+}
+
 /**
  * Encapsulates all breakpoint data needed by the Media component. The data is
  * generated on initialization so no further runtime work is necessary.
  */
 export class Breakpoints<B extends string> {
   static validKeys() {
-    return ["at", "lessThan", "greaterThan", "greaterThanOrEqual", "between"]
+    return [
+      BreakpointKey.at,
+      BreakpointKey.lessThan,
+      BreakpointKey.greaterThan,
+      BreakpointKey.greaterThanOrEqual,
+      BreakpointKey.between,
+    ]
   }
 
   private _sortedBreakpoints: ReadonlyArray<string>
-  private _breakpoints: { [key: string]: number }
-  private _mediaQueries: {
-    at: Map<string, string>
-    lessThan: Map<string, string>
-    greaterThan: Map<string, string>
-    greaterThanOrEqual: Map<string, string>
-    between: Map<string, string>
-  }
+  private _breakpoints: Record<string, number>
+  private _mediaQueries: Record<BreakpointKey, Map<string, string>>
 
   constructor(breakpoints: { [key: string]: number }) {
     this._breakpoints = breakpoints
@@ -53,20 +61,26 @@ export class Breakpoints<B extends string> {
       )
 
     this._mediaQueries = {
-      at: this._createBreakpointQueries("at", this._sortedBreakpoints),
-      lessThan: this._createBreakpointQueries(
-        "lessThan",
-        this._sortedBreakpoints.slice(1)
-      ),
-      greaterThan: this._createBreakpointQueries(
-        "greaterThan",
-        this._sortedBreakpoints.slice(0, -1)
-      ),
-      greaterThanOrEqual: this._createBreakpointQueries(
-        "greaterThanOrEqual",
+      [BreakpointKey.at]: this._createBreakpointQueries(
+        BreakpointKey.at,
         this._sortedBreakpoints
       ),
-      between: this._createBreakpointQueries("between", betweenCombinations),
+      [BreakpointKey.lessThan]: this._createBreakpointQueries(
+        BreakpointKey.lessThan,
+        this._sortedBreakpoints.slice(1)
+      ),
+      [BreakpointKey.greaterThan]: this._createBreakpointQueries(
+        BreakpointKey.greaterThan,
+        this._sortedBreakpoints.slice(0, -1)
+      ),
+      [BreakpointKey.greaterThanOrEqual]: this._createBreakpointQueries(
+        BreakpointKey.greaterThanOrEqual,
+        this._sortedBreakpoints
+      ),
+      [BreakpointKey.between]: this._createBreakpointQueries(
+        BreakpointKey.between,
+        betweenCombinations
+      ),
     }
   }
 
@@ -75,7 +89,7 @@ export class Breakpoints<B extends string> {
   }
 
   public get dynamicResponsiveMediaQueries() {
-    return Array.from(this._mediaQueries.at.entries()).reduce(
+    return Array.from(this._mediaQueries[BreakpointKey.at].entries()).reduce(
       (acc, [k, v]) => ({ ...acc, [k]: v }),
       {}
     )
@@ -118,8 +132,16 @@ export class Breakpoints<B extends string> {
     }) as B | undefined
   }
 
-  public toRuleSets() {
-    return Object.entries(this._mediaQueries).reduce(
+  public toRuleSets(keys = Breakpoints.validKeys()) {
+    const selectedMediaQueries = keys.reduce(
+      (mediaQueries, query) => {
+        mediaQueries[query] = this._mediaQueries[query]
+        return mediaQueries
+      },
+      {} as Record<BreakpointKey, Map<string, string>>
+    )
+
+    return Object.entries(selectedMediaQueries).reduce(
       (acc: string[], [type, queries]) => {
         queries.forEach((query, breakpoint) => {
           // We need to invert the query, such that it matches when we want the
