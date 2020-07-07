@@ -1,7 +1,7 @@
 version: 2.1
 
 orbs:
-  yarn: artsy/yarn@4.0.2
+  yarn: artsy/yarn@5.1.3
   auto: artsy/auto@1.3.2
 
 workflows:
