@@ -1,3 +1,22 @@
+# v1.2.1 (Sun Aug 23 2020)
+
+#### 🐛  Bug Fix
+
+- Fix missing comma in README [#150](https://github.com/artsy/fresnel/pull/150) ([@jhamberg](https://github.com/jhamberg))
+
+#### 🏠  Internal
+
+- Update dep typescript from 3.9.6 to v3.9.7 [#143](https://github.com/artsy/fresnel/pull/143) ([@renovate-bot](https://github.com/renovate-bot))
+- Update yarn orb from 4.0.2 to v5 [#137](https://github.com/artsy/fresnel/pull/137) ([@renovate-bot](https://github.com/renovate-bot) [@renovate[bot]](https://github.com/renovate[bot]))
+
+#### Authors: 3
+
+- [@renovate[bot]](https://github.com/renovate[bot])
+- Jonatan Hamberg ([@jhamberg](https://github.com/jhamberg))
+- WhiteSource Renovate ([@renovate-bot](https://github.com/renovate-bot))
+
+---
+
 # v1.2.0 (Sun Jul 05 2020)
 
 #### 🚀  Enhancement
