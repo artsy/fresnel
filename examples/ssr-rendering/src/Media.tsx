@@ -1,6 +1,12 @@
 import { createMedia } from "@artsy/fresnel"
 
 const ExampleAppMedia = createMedia({
+  interactions: {
+    landscape: "not all and (orientation: landscape)",
+    portrait: "not all and (orientation: portrait)",
+    hover: "(hover: hover)",
+    notHover: "(hover: none)",
+  },
   breakpoints: {
     sm: 0,
     md: 768,

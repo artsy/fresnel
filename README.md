@@ -348,8 +348,8 @@ const ExampleAppMedia = createMedia({
   interactions: {
     hover: "(hover: hover)",
     notHover: "(hover: none)",
-    landscape: "(orientation: landscape)",
-    portrait: "(orientation: portrait)",
+    landscape: "not all and (orientation: landscape)",
+    portrait: "not all and (orientation: portrait)",
   },
 })
 
