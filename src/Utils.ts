@@ -1,11 +1,11 @@
 import { MediaBreakpointProps } from "./Media"
-import { MediaBreakpointKey } from "./Breakpoints"
+import { BreakpointConstraintKey } from "./Breakpoints"
 
 /**
  * Extracts the single breakpoint prop from the props object.
  */
 export function propKey(breakpointProps: MediaBreakpointProps) {
-  return Object.keys(breakpointProps)[0] as MediaBreakpointKey
+  return Object.keys(breakpointProps)[0] as BreakpointConstraintKey
 }
 
 /**

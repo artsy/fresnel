@@ -4,7 +4,7 @@ import React from "react"
 import { createResponsiveComponents } from "./DynamicResponsive"
 import { MediaQueries } from "./MediaQueries"
 import { intersection, propKey, createClassName } from "./Utils"
-import { BreakpointKey } from "./Breakpoints"
+import { BreakpointConstraint } from "./Breakpoints"
 
 /**
  * A render prop that can be used to render a different container element than
@@ -19,7 +19,7 @@ export type RenderProp = (
 
 // TODO: All of these props should be mutually exclusive. Using a union should
 //       probably be made possible by https://github.com/Microsoft/TypeScript/pull/27408.
-export interface MediaBreakpointProps<B = string> {
+export interface MediaBreakpointProps<BreakpointKey = string> {
   /**
    * Children will only be shown if the viewport matches the specified
    * breakpoint. That is, a viewport width that’s higher than the configured
@@ -43,7 +43,7 @@ export interface MediaBreakpointProps<B = string> {
      ```
    *
    */
-  at?: B
+  at?: BreakpointKey
 
   /**
    * Children will only be shown if the viewport is smaller than the specified
@@ -63,7 +63,7 @@ export interface MediaBreakpointProps<B = string> {
      ```
    *
    */
-  lessThan?: B
+  lessThan?: BreakpointKey
 
   /**
    * Children will only be shown if the viewport is greater than the specified
@@ -83,7 +83,7 @@ export interface MediaBreakpointProps<B = string> {
      ```
    *
    */
-  greaterThan?: B
+  greaterThan?: BreakpointKey
 
   /**
    * Children will only be shown if the viewport is greater or equal to the
@@ -106,7 +106,7 @@ export interface MediaBreakpointProps<B = string> {
      ```
    *
    */
-  greaterThanOrEqual?: B
+  greaterThanOrEqual?: BreakpointKey
 
   /**
    * Children will only be shown if the viewport is between the specified
@@ -127,10 +127,11 @@ export interface MediaBreakpointProps<B = string> {
      ```
    *
    */
-  between?: [B, B]
+  between?: [BreakpointKey, BreakpointKey]
 }
 
-export interface MediaProps<B, I> extends MediaBreakpointProps<B> {
+export interface MediaProps<BreakpointKey, Interaction>
+  extends MediaBreakpointProps<BreakpointKey> {
   /**
    * Children will only be shown if the interaction query matches.
    *
@@ -144,7 +145,7 @@ export interface MediaProps<B, I> extends MediaBreakpointProps<B> {
      <Media interaction="hover">ohai</Media>
      ```
    */
-  interaction?: I
+  interaction?: Interaction
 
   /**
    * The component(s) that should conditionally be shown, depending on the media
@@ -221,13 +222,13 @@ export interface CreateMediaConfig {
   interactions?: { [key: string]: string }
 }
 
-export interface CreateMediaResults<B, I> {
+export interface CreateMediaResults<BreakpointKey, Interactions> {
   /**
    * The React component that you use throughout your application.
    *
    * @see {@link MediaBreakpointProps}
    */
-  Media: React.ComponentType<MediaProps<B, I>>
+  Media: React.ComponentType<MediaProps<BreakpointKey, Interactions>>
 
   /**
    * The React Context provider component that you use to constrain rendering of
@@ -235,18 +236,20 @@ export interface CreateMediaResults<B, I> {
    *
    * @see {@link MediaContextProviderProps}
    */
-  MediaContextProvider: React.ComponentType<MediaContextProviderProps<B | I>>
+  MediaContextProvider: React.ComponentType<
+    MediaContextProviderProps<BreakpointKey | Interactions>
+  >
 
   /**
    * Generates a set of CSS rules that you should include in your application’s
    * styling to enable the hiding behaviour of your `Media` component uses.
    */
-  createMediaStyle(breakpointKeys?: BreakpointKey[]): string
+  createMediaStyle(breakpointKeys?: BreakpointConstraint[]): string
 
   /**
    * A list of your application’s breakpoints sorted from small to large.
    */
-  SortedBreakpoints: B[]
+  SortedBreakpoints: BreakpointKey[]
 
   /**
    * Creates a list of your application’s breakpoints that support the given
@@ -255,12 +258,12 @@ export interface CreateMediaResults<B, I> {
   findBreakpointsForWidths(
     fromWidth: number,
     throughWidth: number
-  ): B[] | undefined
+  ): BreakpointKey[] | undefined
 
   /**
    * Finds the breakpoint that matches the given width.
    */
-  findBreakpointAtWidth(width: number): B | undefined
+  findBreakpointAtWidth(width: number): BreakpointKey | undefined
 
   /**
    * Maps a list of values for various breakpoints to props that can be used
@@ -270,7 +273,9 @@ export interface CreateMediaResults<B, I> {
    * less values are specified than the number of breakpoints your application
    * has, the last value will be applied to all subsequent breakpoints.
    */
-  valuesWithBreakpointProps<T>(values: T[]): Array<[T, MediaBreakpointProps<B>]>
+  valuesWithBreakpointProps<SizeValue>(
+    values: SizeValue[]
+  ): Array<[SizeValue, MediaBreakpointProps<BreakpointKey>]>
 }
 
 /**
@@ -304,25 +309,25 @@ export interface CreateMediaResults<B, I> {
  *
  */
 export function createMedia<
-  C extends CreateMediaConfig,
-  B extends keyof C["breakpoints"],
-  I extends keyof C["interactions"]
->(config: C): CreateMediaResults<B, I> {
-  const mediaQueries = new MediaQueries<B>(
+  MediaConfig extends CreateMediaConfig,
+  BreakpointKey extends keyof MediaConfig["breakpoints"],
+  Interaction extends keyof MediaConfig["interactions"]
+>(config: MediaConfig): CreateMediaResults<BreakpointKey, Interaction> {
+  const mediaQueries = new MediaQueries<BreakpointKey>(
     config.breakpoints,
     config.interactions || {}
   )
 
   const DynamicResponsive = createResponsiveComponents()
 
-  const MediaContext = React.createContext<MediaContextProviderProps<B | I>>({})
+  const MediaContext = React.createContext<
+    MediaContextProviderProps<BreakpointKey | Interaction>
+  >({})
   MediaContext.displayName = "Media.Context"
 
-  const MediaContextProvider: React.SFC<MediaContextProviderProps<B | I>> = ({
-    disableDynamicMediaQueries,
-    onlyMatch,
-    children,
-  }) => {
+  const MediaContextProvider: React.SFC<
+    MediaContextProviderProps<BreakpointKey | Interaction>
+  > = ({ disableDynamicMediaQueries, onlyMatch, children }) => {
     if (disableDynamicMediaQueries) {
       return (
         <MediaContext.Provider
@@ -363,7 +368,9 @@ export function createMedia<
     }
   }
 
-  const Media = class extends React.Component<MediaProps<B, I>> {
+  const Media = class extends React.Component<
+    MediaProps<BreakpointKey, Interaction>
+  > {
     constructor(props) {
       super(props)
       validateProps(props)
