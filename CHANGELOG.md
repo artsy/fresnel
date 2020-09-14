@@ -1,3 +1,32 @@
+# v1.2.2 (Mon Sep 14 2020)
+
+### Release Notes
+
+_From #155_
+
+This update expands the generic type names to be self descriptive instead of being single characters. While this change predominately only affects internal types the internal `BreakpointKey` was renamed to `BreakpointConstraint`. Give that that's not documented as part of our external API we haven't listed this release as a breaking change; however, if you use that import you _will_ need to update your references.
+
+---
+
+#### 🐛  Bug Fix
+
+- Expand generic type names to be more descriptive [#155](https://github.com/artsy/fresnel/pull/155) ([@zephraph](https://github.com/zephraph))
+
+#### 🏠  Internal
+
+- Correct orientation interaction docs and add usage examples to ssr demo [#154](https://github.com/artsy/fresnel/pull/154) ([@zephraph](https://github.com/zephraph))
+- Update dep typescript from 3.9.7 to v4 [#149](https://github.com/artsy/fresnel/pull/149) ([@renovate-bot](https://github.com/renovate-bot) [@renovate[bot]](https://github.com/renovate[bot]))
+- [README] Expand render-prop doc [#151](https://github.com/artsy/fresnel/pull/151) ([@alloy](https://github.com/alloy))
+
+#### Authors: 4
+
+- [@renovate[bot]](https://github.com/renovate[bot])
+- Eloy Durán ([@alloy](https://github.com/alloy))
+- Justin Bennett ([@zephraph](https://github.com/zephraph))
+- WhiteSource Renovate ([@renovate-bot](https://github.com/renovate-bot))
+
+---
+
 # v1.2.1 (Sun Aug 23 2020)
 
 #### 🐛  Bug Fix
