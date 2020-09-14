@@ -4,9 +4,12 @@ import { createRuleSet, createClassName } from "./Utils"
 /**
  * A union of possible breakpoint props.
  */
-export type MediaBreakpointKey = keyof MediaBreakpointProps
+export type BreakpointConstraintKey = keyof MediaBreakpointProps
 
-type ValueBreakpointPropsTuple<T, B> = [T, MediaBreakpointProps<B>]
+type ValueBreakpointPropsTuple<SizeValue, BreakpointKey> = [
+  SizeValue,
+  MediaBreakpointProps<BreakpointKey>
+]
 
 type Tuple = [string, string]
 
@@ -14,7 +17,7 @@ function breakpointKey(breakpoint: string | Tuple) {
   return Array.isArray(breakpoint) ? breakpoint.join("-") : breakpoint
 }
 
-export enum BreakpointKey {
+export enum BreakpointConstraint {
   at = "at",
   lessThan = "lessThan",
   greaterThan = "greaterThan",
@@ -26,20 +29,20 @@ export enum BreakpointKey {
  * Encapsulates all breakpoint data needed by the Media component. The data is
  * generated on initialization so no further runtime work is necessary.
  */
-export class Breakpoints<B extends string> {
+export class Breakpoints<BreakpointKey extends string> {
   static validKeys() {
     return [
-      BreakpointKey.at,
-      BreakpointKey.lessThan,
-      BreakpointKey.greaterThan,
-      BreakpointKey.greaterThanOrEqual,
-      BreakpointKey.between,
+      BreakpointConstraint.at,
+      BreakpointConstraint.lessThan,
+      BreakpointConstraint.greaterThan,
+      BreakpointConstraint.greaterThanOrEqual,
+      BreakpointConstraint.between,
     ]
   }
 
   private _sortedBreakpoints: ReadonlyArray<string>
   private _breakpoints: Record<string, number>
-  private _mediaQueries: Record<BreakpointKey, Map<string, string>>
+  private _mediaQueries: Record<BreakpointConstraint, Map<string, string>>
 
   constructor(breakpoints: { [key: string]: number }) {
     this._breakpoints = breakpoints
@@ -61,38 +64,37 @@ export class Breakpoints<B extends string> {
       )
 
     this._mediaQueries = {
-      [BreakpointKey.at]: this._createBreakpointQueries(
-        BreakpointKey.at,
+      [BreakpointConstraint.at]: this._createBreakpointQueries(
+        BreakpointConstraint.at,
         this._sortedBreakpoints
       ),
-      [BreakpointKey.lessThan]: this._createBreakpointQueries(
-        BreakpointKey.lessThan,
+      [BreakpointConstraint.lessThan]: this._createBreakpointQueries(
+        BreakpointConstraint.lessThan,
         this._sortedBreakpoints.slice(1)
       ),
-      [BreakpointKey.greaterThan]: this._createBreakpointQueries(
-        BreakpointKey.greaterThan,
+      [BreakpointConstraint.greaterThan]: this._createBreakpointQueries(
+        BreakpointConstraint.greaterThan,
         this._sortedBreakpoints.slice(0, -1)
       ),
-      [BreakpointKey.greaterThanOrEqual]: this._createBreakpointQueries(
-        BreakpointKey.greaterThanOrEqual,
+      [BreakpointConstraint.greaterThanOrEqual]: this._createBreakpointQueries(
+        BreakpointConstraint.greaterThanOrEqual,
         this._sortedBreakpoints
       ),
-      [BreakpointKey.between]: this._createBreakpointQueries(
-        BreakpointKey.between,
+      [BreakpointConstraint.between]: this._createBreakpointQueries(
+        BreakpointConstraint.between,
         betweenCombinations
       ),
     }
   }
 
   public get sortedBreakpoints() {
-    return this._sortedBreakpoints as B[]
+    return this._sortedBreakpoints as BreakpointKey[]
   }
 
   public get dynamicResponsiveMediaQueries() {
-    return Array.from(this._mediaQueries[BreakpointKey.at].entries()).reduce(
-      (acc, [k, v]) => ({ ...acc, [k]: v }),
-      {}
-    )
+    return Array.from(
+      this._mediaQueries[BreakpointConstraint.at].entries()
+    ).reduce((acc, [k, v]) => ({ ...acc, [k]: v }), {})
   }
 
   public get largestBreakpoint() {
@@ -109,12 +111,12 @@ export class Breakpoints<B extends string> {
     }
     const throughBreakpoint = this.findBreakpointAtWidth(throughWidth)
     if (!throughBreakpoint || fromBreakpoint === throughBreakpoint) {
-      return [fromBreakpoint] as B[]
+      return [fromBreakpoint] as BreakpointKey[]
     } else {
       return this._sortedBreakpoints.slice(
         this._sortedBreakpoints.indexOf(fromBreakpoint),
         this._sortedBreakpoints.indexOf(throughBreakpoint) + 1
-      ) as B[]
+      ) as BreakpointKey[]
     }
   }
 
@@ -129,7 +131,7 @@ export class Breakpoints<B extends string> {
       } else {
         return width >= this._breakpoints[breakpoint]
       }
-    }) as B | undefined
+    }) as BreakpointKey | undefined
   }
 
   public toRuleSets(keys = Breakpoints.validKeys()) {
@@ -138,7 +140,7 @@ export class Breakpoints<B extends string> {
         mediaQueries[query] = this._mediaQueries[query]
         return mediaQueries
       },
-      {} as Record<BreakpointKey, Map<string, string>>
+      {} as Record<BreakpointConstraint, Map<string, string>>
     )
 
     return Object.entries(selectedMediaQueries).reduce(
@@ -201,10 +203,10 @@ export class Breakpoints<B extends string> {
     return false
   }
 
-  public valuesWithBreakpointProps = <T>(
-    values: T[]
-  ): Array<ValueBreakpointPropsTuple<T, B>> => {
-    type ValueBreakpoints = [T, string[]]
+  public valuesWithBreakpointProps = <SizeValue>(
+    values: SizeValue[]
+  ): Array<ValueBreakpointPropsTuple<SizeValue, BreakpointKey>> => {
+    type ValueBreakpoints = [SizeValue, string[]]
     const max = values.length
     const valueBreakpoints: ValueBreakpoints[] = []
     let lastTuple: ValueBreakpoints
@@ -229,7 +231,10 @@ export class Breakpoints<B extends string> {
         //       prop, which unlike `between` is inclusive.
         props.between = [breakpoints[0], valueBreakpoints[i + 1][1][0]]
       }
-      return [value, props] as ValueBreakpointPropsTuple<T, B>
+      return [value, props] as ValueBreakpointPropsTuple<
+        SizeValue,
+        BreakpointKey
+      >
     })
   }
 
@@ -275,7 +280,7 @@ export class Breakpoints<B extends string> {
   }
 
   private _createBreakpointQueries(
-    key: MediaBreakpointKey,
+    key: BreakpointConstraintKey,
     forBreakpoints: ReadonlyArray<string | [string, string]>
   ) {
     return forBreakpoints.reduce<Map<string, string>>((map, breakpoint) => {

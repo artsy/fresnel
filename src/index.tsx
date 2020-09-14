@@ -1,2 +1,2 @@
 export { createMedia } from "./Media"
-export { BreakpointKey } from "./Breakpoints"
+export { BreakpointConstraint as BreakpointKey } from "./Breakpoints"
