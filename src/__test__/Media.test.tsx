@@ -530,6 +530,46 @@ describe("Media", () => {
     })
   })
 
+  describe("prevent nested unnecessary renders", () => {
+    it("only renders one element when Media is nested within Media", () => {
+      const query = renderer.create(
+        <MediaContextProvider>
+          <Media at="extra-small">
+            <span className="extra-small" />
+          </Media>
+
+          <Media at="medium">
+            <Media at="extra-small">
+              <span className="extra-small" />
+            </Media>
+            <Media at="medium">
+              <span className="medium" />
+            </Media>
+            <Media at="large">
+              <span className="large" />
+            </Media>
+          </Media>
+
+          <Media at="large">
+            <span className="large" />
+          </Media>
+        </MediaContextProvider>
+      )
+
+      expect(
+        query.root.findAllByProps({ className: "extra-small" }, { deep: true })
+          .length
+      ).toBe(1)
+      expect(
+        query.root.findAllByProps({ className: "large" }, { deep: true }).length
+      ).toBe(1)
+      expect(
+        query.root.findAllByProps({ className: "medium" }, { deep: true })
+          .length
+      ).toBe(1)
+    })
+  })
+
   // TODO: This actually doesn’t make sense, I think, because if the user
   //       decides to not use a provider they are opting for rendering all
   //       variants. We just need to make sure to document this well.

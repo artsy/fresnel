@@ -134,6 +134,39 @@ export class Breakpoints<BreakpointKey extends string> {
     }) as BreakpointKey | undefined
   }
 
+  public toVisibleAtBreakpointSet(breakpointProps: MediaBreakpointProps) {
+    breakpointProps = this._normalizeProps(breakpointProps)
+    if (breakpointProps.lessThan) {
+      const breakpointIndex = this.sortedBreakpoints.findIndex(
+        bp => bp === breakpointProps.lessThan
+      )
+      return this.sortedBreakpoints.slice(0, breakpointIndex)
+    } else if (breakpointProps.greaterThan) {
+      const breakpointIndex = this.sortedBreakpoints.findIndex(
+        bp => bp === breakpointProps.greaterThan
+      )
+      return this.sortedBreakpoints.slice(breakpointIndex + 1)
+    } else if (breakpointProps.greaterThanOrEqual) {
+      const breakpointIndex = this.sortedBreakpoints.findIndex(
+        bp => bp === breakpointProps.greaterThanOrEqual
+      )
+      return this.sortedBreakpoints.slice(breakpointIndex)
+    } else if (breakpointProps.between) {
+      const between = breakpointProps.between
+      const fromBreakpointIndex = this.sortedBreakpoints.findIndex(
+        bp => bp === between[0]
+      )
+      const toBreakpointIndex = this.sortedBreakpoints.findIndex(
+        bp => bp === between[1]
+      )
+      return this.sortedBreakpoints.slice(
+        fromBreakpointIndex,
+        toBreakpointIndex
+      )
+    }
+    return []
+  }
+
   public toRuleSets(keys = Breakpoints.validKeys()) {
     const selectedMediaQueries = keys.reduce(
       (mediaQueries, query) => {
