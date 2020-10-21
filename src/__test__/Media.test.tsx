@@ -568,6 +568,169 @@ describe("Media", () => {
           .length
       ).toBe(1)
     })
+
+    it("renders no spans with deep nesting where parent has no intersection with children", () => {
+      const query = renderer.create(
+        <MediaContextProvider>
+          <Media at="extra-small">
+            <Media at="medium">
+              <Media at="extra-small">
+                <span className="extra-small" />
+              </Media>
+              <Media at="medium">
+                <span className="medium" />
+              </Media>
+              <Media at="large">
+                <span className="large" />
+              </Media>
+            </Media>
+
+            <Media at="large">
+              <span className="large" />
+            </Media>
+          </Media>
+        </MediaContextProvider>
+      )
+
+      expect(query.root.findAllByType("span", { deep: true }).length).toBe(0)
+    })
+
+    it("renders multiple spans in path, without rendering spans that don't intersect", () => {
+      const query = renderer.create(
+        <MediaContextProvider>
+          <Media at="extra-small">
+            {/* Should render */}
+            <span />
+            <Media at="extra-small">
+              {/* Should render */}
+              <span />
+              <Media at="extra-small">
+                {/* Should render */}
+                <span />
+              </Media>
+              <Media at="medium">
+                {/* Should NOT render */}
+                <span />
+              </Media>
+            </Media>
+            <Media at="medium">
+              {/* Should NOT render */}
+              <span />
+            </Media>
+          </Media>
+        </MediaContextProvider>
+      )
+
+      expect(query.root.findAllByType("span", { deep: true }).length).toBe(3)
+    })
+
+    it("renders correct Media when using greaterThan prop", () => {
+      const query = renderer.create(
+        <MediaContextProvider>
+          <Media greaterThan="small">
+            <Media at="extra-small">
+              {/* Should NOT render */}
+              <span />
+            </Media>
+            <Media at="small">
+              {/* Should NOT render */}
+              <span />
+            </Media>
+            <Media at="medium">
+              {/* Should render */}
+              <span />
+            </Media>
+            <Media at="large">
+              {/* Should render */}
+              <span />
+            </Media>
+          </Media>
+        </MediaContextProvider>
+      )
+
+      expect(query.root.findAllByType("span", { deep: true }).length).toBe(2)
+    })
+
+    it("renders correct Media when using greaterThanOrEqual prop", () => {
+      const query = renderer.create(
+        <MediaContextProvider>
+          <Media greaterThanOrEqual="small">
+            <Media at="extra-small">
+              {/* Should NOT render */}
+              <span />
+            </Media>
+            <Media at="small">
+              {/* Should render */}
+              <span />
+            </Media>
+            <Media at="medium">
+              {/* Should render */}
+              <span />
+            </Media>
+            <Media at="large">
+              {/* Should render */}
+              <span />
+            </Media>
+          </Media>
+        </MediaContextProvider>
+      )
+
+      expect(query.root.findAllByType("span", { deep: true }).length).toBe(3)
+    })
+
+    it("renders correct Media when using lessThan prop", () => {
+      const query = renderer.create(
+        <MediaContextProvider>
+          <Media lessThan="small">
+            <Media at="extra-small">
+              {/* Should render */}
+              <span />
+            </Media>
+            <Media at="small">
+              {/* Should NOT render */}
+              <span />
+            </Media>
+            <Media at="medium">
+              {/* Should NOT render */}
+              <span />
+            </Media>
+            <Media at="large">
+              {/* Should NOT render */}
+              <span />
+            </Media>
+          </Media>
+        </MediaContextProvider>
+      )
+
+      expect(query.root.findAllByType("span", { deep: true }).length).toBe(1)
+    })
+
+    it("renders correct Media when using lessThan prop", () => {
+      const query = renderer.create(
+        <MediaContextProvider>
+          <Media between={["small", "large"]}>
+            <Media at="extra-small">
+              {/* Should NOT render */}
+              <span />
+            </Media>
+            <Media at="small">
+              {/* Should render */}
+              <span />
+            </Media>
+            <Media at="medium">
+              {/* Should render */}
+              <span />
+            </Media>
+            <Media at="large">
+              {/* Should NOT render */}
+              <span />
+            </Media>
+          </Media>
+        </MediaContextProvider>
+      )
+
+      expect(query.root.findAllByType("span", { deep: true }).length).toBe(2)
+    })
   })
 
   // TODO: This actually doesn’t make sense, I think, because if the user
