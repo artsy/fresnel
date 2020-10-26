@@ -10,7 +10,7 @@ const config = {
 const breakpoint = new Breakpoints(config)
 
 describe("Breakpoints", () => {
-  describe.only("toVisibleAtBreakpointSet", () => {
+  describe("toVisibleAtBreakpointSet", () => {
     it("returns correct values for greaterThan", () => {
       const breakpoints = breakpoint.toVisibleAtBreakpointSet({
         greaterThan: "small",
