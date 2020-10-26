@@ -705,7 +705,7 @@ describe("Media", () => {
       expect(query.root.findAllByType("span", { deep: true }).length).toBe(1)
     })
 
-    it("renders correct Media when using lessThan prop", () => {
+    it("renders correct Media when using between prop", () => {
       const query = renderer.create(
         <MediaContextProvider>
           <Media between={["small", "large"]}>
