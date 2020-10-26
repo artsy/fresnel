@@ -325,6 +325,12 @@ export function createMedia<
   >({})
   MediaContext.displayName = "Media.Context"
 
+  const MediaParentContext = React.createContext<{
+    hasParentMedia: boolean
+    breakpointProps: MediaBreakpointProps<BreakpointKey>
+  }>({ hasParentMedia: false, breakpointProps: {} })
+  MediaContext.displayName = "MediaParent.Context"
+
   const MediaContextProvider: React.SFC<
     MediaContextProviderProps<BreakpointKey | Interaction>
   > = ({ disableDynamicMediaQueries, onlyMatch, children }) => {
@@ -380,76 +386,102 @@ export function createMedia<
       className: "",
     }
 
+    static contextType = MediaParentContext
+
     render() {
       const props = this.props
+      const {
+        children,
+        className: passedClassName,
+        interaction,
+        ...breakpointProps
+      } = props
       return (
-        <MediaContext.Consumer>
-          {({ onlyMatch } = {}) => {
-            let className: string | null
-            const {
-              children,
-              className: passedClassName,
-              interaction,
-              ...breakpointProps
-            } = props
-            if (props.interaction) {
-              className = createClassName("interaction", props.interaction)
-            } else {
-              if (props.at) {
-                const largestBreakpoint =
-                  mediaQueries.breakpoints.largestBreakpoint
-                if (props.at === largestBreakpoint) {
-                  // TODO: We should look into making React’s __DEV__ available
-                  //       and have webpack completely compile these away.
-                  let ownerName = null
-                  try {
-                    const owner = (this as any)._reactInternalFiber._debugOwner
-                      .type
-                    ownerName = owner.displayName || owner.name
-                  } catch (err) {
-                    // no-op
-                  }
+        <MediaParentContext.Consumer>
+          {mediaParentContext => {
+            return (
+              <MediaParentContext.Provider
+                value={{ hasParentMedia: true, breakpointProps }}
+              >
+                <MediaContext.Consumer>
+                  {({ onlyMatch } = {}) => {
+                    let className: string | null
+                    if (props.interaction) {
+                      className = createClassName(
+                        "interaction",
+                        props.interaction
+                      )
+                    } else {
+                      if (props.at) {
+                        const largestBreakpoint =
+                          mediaQueries.breakpoints.largestBreakpoint
+                        if (props.at === largestBreakpoint) {
+                          // TODO: We should look into making React’s __DEV__ available
+                          //       and have webpack completely compile these away.
+                          let ownerName = null
+                          try {
+                            const owner = (this as any)._reactInternalFiber
+                              ._debugOwner.type
+                            ownerName = owner.displayName || owner.name
+                          } catch (err) {
+                            // no-op
+                          }
 
-                  console.warn(
-                    "[@artsy/fresnel] " +
-                      "`at` is being used with the largest breakpoint. " +
-                      "Consider using `<Media greaterThanOrEqual=" +
-                      `"${largestBreakpoint}">\` to account for future ` +
-                      `breakpoint definitions outside of this range.${
-                        ownerName
-                          ? ` It is being used in the ${ownerName} component.`
-                          : ""
-                      }`
-                  )
-                }
-              }
+                          console.warn(
+                            "[@artsy/fresnel] " +
+                              "`at` is being used with the largest breakpoint. " +
+                              "Consider using `<Media greaterThanOrEqual=" +
+                              `"${largestBreakpoint}">\` to account for future ` +
+                              `breakpoint definitions outside of this range.${
+                                ownerName
+                                  ? ` It is being used in the ${ownerName} component.`
+                                  : ""
+                              }`
+                          )
+                        }
+                      }
 
-              const type = propKey(breakpointProps)
-              const breakpoint = breakpointProps[type]!
-              className = createClassName(type, breakpoint)
-            }
+                      const type = propKey(breakpointProps)
+                      const breakpoint = breakpointProps[type]!
+                      className = createClassName(type, breakpoint)
+                    }
 
-            const renderChildren =
-              onlyMatch === undefined ||
-              mediaQueries.shouldRenderMediaQuery(
-                { ...breakpointProps, interaction },
-                onlyMatch
-              )
+                    const doesMatchParent =
+                      !mediaParentContext.hasParentMedia ||
+                      intersection(
+                        mediaQueries.breakpoints.toVisibleAtBreakpointSet(
+                          mediaParentContext.breakpointProps
+                        ),
+                        mediaQueries.breakpoints.toVisibleAtBreakpointSet(
+                          breakpointProps
+                        )
+                      ).length > 0
+                    const renderChildren =
+                      doesMatchParent &&
+                      (onlyMatch === undefined ||
+                        mediaQueries.shouldRenderMediaQuery(
+                          { ...breakpointProps, interaction },
+                          onlyMatch
+                        ))
 
-            if (props.children instanceof Function) {
-              return props.children(className, renderChildren)
-            } else {
-              return (
-                <div
-                  className={`fresnel-container ${className} ${passedClassName}`}
-                  suppressHydrationWarning={!renderChildren}
-                >
-                  {renderChildren ? props.children : null}
-                </div>
-              )
-            }
+                    if (props.children instanceof Function) {
+                      return props.children(className, renderChildren)
+                    } else {
+                      return (
+                        <div
+                          className={`fresnel-container ${className} ${passedClassName}`}
+                          suppressHydrationWarning={!renderChildren}
+                        >
+                          {renderChildren ? props.children : null}
+                        </div>
+                      )
+                    }
+                  }}
+                </MediaContext.Consumer>
+              </MediaParentContext.Provider>
+            )
           }}
-        </MediaContext.Consumer>
+        </MediaParentContext.Consumer>
       )
     }
   }
