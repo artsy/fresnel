@@ -1,3 +1,25 @@
+# v1.3.0 (Mon Oct 26 2020)
+
+#### 🚀  Enhancement
+
+- Prevent unnecessary nesting of breakpoint nodes (fixes #132) [#158](https://github.com/artsy/fresnel/pull/158) ([@kirkness](https://github.com/kirkness))
+
+#### 🐛  Bug Fix
+
+- Move Reaction's Utils/Responsive over into @artsy/responsive [#1](https://github.com/artsy/fresnel/pull/1) ([@damassi](https://github.com/damassi))
+
+#### 🏠  Internal
+
+- Update dep typescript from 4.0.2 to v4.0.3 [#157](https://github.com/artsy/fresnel/pull/157) ([@renovate-bot](https://github.com/renovate-bot))
+
+#### Authors: 3
+
+- Christopher Pappas ([@damassi](https://github.com/damassi))
+- Henry ([@kirkness](https://github.com/kirkness))
+- WhiteSource Renovate ([@renovate-bot](https://github.com/renovate-bot))
+
+---
+
 # v1.2.2 (Mon Sep 14 2020)
 
 ### Release Notes
