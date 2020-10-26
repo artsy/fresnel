@@ -534,10 +534,6 @@ describe("Media", () => {
     it("only renders one element when Media is nested within Media", () => {
       const query = renderer.create(
         <MediaContextProvider>
-          <Media at="extra-small">
-            <span className="extra-small" />
-          </Media>
-
           <Media at="medium">
             <Media at="extra-small">
               <span className="extra-small" />
@@ -549,20 +545,16 @@ describe("Media", () => {
               <span className="large" />
             </Media>
           </Media>
-
-          <Media at="large">
-            <span className="large" />
-          </Media>
         </MediaContextProvider>
       )
 
       expect(
         query.root.findAllByProps({ className: "extra-small" }, { deep: true })
           .length
-      ).toBe(1)
+      ).toBe(0)
       expect(
         query.root.findAllByProps({ className: "large" }, { deep: true }).length
-      ).toBe(1)
+      ).toBe(0)
       expect(
         query.root.findAllByProps({ className: "medium" }, { deep: true })
           .length
