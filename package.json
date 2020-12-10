@@ -41,7 +41,7 @@
   },
   "homepage": "https://github.com/artsy/fresnel#readme",
   "peerDependencies": {
-    "react": "^16.3.0"
+    "react": ">=16.3.0 <18.0.0"
   },
   "devDependencies": {
     "@artsy/auto-config": "1.0.2",
