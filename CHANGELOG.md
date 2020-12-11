@@ -1,3 +1,21 @@
+# v1.3.1 (Fri Dec 11 2020)
+
+#### 🐛  Bug Fix
+
+- Upgrade react [#162](https://github.com/artsy/fresnel/pull/162) ([@zephraph](https://github.com/zephraph))
+
+#### 🏠  Internal
+
+- chore(deps): update dep typescript from 4.0.5 to v4.1.2 [#160](https://github.com/artsy/fresnel/pull/160) ([@renovate-bot](https://github.com/renovate-bot))
+- chore(deps): update dep typescript from 4.0.3 to v4.0.5 [#159](https://github.com/artsy/fresnel/pull/159) ([@renovate-bot](https://github.com/renovate-bot))
+
+#### Authors: 2
+
+- Justin Bennett ([@zephraph](https://github.com/zephraph))
+- WhiteSource Renovate ([@renovate-bot](https://github.com/renovate-bot))
+
+---
+
 # v1.3.0 (Mon Oct 26 2020)
 
 #### 🚀  Enhancement
