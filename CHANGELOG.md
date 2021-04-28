@@ -1,3 +1,26 @@
+# v1.4.0 (Wed Apr 28 2021)
+
+#### 🚀  Enhancement
+
+- Add README section for gatsby-plugin-fresnel [#175](https://github.com/artsy/fresnel/pull/175) ([@chrissantamaria](https://github.com/chrissantamaria))
+
+#### 🏠  Internal
+
+- chore(deps): update dep typescript from 4.2.3 to v4.2.4 [#173](https://github.com/artsy/fresnel/pull/173) ([@renovate-bot](https://github.com/renovate-bot))
+- chore(deps): update dep typescript from 4.2.2 to v4.2.3 [#172](https://github.com/artsy/fresnel/pull/172) ([@renovate-bot](https://github.com/renovate-bot))
+- chore(deps): update dep typescript from 4.1.5 to v4.2.2 [#171](https://github.com/artsy/fresnel/pull/171) ([@renovate-bot](https://github.com/renovate-bot))
+- chore(deps): update dep typescript from 4.1.4 to v4.1.5 [#169](https://github.com/artsy/fresnel/pull/169) ([@renovate-bot](https://github.com/renovate-bot))
+- chore(deps): update dep typescript from 4.1.3 to v4.1.4 [#167](https://github.com/artsy/fresnel/pull/167) ([@renovate-bot](https://github.com/renovate-bot))
+- chore(deps): update dep typescript from 4.1.2 to v4.1.3 [#164](https://github.com/artsy/fresnel/pull/164) ([@renovate-bot](https://github.com/renovate-bot))
+- chore(deps): pin dependencies [#163](https://github.com/artsy/fresnel/pull/163) ([@renovate-bot](https://github.com/renovate-bot))
+
+#### Authors: 2
+
+- Chris Santamaria ([@chrissantamaria](https://github.com/chrissantamaria))
+- WhiteSource Renovate ([@renovate-bot](https://github.com/renovate-bot))
+
+---
+
 # v1.3.1 (Fri Dec 11 2020)
 
 #### 🐛  Bug Fix
