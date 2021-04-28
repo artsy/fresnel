@@ -215,8 +215,10 @@ There are four examples one can explore in the `/examples` folder:
 - [Kitchen Sink](examples/kitchen-sink)
 
 While the `Basic` and `SSR` examples will get one pretty far, `@artsy/fresnel`
-can do a lot more . For an exhaustive deep-dive into its features, check out the
+can do a lot more. For an exhaustive deep-dive into its features, check out the
 [Kitchen Sink](examples/kitchen-sink) app.
+
+If you're using Gatsby, you can also try [gatsby-plugin-fresnel](https://github.com/chrissantamaria/gatsby-plugin-fresnel) for easy configuration.
 
 ## Why not conditionally render?
 
