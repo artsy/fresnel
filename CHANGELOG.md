@@ -1,3 +1,15 @@
+# v1.5.0 (Sat May 08 2021)
+
+#### 🚀  Enhancement
+
+- [deps] Upgrade Next.js example deps to latest [#177](https://github.com/artsy/fresnel/pull/177) ([@damassi](https://github.com/damassi))
+
+#### Authors: 1
+
+- Christopher Pappas ([@damassi](https://github.com/damassi))
+
+---
+
 # v1.4.0 (Wed Apr 28 2021)
 
 #### 🚀  Enhancement
