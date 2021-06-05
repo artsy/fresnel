@@ -273,7 +273,7 @@ problem in the following way:
 1. When all JS has loaded and React starts the rehydration phase, we query the
    browser for what breakpoint it’s currently at and then limit the rendered
    components to the matching media queries. This prevents life-cycle methods
-   from firing in hidden components and unused html being written to the DOM.
+   from firing in hidden components and unused html being re-written to the DOM.
 
 1. Additionally, we register event listeners with the browser to notify the
    `MediaContextProvider` when a different breakpoint is matched and then
