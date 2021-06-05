@@ -1,3 +1,20 @@
+# v1.6.0 (Sat Jun 05 2021)
+
+#### 🚀  Enhancement
+
+- fix small typo [#181](https://github.com/artsy/fresnel/pull/181) ([@redbar0n](https://github.com/redbar0n))
+
+#### 🏠  Internal
+
+- chore(deps): update dep typescript from 4.2.4 to v4.3.2 [#180](https://github.com/artsy/fresnel/pull/180) ([@renovate-bot](https://github.com/renovate-bot))
+
+#### Authors: 2
+
+- [@redbar0n](https://github.com/redbar0n)
+- WhiteSource Renovate ([@renovate-bot](https://github.com/renovate-bot))
+
+---
+
 # v1.5.0 (Sat May 08 2021)
 
 #### 🚀  Enhancement
