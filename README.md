@@ -610,10 +610,10 @@ a `matchMedia` example.)
 ```tsx
 <>
   <Media at="sm">
-    {this.getComponent('sm')
+    {this.getComponent('sm')}
   </Media>
   <Media greaterThan="sm">
-    {this.getComponent()
+    {this.getComponent()}
   </Media>
 </>
 ```
