@@ -1,3 +1,15 @@
+# v1.7.0 (Wed Jun 09 2021)
+
+#### 🚀  Enhancement
+
+- Fix small typo: add missing closing curlies [#185](https://github.com/artsy/fresnel/pull/185) ([@wendtcode](https://github.com/wendtcode))
+
+#### Authors: 1
+
+- Brian Wendt ([@wendtcode](https://github.com/wendtcode))
+
+---
+
 # v1.6.0 (Sat Jun 05 2021)
 
 #### 🚀  Enhancement
