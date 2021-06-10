@@ -1,0 +1,21 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Media during hydration does not warn about Media components that do not match and are empty 1`] = `"<div class=\\"fresnel-container fresnel-at-extra-small \\"><div class=\\"extra-small\\"></div></div><div class=\\"fresnel-container fresnel-at-medium \\"><div class=\\"medium\\"></div></div><div class=\\"fresnel-container fresnel-greaterThanOrEqual-large \\"><div class=\\"large\\"></div></div>"`;
+
+exports[`Media during hydration does not warn about Media components that do not match and are empty 2`] = `
+<div>
+  <div
+    class="fresnel-container fresnel-at-extra-small "
+  />
+  <div
+    class="fresnel-container fresnel-at-medium "
+  >
+    <div
+      class="medium"
+    />
+  </div>
+  <div
+    class="fresnel-container fresnel-greaterThanOrEqual-large "
+  />
+</div>
+`;

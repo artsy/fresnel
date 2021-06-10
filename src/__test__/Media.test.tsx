@@ -465,7 +465,7 @@ describe("Media", () => {
 
   describe("during hydration", () => {
     // FIXME: Unable to reproduce this here, so we'll do a more synthetic test.
-    xit("does not warn about Media components that do not match and are empty", done => {
+    it("does not warn about Media components that do not match and are empty", done => {
       const spy = jest.spyOn(console, "error")
 
       const App = () => (
@@ -485,10 +485,12 @@ describe("Media", () => {
       const container = document.createElement("div")
       document.body.appendChild(container)
 
-      mockCurrentDynamicBreakpoint("medium")
-
-      container.innerHTML = ReactDOMServer.renderToString(<App />)
+      const html = ReactDOMServer.renderToString(<App />)
+      expect(html).toMatchSnapshot()
+      mockCurrentDynamicBreakpoint("medium");
+      container.innerHTML = ReactDOMServer.renderToString(html)
       ReactDOM.hydrate(<App />, container, () => {
+        expect(container).toMatchSnapshot()
         expect(spy).not.toHaveBeenCalled()
         done()
       })
