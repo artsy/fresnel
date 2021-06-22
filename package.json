@@ -45,7 +45,7 @@
   },
   "devDependencies": {
     "@artsy/auto-config": "1.0.2",
-    "@artsy/detect-responsive-traits": "0.0.5",
+    "@artsy/detect-responsive-traits": "0.1.0",
     "@babel/cli": "7.0.0",
     "@babel/core": "7.0.0",
     "@babel/node": "7.0.0",
