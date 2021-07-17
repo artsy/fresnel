@@ -3,7 +3,12 @@
 import React from "react"
 import { createResponsiveComponents } from "./DynamicResponsive"
 import { MediaQueries } from "./MediaQueries"
-import { intersection, propKey, createClassName } from "./Utils"
+import {
+  intersection,
+  propKey,
+  createClassName,
+  castBreakpointsToIntegers,
+} from "./Utils"
 import { BreakpointConstraint } from "./Breakpoints"
 
 /**
@@ -214,7 +219,7 @@ export interface CreateMediaConfig {
    *
    * @see {@link createMedia}
    */
-  breakpoints: { [key: string]: number }
+  breakpoints: { [key: string]: number | string }
 
   /**
    * The interaction definitions for your application.
@@ -313,8 +318,10 @@ export function createMedia<
   BreakpointKey extends keyof MediaConfig["breakpoints"],
   Interaction extends keyof MediaConfig["interactions"]
 >(config: MediaConfig): CreateMediaResults<BreakpointKey, Interaction> {
+  const breakpoints = castBreakpointsToIntegers(config.breakpoints)
+
   const mediaQueries = new MediaQueries<BreakpointKey>(
-    config.breakpoints,
+    breakpoints,
     config.interactions || {}
   )
 
