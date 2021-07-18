@@ -1,3 +1,23 @@
+# v1.8.0 (Sun Jul 18 2021)
+
+#### 🚀  Enhancement
+
+- Feat/string-breakpoints [#191](https://github.com/artsy/fresnel/pull/191) ([@Spartakyste](https://github.com/Spartakyste))
+
+#### 🏠  Internal
+
+- chore(deps): update dep typescript from 4.3.4 to v4.3.5 [#190](https://github.com/artsy/fresnel/pull/190) ([@renovate-bot](https://github.com/renovate-bot))
+- chore(deps): update dep @artsy/detect-responsive-traits from 0.0.5 to v0.1.0 [#189](https://github.com/artsy/fresnel/pull/189) ([@renovate-bot](https://github.com/renovate-bot))
+- chore(deps): update dep typescript from 4.3.3 to v4.3.4 [#188](https://github.com/artsy/fresnel/pull/188) ([@renovate-bot](https://github.com/renovate-bot))
+- chore(deps): update dep typescript from 4.3.2 to v4.3.3 [#187](https://github.com/artsy/fresnel/pull/187) ([@renovate-bot](https://github.com/renovate-bot))
+
+#### Authors: 2
+
+- Chandelier Axel ([@Spartakyste](https://github.com/Spartakyste))
+- WhiteSource Renovate ([@renovate-bot](https://github.com/renovate-bot))
+
+---
+
 # v1.7.0 (Wed Jun 09 2021)
 
 #### 🚀  Enhancement
