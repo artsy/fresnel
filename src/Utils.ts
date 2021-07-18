@@ -43,3 +43,20 @@ export function createClassName(
     ),
   ].join("-")
 }
+
+/**
+ * Returns an object with every values casted to integers.
+ */
+export function castBreakpointsToIntegers(breakpoints: {
+  [key: string]: number | string
+}): { [key: string]: number } {
+  const keys = Object.keys(breakpoints)
+
+  return keys.reduce(
+    (previous, current, currentIndex) => ({
+      ...previous,
+      [keys[currentIndex]]: Number(breakpoints[current]),
+    }),
+    {}
+  )
+}
