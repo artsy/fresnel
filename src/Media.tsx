@@ -338,7 +338,7 @@ export function createMedia<
   }>({ hasParentMedia: false, breakpointProps: {} })
   MediaContext.displayName = "MediaParent.Context"
 
-  const MediaContextProvider: React.SFC<
+  const MediaContextProvider: React.FunctionComponent<
     MediaContextProviderProps<BreakpointKey | Interaction>
   > = ({ disableDynamicMediaQueries, onlyMatch, children }) => {
     if (disableDynamicMediaQueries) {
