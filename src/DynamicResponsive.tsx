@@ -42,9 +42,11 @@ export function createResponsiveComponents<M extends string>() {
   const ResponsiveContext = React.createContext({})
   ResponsiveContext.displayName = "Media.DynamicContext"
 
-  const ResponsiveConsumer: React.SFC<
+  const ResponsiveConsumer: React.FunctionComponent<
     React.ConsumerProps<MediaQueryMatches<M>>
-  > = ResponsiveContext.Consumer as React.SFC<React.ConsumerProps<any>>
+  > = ResponsiveContext.Consumer as React.FunctionComponent<
+    React.ConsumerProps<any>
+  >
 
   return {
     Consumer: ResponsiveConsumer,

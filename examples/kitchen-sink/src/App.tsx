@@ -35,7 +35,7 @@ const LargeStyle: CSSProperties = {
 }
 
 // From https://www.smashingmagazine.com/2013/07/simple-responsive-images-with-css-background-images/
-const Img: React.SFC<
+const Img: React.FunctionComponent<
   { src: string; aspectRatio: number } & React.HTMLProps<HTMLSpanElement>
 > = ({ src, aspectRatio, style, ...props }) => (
   <span
@@ -63,7 +63,7 @@ const Img: React.SFC<
   </span>
 )
 
-export const App: React.SFC = () => (
+export const App: React.FunctionComponent = () => (
   <div>
     <div>
       <h1>
@@ -88,11 +88,11 @@ export const App: React.SFC = () => (
       </h1>
       <ul style={{ listStyleType: "none", padding: "0", margin: "0" }}>
         {/* prettier-ignore
-          *
-          * These line-items can’t be wrapped by a div, so use a render prop to
-          * receive the class name and a hint as to wether children should be
-          * rendered.
-          */}
+         *
+         * These line-items can’t be wrapped by a div, so use a render prop to
+         * receive the class name and a hint as to wether children should be
+         * rendered.
+         */}
         <Media lessThan="sm">
           {className => (
             <li className={className} style={ExtraSmallStyle}>
