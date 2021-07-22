@@ -1,3 +1,15 @@
+# v1.9.0 (Thu Jul 22 2021)
+
+#### 🚀  Enhancement
+
+- chore: Updated React component typing [#193](https://github.com/artsy/fresnel/pull/193) ([@Spartakyste](https://github.com/Spartakyste))
+
+#### Authors: 1
+
+- Chandelier Axel ([@Spartakyste](https://github.com/Spartakyste))
+
+---
+
 # v1.8.0 (Sun Jul 18 2021)
 
 #### 🚀  Enhancement
