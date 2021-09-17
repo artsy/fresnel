@@ -1,3 +1,15 @@
+# v2.1.2 (Fri Sep 17 2021)
+
+#### ⚠️  Pushed to `master`
+
+- Enable Node 8 for V2 ([@icirellik](https://github.com/icirellik))
+
+#### Authors: 1
+
+- Cameron Rollheiser ([@icirellik](https://github.com/icirellik))
+
+---
+
 # v2.1.1 (Fri Sep 17 2021)
 
 #### ⚠️  Pushed to `master`
