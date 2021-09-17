@@ -1,3 +1,22 @@
+# v2.0.0 (Fri Sep 17 2021)
+
+#### 💥  Breaking Change
+
+- feature: Node 14 LTS [#198](https://github.com/artsy/fresnel/pull/198) ([@icirellik](https://github.com/icirellik))
+
+#### 🏠  Internal
+
+- chore(deps): update dep typescript from 4.4.2 to v4.4.3 [#197](https://github.com/artsy/fresnel/pull/197) ([@renovate-bot](https://github.com/renovate-bot))
+- chore(deps): update dep typescript from 4.3.5 to v4.4.2 [#196](https://github.com/artsy/fresnel/pull/196) ([@renovate-bot](https://github.com/renovate-bot))
+- chore(deps): update auto orb from 1.3.2 to v1.4.0 [#194](https://github.com/artsy/fresnel/pull/194) ([@renovate-bot](https://github.com/renovate-bot))
+
+#### Authors: 2
+
+- Cameron Rollheiser ([@icirellik](https://github.com/icirellik))
+- WhiteSource Renovate ([@renovate-bot](https://github.com/renovate-bot))
+
+---
+
 # v1.9.0 (Thu Jul 22 2021)
 
 #### 🚀  Enhancement
