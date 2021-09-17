@@ -2,54 +2,6 @@
 
 #### 💥  Breaking Change
 
-- feature: Node 14 LTS [#200](https://github.com/artsy/fresnel/pull/200) ([@icirellik](https://github.com/icirellik))
-
-#### Authors: 1
-
-- Cameron Rollheiser ([@icirellik](https://github.com/icirellik))
-
----
-
-# v2.1.2 (Fri Sep 17 2021)
-
-#### ⚠️  Pushed to `master`
-
-- Enable Node 8 for V2 ([@icirellik](https://github.com/icirellik))
-
-#### Authors: 1
-
-- Cameron Rollheiser ([@icirellik](https://github.com/icirellik))
-
----
-
-# v2.1.1 (Fri Sep 17 2021)
-
-#### ⚠️  Pushed to `master`
-
-- feature: Node 14 LTS ([@icirellik](https://github.com/icirellik))
-
-#### Authors: 1
-
-- Cameron Rollheiser ([@icirellik](https://github.com/icirellik))
-
----
-
-# v2.1.0 (Fri Sep 17 2021)
-
-#### 🚀  Enhancement
-
-- Revert "feature: Node 14 LTS" [#199](https://github.com/artsy/fresnel/pull/199) ([@mc-jones](https://github.com/mc-jones))
-
-#### Authors: 1
-
-- Matt Jones ([@mc-jones](https://github.com/mc-jones))
-
----
-
-# v2.0.0 (Fri Sep 17 2021)
-
-#### 💥  Breaking Change
-
 - feature: Node 14 LTS [#198](https://github.com/artsy/fresnel/pull/198) ([@icirellik](https://github.com/icirellik))
 
 #### 🏠  Internal
