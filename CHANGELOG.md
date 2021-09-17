@@ -1,3 +1,19 @@
+# v3.0.1 (Fri Sep 17 2021)
+
+#### 🐛  Bug Fix
+
+- chore: Remove V2 from Changelog [#202](https://github.com/artsy/fresnel/pull/202) ([@icirellik](https://github.com/icirellik))
+
+#### 🏠  Internal
+
+- chore: Dependabot Configuration [#201](https://github.com/artsy/fresnel/pull/201) ([@icirellik](https://github.com/icirellik))
+
+#### Authors: 1
+
+- Cameron Rollheiser ([@icirellik](https://github.com/icirellik))
+
+---
+
 # v3.0.0 (Fri Sep 17 2021)
 
 #### 💥  Breaking Change
