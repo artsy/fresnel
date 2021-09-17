@@ -1,3 +1,15 @@
+# v2.1.1 (Fri Sep 17 2021)
+
+#### ⚠️  Pushed to `master`
+
+- feature: Node 14 LTS ([@icirellik](https://github.com/icirellik))
+
+#### Authors: 1
+
+- Cameron Rollheiser ([@icirellik](https://github.com/icirellik))
+
+---
+
 # v2.1.0 (Fri Sep 17 2021)
 
 #### 🚀  Enhancement
