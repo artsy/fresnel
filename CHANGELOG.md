@@ -1,3 +1,15 @@
+# v2.1.0 (Fri Sep 17 2021)
+
+#### 🚀  Enhancement
+
+- Revert "feature: Node 14 LTS" [#199](https://github.com/artsy/fresnel/pull/199) ([@mc-jones](https://github.com/mc-jones))
+
+#### Authors: 1
+
+- Matt Jones ([@mc-jones](https://github.com/mc-jones))
+
+---
+
 # v2.0.0 (Fri Sep 17 2021)
 
 #### 💥  Breaking Change
