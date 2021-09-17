@@ -1,3 +1,15 @@
+# v3.0.0 (Fri Sep 17 2021)
+
+#### 💥  Breaking Change
+
+- feature: Node 14 LTS [#200](https://github.com/artsy/fresnel/pull/200) ([@icirellik](https://github.com/icirellik))
+
+#### Authors: 1
+
+- Cameron Rollheiser ([@icirellik](https://github.com/icirellik))
+
+---
+
 # v2.1.2 (Fri Sep 17 2021)
 
 #### ⚠️  Pushed to `master`
