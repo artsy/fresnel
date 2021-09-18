@@ -10,8 +10,8 @@
     "@artsy/fresnel": "^0.0.1",
     "@babel/node": "^7.4.5",
     "express": "^4.17.0",
-    "react": "^16.8.6",
-    "react-dom": "^16.8.6"
+    "react": "^16.14.0",
+    "react-dom": "^16.14.0"
   },
   "devDependencies": {
     "@babel/core": "7.4.5",
