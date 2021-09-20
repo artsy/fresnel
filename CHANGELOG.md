@@ -1,3 +1,15 @@
+# v3.0.2 (Mon Sep 20 2021)
+
+#### 🐛  Bug Fix
+
+- chore: Security Updates [#207](https://github.com/artsy/fresnel/pull/207) ([@icirellik](https://github.com/icirellik))
+
+#### Authors: 1
+
+- Cameron Rollheiser ([@icirellik](https://github.com/icirellik))
+
+---
+
 # v3.0.1 (Fri Sep 17 2021)
 
 #### 🐛  Bug Fix
