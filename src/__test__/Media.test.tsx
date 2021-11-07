@@ -167,7 +167,7 @@ describe("Media", () => {
         .toJSON()
       expect(query.type).toEqual("div")
       expect(query).toHaveStyleRule("display", "none!important", {
-        media: "not all and (max-width:767px)",
+        media: "not all and (max-width:767.98px)",
       })
     })
 
@@ -197,7 +197,7 @@ describe("Media", () => {
         .toJSON()
       expect(query.type).toEqual("div")
       expect(query).toHaveStyleRule("display", "none!important", {
-        media: "not all and (min-width:768px) and (max-width:1119px)",
+        media: "not all and (min-width:768px) and (max-width:1119.98px)",
       })
     })
 
@@ -260,7 +260,7 @@ describe("Media", () => {
         .toJSON()
       expect(query.type).toEqual("span")
       expect(query).toHaveStyleRule("display", "none!important", {
-        media: "not all and (max-width:767px)",
+        media: "not all and (max-width:767.98px)",
       })
     })
 
