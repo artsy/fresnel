@@ -290,7 +290,7 @@ export class Breakpoints<BreakpointKey extends string> {
     breakpointProps = this._normalizeProps(breakpointProps)
     if (breakpointProps.lessThan) {
       const width = this._breakpoints[breakpointProps.lessThan]
-      return `(max-width:${width - 1}px)`
+      return `(max-width:${width - 0.02}px)`
     } else if (breakpointProps.greaterThan) {
       const width = this._breakpoints[
         this._findNextBreakpoint(breakpointProps.greaterThan)
@@ -305,7 +305,7 @@ export class Breakpoints<BreakpointKey extends string> {
       //       to add `outside`.
       const fromWidth = this._breakpoints[breakpointProps.between[0]]
       const toWidth = this._breakpoints[breakpointProps.between[1]]
-      return `(min-width:${fromWidth}px) and (max-width:${toWidth - 1}px)`
+      return `(min-width:${fromWidth}px) and (max-width:${toWidth - 0.02}px)`
     }
     throw new Error(
       `Unexpected breakpoint props: ${JSON.stringify(breakpointProps)}`
