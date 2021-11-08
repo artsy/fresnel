@@ -1,3 +1,30 @@
+# v3.1.0 (Mon Nov 08 2021)
+
+#### 🚀  Enhancement
+
+- Unit test update for fractional pixels [#225](https://github.com/artsy/fresnel/pull/225) ([@tb-campbell](https://github.com/tb-campbell))
+- Adjust max-width breakpoints to account for fractional pixels [#222](https://github.com/artsy/fresnel/pull/222) ([@tb-campbell](https://github.com/tb-campbell))
+
+#### 🏠  Internal
+
+- chore(deps): update dep typescript from 4.4.3 to v4.4.4 [#216](https://github.com/artsy/fresnel/pull/216) ([@renovate-bot](https://github.com/renovate-bot))
+- chore(deps): update yarn orb from 5.1.3 to v6 [#195](https://github.com/artsy/fresnel/pull/195) ([@renovate-bot](https://github.com/renovate-bot) [@renovate[bot]](https://github.com/renovate[bot]))
+- chore(deps): update dep @artsy/auto-config from 1.0.2 to v1.1.0 [#211](https://github.com/artsy/fresnel/pull/211) ([@renovate-bot](https://github.com/renovate-bot) [@renovate[bot]](https://github.com/renovate[bot]))
+- chore(deps): update auto orb from 1.4.0 to v2 [#212](https://github.com/artsy/fresnel/pull/212) ([@renovate-bot](https://github.com/renovate-bot) [@renovate[bot]](https://github.com/renovate[bot]))
+- chore: Update Renovate [#214](https://github.com/artsy/fresnel/pull/214) ([@icirellik](https://github.com/icirellik))
+- chore(deps): bump tmpl from 1.0.4 to 1.0.5 [#210](https://github.com/artsy/fresnel/pull/210) ([@dependabot[bot]](https://github.com/dependabot[bot]))
+- chore(deps): bump object-path from 0.11.4 to 0.11.8 in /examples/gatsby [#209](https://github.com/artsy/fresnel/pull/209) ([@dependabot[bot]](https://github.com/dependabot[bot]))
+
+#### Authors: 5
+
+- [@dependabot[bot]](https://github.com/dependabot[bot])
+- [@renovate[bot]](https://github.com/renovate[bot])
+- [@tb-campbell](https://github.com/tb-campbell)
+- Cameron Rollheiser ([@icirellik](https://github.com/icirellik))
+- WhiteSource Renovate ([@renovate-bot](https://github.com/renovate-bot))
+
+---
+
 # v3.0.2 (Mon Sep 20 2021)
 
 #### 🐛  Bug Fix
