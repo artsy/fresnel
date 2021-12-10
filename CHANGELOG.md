@@ -1,3 +1,21 @@
+# v3.1.1 (Fri Dec 10 2021)
+
+#### 🐛  Bug Fix
+
+- Rename master -> main [#230](https://github.com/artsy/fresnel/pull/230) ([@mdole](https://github.com/mdole))
+
+#### 🏠  Internal
+
+- chore(deps): update dep typescript from 4.5.2 to v4.5.3 [#229](https://github.com/artsy/fresnel/pull/229) ([@renovate-bot](https://github.com/renovate-bot))
+- chore(deps): update dep typescript from 4.4.4 to v4.5.2 [#226](https://github.com/artsy/fresnel/pull/226) ([@renovate-bot](https://github.com/renovate-bot))
+
+#### Authors: 2
+
+- Matt Dole ([@mdole](https://github.com/mdole))
+- WhiteSource Renovate ([@renovate-bot](https://github.com/renovate-bot))
+
+---
+
 # v3.1.0 (Mon Nov 08 2021)
 
 #### 🚀  Enhancement
