@@ -1,8 +1,8 @@
 version: 2.1
 
 orbs:
-  yarn: artsy/yarn@5.1.3
-  auto: artsy/auto@1.4.0
+  yarn: artsy/yarn@6.0.0
+  auto: artsy/auto@2.0.0
 
 workflows:
   build_and_verify:
@@ -24,7 +24,7 @@ workflows:
           context: npm-deploy
           filters:
             branches:
-              ignore: master
+              ignore: main
           requires:
             - yarn/test
             - yarn/lint
@@ -34,7 +34,7 @@ workflows:
           context: npm-deploy
           filters:
             branches:
-              only: master
+              only: main
           requires:
             - yarn/test
             - yarn/lint

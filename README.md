@@ -410,9 +410,9 @@ export const HomePage = () => {
     <>
       <Media at="sm">Hello mobile!</Media>
       <Media greaterThan="sm">
-        {(mediaClassNames, renderChildren) => {
+        {(className, renderChildren) => {
           return (
-            <MySpecialComponent className={mediaClassNames}>
+            <MySpecialComponent className={className}>
               {renderChildren ? "Hello desktop!" : null}
             </MySpecialComponent>
           )
@@ -433,7 +433,7 @@ queries that the `Media` instance can make use of while markup is being passed
 from the server to the client during hydration. If only a subset of breakpoint
 keys is used those can be optional specified as a parameter to minimize the
 output. Be sure to insert this within a `<style>` tag
-[in your document’s `<head>`](https://github.com/artsy/fresnel/blob/master/examples/ssr-rendering/src/server.tsx#L28).
+[in your document’s `<head>`](https://github.com/artsy/fresnel/blob/main/examples/ssr-rendering/src/server.tsx#L28).
 
 It’s advisable to do this setup in its own module so that it can be easily
 imported throughout your application:
@@ -661,4 +661,4 @@ then use the `Skip Release` tag along side the appropriate version tag.
 [match-media-api]:
   https://developer.mozilla.org/en-US/docs/Web/API/Window/matchMedia
 [new-issue]: https://github.com/artsy/fresnel/issues/new
-[release-tags]: https://github.com/artsy/fresnel/blob/master/package.json
+[release-tags]: https://github.com/artsy/fresnel/blob/main/package.json

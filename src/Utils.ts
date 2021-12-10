@@ -55,7 +55,7 @@ export function castBreakpointsToIntegers(breakpoints: {
   return keys.reduce(
     (previous, current, currentIndex) => ({
       ...previous,
-      [keys[currentIndex]]: Number(breakpoints[current]),
+      [keys[currentIndex]]: Math.round(Number(breakpoints[current])),
     }),
     {}
   )
