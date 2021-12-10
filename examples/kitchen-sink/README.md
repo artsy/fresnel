@@ -8,5 +8,5 @@ To run the example:
 
 ```
 yarn install
-yarn example
+yarn start
 ```
