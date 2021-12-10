@@ -410,9 +410,9 @@ export const HomePage = () => {
     <>
       <Media at="sm">Hello mobile!</Media>
       <Media greaterThan="sm">
-        {(mediaClassNames, renderChildren) => {
+        {(className, renderChildren) => {
           return (
-            <MySpecialComponent className={mediaClassNames}>
+            <MySpecialComponent className={className}>
               {renderChildren ? "Hello desktop!" : null}
             </MySpecialComponent>
           )
