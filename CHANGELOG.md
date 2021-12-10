@@ -1,3 +1,15 @@
+# v3.2.1 (Fri Dec 10 2021)
+
+#### 🐛  Bug Fix
+
+- chore: update examples [#231](https://github.com/artsy/fresnel/pull/231) ([@mdole](https://github.com/mdole))
+
+#### Authors: 1
+
+- Matt Dole ([@mdole](https://github.com/mdole))
+
+---
+
 # v3.2.0 (Fri Dec 10 2021)
 
 #### 🚀  Enhancement
