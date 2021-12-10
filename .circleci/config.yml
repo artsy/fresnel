@@ -24,7 +24,7 @@ workflows:
           context: npm-deploy
           filters:
             branches:
-              ignore: master
+              ignore: main
           requires:
             - yarn/test
             - yarn/lint
@@ -34,7 +34,7 @@ workflows:
           context: npm-deploy
           filters:
             branches:
-              only: master
+              only: main
           requires:
             - yarn/test
             - yarn/lint
