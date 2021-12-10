@@ -1,3 +1,25 @@
+# v3.2.0 (Fri Dec 10 2021)
+
+#### 🚀  Enhancement
+
+- fix typo in Readme: mediaClassNames → className [#182](https://github.com/artsy/fresnel/pull/182) ([@redbar0n](https://github.com/redbar0n))
+
+#### 🐛  Bug Fix
+
+- [Snyk] Upgrade: react, react-dom [#203](https://github.com/artsy/fresnel/pull/203) ([@snyk-bot](https://github.com/snyk-bot))
+
+#### 🏠  Internal
+
+- chore(deps): bump next from 10.2.0 to 11.1.3 in /examples/nextjs [#228](https://github.com/artsy/fresnel/pull/228) ([@dependabot[bot]](https://github.com/dependabot[bot]))
+
+#### Authors: 3
+
+- [@dependabot[bot]](https://github.com/dependabot[bot])
+- [@redbar0n](https://github.com/redbar0n)
+- Snyk bot ([@snyk-bot](https://github.com/snyk-bot))
+
+---
+
 # v3.1.1 (Fri Dec 10 2021)
 
 #### 🐛  Bug Fix
