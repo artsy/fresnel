@@ -60,3 +60,17 @@ export function castBreakpointsToIntegers(breakpoints: {
     {}
   )
 }
+
+/**
+ * Use this function to memoize any function
+ */
+export function memoize<F extends (...args: any[]) => void>(func: F) {
+  const results = {}
+  return (...args) => {
+    const argsKey = JSON.stringify(args)
+    if (!results[argsKey]) {
+      results[argsKey] = func(...args)
+    }
+    return results[argsKey]
+  }
+}
