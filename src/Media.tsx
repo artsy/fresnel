@@ -8,6 +8,7 @@ import {
   propKey,
   createClassName,
   castBreakpointsToIntegers,
+  memoize,
 } from "./Utils"
 import { BreakpointConstraint } from "./Breakpoints"
 
@@ -338,16 +339,18 @@ export function createMedia<
   }>({ hasParentMedia: false, breakpointProps: {} })
   MediaContext.displayName = "MediaParent.Context"
 
+  const getMediaContextValue = memoize(onlyMatch => ({
+    onlyMatch,
+  }))
+
   const MediaContextProvider: React.FunctionComponent<
     MediaContextProviderProps<BreakpointKey | Interaction>
   > = ({ disableDynamicMediaQueries, onlyMatch, children }) => {
     if (disableDynamicMediaQueries) {
+      const MediaContextValue = getMediaContextValue(onlyMatch)
+
       return (
-        <MediaContext.Provider
-          value={{
-            onlyMatch,
-          }}
-        >
+        <MediaContext.Provider value={MediaContextValue}>
           {children}
         </MediaContext.Provider>
       )
@@ -365,12 +368,13 @@ export function createMedia<
               const matchingMediaQueries = Object.keys(matches).filter(
                 key => matches[key]
               )
+
+              const MediaContextValue = getMediaContextValue(
+                intersection(matchingMediaQueries, onlyMatch)
+              )
+
               return (
-                <MediaContext.Provider
-                  value={{
-                    onlyMatch: intersection(matchingMediaQueries, onlyMatch),
-                  }}
-                >
+                <MediaContext.Provider value={MediaContextValue}>
                   {children}
                 </MediaContext.Provider>
               )
@@ -395,6 +399,13 @@ export function createMedia<
 
     static contextType = MediaParentContext
 
+    getMediaParentContextValue = memoize(
+      (breakpointProps: MediaBreakpointProps<BreakpointKey>) => ({
+        hasParentMedia: true,
+        breakpointProps,
+      })
+    )
+
     render() {
       const props = this.props
       const {
@@ -403,13 +414,15 @@ export function createMedia<
         interaction,
         ...breakpointProps
       } = props
+      const mediaParentContextValue = this.getMediaParentContextValue(
+        breakpointProps
+      )
+
       return (
         <MediaParentContext.Consumer>
           {mediaParentContext => {
             return (
-              <MediaParentContext.Provider
-                value={{ hasParentMedia: true, breakpointProps }}
-              >
+              <MediaParentContext.Provider value={mediaParentContextValue}>
                 <MediaContext.Consumer>
                   {({ onlyMatch } = {}) => {
                     let className: string | null
