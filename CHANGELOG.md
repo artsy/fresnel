@@ -1,3 +1,22 @@
+# v3.2.2 (Tue Feb 08 2022)
+
+#### 🐛  Bug Fix
+
+- Added memoization to providers' value prop [#248](https://github.com/artsy/fresnel/pull/248) ([@dwilt](https://github.com/dwilt))
+
+#### 🏠  Internal
+
+- chore(deps): update dep typescript from 4.5.4 to v4.5.5 [#238](https://github.com/artsy/fresnel/pull/238) ([@renovate-bot](https://github.com/renovate-bot))
+- chore(deps): update yarn orb from 6.0.0 to v6.1.0 [#233](https://github.com/artsy/fresnel/pull/233) ([@renovate-bot](https://github.com/renovate-bot))
+- chore(deps): update dep typescript from 4.5.3 to v4.5.4 [#232](https://github.com/artsy/fresnel/pull/232) ([@renovate-bot](https://github.com/renovate-bot))
+
+#### Authors: 2
+
+- Dan Wilt ([@dwilt](https://github.com/dwilt))
+- WhiteSource Renovate ([@renovate-bot](https://github.com/renovate-bot))
+
+---
+
 # v3.2.1 (Fri Dec 10 2021)
 
 #### 🐛  Bug Fix
