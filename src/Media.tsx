@@ -1,6 +1,6 @@
 // tslint:disable:jsdoc-format
 
-import React from "react"
+import React, { CSSProperties } from "react"
 import { createResponsiveComponents } from "./DynamicResponsive"
 import { MediaQueries } from "./MediaQueries"
 import {
@@ -189,6 +189,11 @@ export interface MediaProps<BreakpointKey, Interaction>
    * Additional classNames to passed down and applied to Media container
    */
   className?: string
+
+  /**
+   * Additional styles to passed down and applied to Media container
+   */
+  style?: CSSProperties
 }
 
 export interface MediaContextProviderProps<M> {
@@ -395,6 +400,7 @@ export function createMedia<
 
     static defaultProps = {
       className: "",
+      style: {},
     }
 
     static contextType = MediaParentContext
@@ -411,6 +417,7 @@ export function createMedia<
       const {
         children,
         className: passedClassName,
+        style,
         interaction,
         ...breakpointProps
       } = props
@@ -490,6 +497,7 @@ export function createMedia<
                       return (
                         <div
                           className={`fresnel-container ${className} ${passedClassName}`}
+                          style={style}
                           suppressHydrationWarning={!renderChildren}
                         >
                           {renderChildren ? props.children : null}
