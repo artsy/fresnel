@@ -1,3 +1,15 @@
+# v3.3.0 (Sat Feb 12 2022)
+
+#### 🚀  Enhancement
+
+- Add style prop to Media [#253](https://github.com/artsy/fresnel/pull/253) ([@PegasisForever](https://github.com/PegasisForever))
+
+#### Authors: 1
+
+- Pegasis ([@PegasisForever](https://github.com/PegasisForever))
+
+---
+
 # v3.2.2 (Tue Feb 08 2022)
 
 #### 🐛  Bug Fix
