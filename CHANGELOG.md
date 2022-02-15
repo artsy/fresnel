@@ -1,3 +1,35 @@
+# v3.4.0 (Tue Feb 15 2022)
+
+#### 🚀  Enhancement
+
+- [Snyk] Upgrade express from 4.17.0 to 4.17.1 [#204](https://github.com/artsy/fresnel/pull/204) ([@snyk-bot](https://github.com/snyk-bot) [@damassi](https://github.com/damassi))
+
+#### 🏠  Internal
+
+- chore(deps): bump lodash from 4.17.11 to 4.17.21 in /examples/gatsby [#240](https://github.com/artsy/fresnel/pull/240) ([@dependabot[bot]](https://github.com/dependabot[bot]))
+- chore(deps): bump lodash from 4.17.11 to 4.17.21 in /examples/kitchen-sink [#242](https://github.com/artsy/fresnel/pull/242) ([@dependabot[bot]](https://github.com/dependabot[bot]))
+- chore(deps): bump ua-parser-js from 0.7.19 to 0.7.31 in /examples/gatsby [#249](https://github.com/artsy/fresnel/pull/249) ([@dependabot[bot]](https://github.com/dependabot[bot]))
+- chore(deps): bump ajv from 6.10.0 to 6.12.6 in /examples/basic [#250](https://github.com/artsy/fresnel/pull/250) ([@dependabot[bot]](https://github.com/dependabot[bot]))
+- chore(deps): bump ajv from 6.10.0 to 6.12.6 in /examples/gatsby [#251](https://github.com/artsy/fresnel/pull/251) ([@dependabot[bot]](https://github.com/dependabot[bot]))
+- chore(deps): bump follow-redirects from 1.5.9 to 1.14.8 [#252](https://github.com/artsy/fresnel/pull/252) ([@dependabot[bot]](https://github.com/dependabot[bot]))
+- chore(deps): bump follow-redirects from 1.7.0 to 1.14.8 in /examples/gatsby [#254](https://github.com/artsy/fresnel/pull/254) ([@dependabot[bot]](https://github.com/dependabot[bot]))
+- chore(deps): bump ajv from 6.10.0 to 6.12.6 in /examples/kitchen-sink [#255](https://github.com/artsy/fresnel/pull/255) ([@dependabot[bot]](https://github.com/dependabot[bot]))
+- chore(deps): bump follow-redirects from 1.8.1 to 1.14.8 in /examples/kitchen-sink [#256](https://github.com/artsy/fresnel/pull/256) ([@dependabot[bot]](https://github.com/dependabot[bot]))
+
+#### 🔩 Dependency Updates
+
+- chore(deps): bump lodash from 4.17.11 to 4.17.21 in /examples/basic [#239](https://github.com/artsy/fresnel/pull/239) ([@dependabot[bot]](https://github.com/dependabot[bot]))
+- chore(deps): bump lodash from 4.17.11 to 4.17.21 in /examples/ssr-rendering [#241](https://github.com/artsy/fresnel/pull/241) ([@dependabot[bot]](https://github.com/dependabot[bot]))
+- chore(deps): bump nanoid from 3.1.30 to 3.2.0 in /examples/nextjs [#243](https://github.com/artsy/fresnel/pull/243) ([@dependabot[bot]](https://github.com/dependabot[bot]))
+
+#### Authors: 3
+
+- [@dependabot[bot]](https://github.com/dependabot[bot])
+- Christopher Pappas ([@damassi](https://github.com/damassi))
+- Snyk bot ([@snyk-bot](https://github.com/snyk-bot))
+
+---
+
 # v3.3.0 (Sat Feb 12 2022)
 
 #### 🚀  Enhancement
