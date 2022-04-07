@@ -7,6 +7,8 @@
 
 – https://en.wikipedia.org/wiki/Fresnel_equations
 
+### ⚠️ Due to React 18 more strictly handling server-side rendering rehydration this lib is now imcompatable with any version greater than 17. See [this issue](https://github.com/artsy/fresnel/issues/260) for more info. And contributions welcome 🙏
+
 ## Installation
 
 ```sh
