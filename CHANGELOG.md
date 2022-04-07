@@ -1,3 +1,23 @@
+# v3.4.1 (Thu Apr 07 2022)
+
+#### ⚠️ Pushed to `main`
+
+- Update README with note on React 18 ([@damassi](https://github.com/damassi))
+
+#### 🏠  Internal
+
+- chore(deps): update dep typescript from 4.6.2 to v4.6.3 [#266](https://github.com/artsy/fresnel/pull/266) ([@renovate-bot](https://github.com/renovate-bot))
+- chore(deps): update dep typescript from 4.5.5 to v4.6.2 [#264](https://github.com/artsy/fresnel/pull/264) ([@renovate-bot](https://github.com/renovate-bot))
+- chore: update dependabot reviewers [#263](https://github.com/artsy/fresnel/pull/263) ([@ovasdi](https://github.com/ovasdi))
+
+#### Authors: 3
+
+- Christopher Pappas ([@damassi](https://github.com/damassi))
+- Ozzie Vasdi ([@ovasdi](https://github.com/ovasdi))
+- WhiteSource Renovate ([@renovate-bot](https://github.com/renovate-bot))
+
+---
+
 # v3.4.0 (Tue Feb 15 2022)
 
 #### 🚀  Enhancement
