@@ -1,3 +1,15 @@
+# v3.5.0 (Wed Apr 13 2022)
+
+#### 🚀  Enhancement
+
+- chore: update renovate and dependabot assignee [#267](https://github.com/artsy/fresnel/pull/267) ([@ovasdi](https://github.com/ovasdi))
+
+#### Authors: 1
+
+- Ozzie Vasdi ([@ovasdi](https://github.com/ovasdi))
+
+---
+
 # v3.4.1 (Thu Apr 07 2022)
 
 #### ⚠️ Pushed to `main`
