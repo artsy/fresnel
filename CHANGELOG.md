@@ -1,3 +1,39 @@
+# v4.0.0 (Wed Aug 10 2022)
+
+#### 💥  Breaking Change
+
+- chore(lib): Upgrade to React 18 [#287](https://github.com/artsy/fresnel/pull/287) ([@damassi](https://github.com/damassi))
+
+#### 🏠  Internal
+
+- chore(deps): bump url-parse from 1.4.7 to 1.5.10 in /examples/gatsby [#261](https://github.com/artsy/fresnel/pull/261) ([@dependabot[bot]](https://github.com/dependabot[bot]))
+- chore(deps): bump url-parse from 1.4.7 to 1.5.10 in /examples/kitchen-sink [#262](https://github.com/artsy/fresnel/pull/262) ([@dependabot[bot]](https://github.com/dependabot[bot]))
+- chore(deps): update dep @artsy/auto-config from 1.1.0 to v1.2.0 [#265](https://github.com/artsy/fresnel/pull/265) ([@renovate-bot](https://github.com/renovate-bot) [@renovate[bot]](https://github.com/renovate[bot]))
+- chore(deps): bump minimist from 1.2.0 to 1.2.6 in /examples/nextjs [#268](https://github.com/artsy/fresnel/pull/268) ([@dependabot[bot]](https://github.com/dependabot[bot]))
+- chore(deps): bump ansi-regex from 5.0.0 to 5.0.1 in /examples/nextjs [#269](https://github.com/artsy/fresnel/pull/269) ([@dependabot[bot]](https://github.com/dependabot[bot]))
+- chore(deps): bump eventsource from 1.0.7 to 1.1.1 in /examples/kitchen-sink [#277](https://github.com/artsy/fresnel/pull/277) ([@dependabot[bot]](https://github.com/dependabot[bot]))
+- chore(deps): bump moment from 2.24.0 to 2.29.4 in /examples/gatsby [#282](https://github.com/artsy/fresnel/pull/282) ([@dependabot[bot]](https://github.com/dependabot[bot]))
+- chore(deps): bump glob-parent from 5.1.0 to 5.1.2 in /examples/nextjs [#286](https://github.com/artsy/fresnel/pull/286) ([@dependabot[bot]](https://github.com/dependabot[bot]))
+- chore(deps): bump terser from 4.8.0 to 4.8.1 in /examples/ssr-rendering [#283](https://github.com/artsy/fresnel/pull/283) ([@dependabot[bot]](https://github.com/dependabot[bot]))
+- chore(deps): bump terser from 4.2.1 to 4.8.1 in /examples/kitchen-sink [#284](https://github.com/artsy/fresnel/pull/284) ([@dependabot[bot]](https://github.com/dependabot[bot]))
+- chore(deps): bump terser from 4.8.0 to 4.8.1 [#285](https://github.com/artsy/fresnel/pull/285) ([@dependabot[bot]](https://github.com/dependabot[bot]))
+- chore(deps): update dep typescript from 4.7.3 to v4.7.4 [#279](https://github.com/artsy/fresnel/pull/279) ([@renovate[bot]](https://github.com/renovate[bot]))
+- chore(deps): update dep typescript from 4.7.2 to v4.7.3 [#278](https://github.com/artsy/fresnel/pull/278) ([@renovate-bot](https://github.com/renovate-bot))
+- chore(deps): update dep typescript from 4.6.4 to v4.7.2 [#276](https://github.com/artsy/fresnel/pull/276) ([@renovate-bot](https://github.com/renovate-bot))
+- chore(deps): bump async from 2.6.3 to 2.6.4 [#274](https://github.com/artsy/fresnel/pull/274) ([@dependabot[bot]](https://github.com/dependabot[bot]))
+- chore(deps): update dep typescript from 4.6.3 to v4.6.4 [#275](https://github.com/artsy/fresnel/pull/275) ([@renovate-bot](https://github.com/renovate-bot))
+- chore(deps): update yarn orb from 6.1.0 to v6.2.0 [#273](https://github.com/artsy/fresnel/pull/273) ([@renovate-bot](https://github.com/renovate-bot))
+- chore(deps): update auto orb from 2.0.0 to v2.1.0 [#272](https://github.com/artsy/fresnel/pull/272) ([@renovate-bot](https://github.com/renovate-bot))
+
+#### Authors: 4
+
+- [@dependabot[bot]](https://github.com/dependabot[bot])
+- [@renovate[bot]](https://github.com/renovate[bot])
+- Christopher Pappas ([@damassi](https://github.com/damassi))
+- WhiteSource Renovate ([@renovate-bot](https://github.com/renovate-bot))
+
+---
+
 # v3.5.0 (Wed Apr 13 2022)
 
 #### 🚀  Enhancement
