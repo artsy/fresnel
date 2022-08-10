@@ -21,7 +21,7 @@ app.get("/", (_req, res) => {
         <title>@artsy/fresnel | Basic Example</title>
       </head>
       <body>
-        <div id="react"></div>
+        <div id="root"></div>
 
         <script src="/assets/app.js"></script>
       </body>

@@ -28,7 +28,7 @@ app.get("/", (_req, res) => {
         <style type="text/css">${mediaStyles}</style>
       </head>
       <body>
-        <div id="react">${html}</div>
+        <div id="root">${html}</div>
 
         <script src="/assets/app.js"></script>
       </body>

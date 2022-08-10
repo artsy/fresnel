@@ -1,6 +1,7 @@
 {
   "extends": ["tslint:recommended", "tslint-react", "tslint-config-prettier"],
   "rules": {
+    "array-type": false,
     "curly": false,
     "interface-name": [true, "never-prefix"],
     "jsx-boolean-value": [true, "never"],
@@ -18,7 +19,7 @@
     "trailing-comma": false,
     "variable-name": [true, "ban-keywords", "allow-leading-underscore"],
     "completed-docs": [
-      true,
+      false,
       {
         "functions": { "visibilities": ["exported"] },
         "classes": { "visibilities": ["exported"] },

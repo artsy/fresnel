@@ -1,6 +1,6 @@
 import React from "react"
-import ReactDOM from "react-dom"
 import { createMedia } from "@artsy/fresnel"
+import { createRoot } from "react-dom/client"
 
 const ExampleAppMedia = createMedia({
   breakpoints: {
@@ -22,4 +22,6 @@ const App = () => {
   )
 }
 
-ReactDOM.render(<App />, document.getElementById("react"))
+const root = createRoot(document.getElementById("root")!)
+
+root.render(<App />)

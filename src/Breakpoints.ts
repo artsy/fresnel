@@ -238,7 +238,7 @@ export class Breakpoints<BreakpointKey extends string> {
 
   public valuesWithBreakpointProps = <SizeValue>(
     values: SizeValue[]
-  ): Array<ValueBreakpointPropsTuple<SizeValue, BreakpointKey>> => {
+  ): ValueBreakpointPropsTuple<SizeValue, BreakpointKey>[] => {
     type ValueBreakpoints = [SizeValue, string[]]
     const max = values.length
     const valueBreakpoints: ValueBreakpoints[] = []

@@ -81,6 +81,7 @@ app.get("/rehydration", (req, res) => {
         <div id="react-root">
           ${ReactDOMServer.renderToString(
             <MediaContextProvider
+              disableDynamicMediaQueries
               onlyMatch={onlyMatchListForUserAgent(req.header(
                 "User-Agent"
               ) as string)}
