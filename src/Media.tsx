@@ -248,7 +248,9 @@ export interface CreateMediaResults<BreakpointKey, Interactions> {
    * @see {@link MediaContextProviderProps}
    */
   MediaContextProvider: React.ComponentType<
-    MediaContextProviderProps<BreakpointKey | Interactions>
+    MediaContextProviderProps<BreakpointKey | Interactions> & {
+      children: React.ReactNode
+    }
   >
 
   /**
@@ -286,7 +288,7 @@ export interface CreateMediaResults<BreakpointKey, Interactions> {
    */
   valuesWithBreakpointProps<SizeValue>(
     values: SizeValue[]
-  ): Array<[SizeValue, MediaBreakpointProps<BreakpointKey>]>
+  ): [SizeValue, MediaBreakpointProps<BreakpointKey>][]
 }
 
 /**
@@ -349,7 +351,9 @@ export function createMedia<
   }))
 
   const MediaContextProvider: React.FunctionComponent<
-    MediaContextProviderProps<BreakpointKey | Interaction>
+    MediaContextProviderProps<BreakpointKey | Interaction> & {
+      children?: React.ReactNode
+    }
   > = ({ disableDynamicMediaQueries, onlyMatch, children }) => {
     if (disableDynamicMediaQueries) {
       const MediaContextValue = getMediaContextValue(onlyMatch)

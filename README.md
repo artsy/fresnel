@@ -7,7 +7,32 @@
 
 – https://en.wikipedia.org/wiki/Fresnel_equations
 
-### ⚠️ Due to React 18 more strictly handling server-side rendering rehydration this lib is now imcompatable with any version greater than 17. See [this issue](https://github.com/artsy/fresnel/issues/260) for more info. And contributions welcome 🙏
+### ⚠️ React 18 Notice
+
+Due to React 18 more strictly handling server-side rendering rehydration full
+SSR support is incompatable with any version greater than 17. See
+[this issue](https://github.com/artsy/fresnel/issues/260) for more info, and Dan
+Abromov's
+[comment here](https://github.com/facebook/react/issues/23381#issuecomment-1096899474).
+
+In the meantime -- for users of server-side rendering features -- you can
+disable DOM cleaning optimizations by setting `disableDynamicMediaQueries` on
+the context like so and things should work:
+
+```tsx
+<MediaContextProvider disableDynamicMediaQueries>
+  <Media at='xs'>
+    <MobileApp />
+  </Media>
+  <Media greaterThan='xs'>
+    <DesktopApp />
+  </Media>
+<MediaContextProvider>
+```
+
+Note that this will fire all effects within sub components for each breakpoint
+on re-hydration. For some users this could be an issue; for many others, no
+problem at all.
 
 ## Installation
 
@@ -20,7 +45,7 @@
 - [Overview](#overview)
 - [Basic Example](#basic-example)
 - [Server-side Rendering (SSR)](#server-side-rendering-ssr-usage)
-- [Usage with Gatsby or Next](#usage-with-gatsby-or-next)
+- [Usage with Next](#usage-with-gatsby-or-next)
 - [Example Apps](#example-apps)
 - [Why not conditionally render?](#why-not-conditionally-render)
 - [API](#api)
@@ -213,7 +238,6 @@ There are four examples one can explore in the `/examples` folder:
 
 - [Basic](examples/basic)
 - [Server-side Rendering](examples/ssr-rendering)
-- [Gatsby](examples/gatsby)
 - [Next](examples/nextjs)
 - [Kitchen Sink](examples/kitchen-sink)
 
@@ -221,7 +245,9 @@ While the `Basic` and `SSR` examples will get one pretty far, `@artsy/fresnel`
 can do a lot more. For an exhaustive deep-dive into its features, check out the
 [Kitchen Sink](examples/kitchen-sink) app.
 
-If you're using Gatsby, you can also try [gatsby-plugin-fresnel](https://github.com/chrissantamaria/gatsby-plugin-fresnel) for easy configuration.
+If you're using Gatsby, you can also try
+[gatsby-plugin-fresnel](https://github.com/chrissantamaria/gatsby-plugin-fresnel)
+for easy configuration.
 
 ## Why not conditionally render?
 
@@ -612,12 +638,8 @@ a `matchMedia` example.)
 
 ```tsx
 <>
-  <Media at="sm">
-    {this.getComponent('sm')}
-  </Media>
-  <Media greaterThan="sm">
-    {this.getComponent()}
-  </Media>
+  <Media at="sm">{this.getComponent("sm")}</Media>
+  <Media greaterThan="sm">{this.getComponent()}</Media>
 </>
 ```
 

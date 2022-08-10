@@ -96,6 +96,7 @@ describe("Media", () => {
   })
 
   afterEach(() => {
+    // @ts-ignore
     window.matchMedia = undefined
   })
 
