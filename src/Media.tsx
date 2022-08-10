@@ -1,16 +1,16 @@
 // tslint:disable:jsdoc-format
-
 import React, { CSSProperties } from "react"
+
+import { BreakpointConstraint } from "./Breakpoints"
 import { createResponsiveComponents } from "./DynamicResponsive"
 import { MediaQueries } from "./MediaQueries"
 import {
-  intersection,
-  propKey,
-  createClassName,
   castBreakpointsToIntegers,
+  createClassName,
+  intersection,
   memoize,
+  propKey,
 } from "./Utils"
-import { BreakpointConstraint } from "./Breakpoints"
 
 /**
  * A render prop that can be used to render a different container element than
@@ -20,7 +20,8 @@ import { BreakpointConstraint } from "./Breakpoints"
  */
 export type RenderProp = (
   className: string,
-  renderChildren: boolean
+  renderChildren: boolean,
+  isPending?: boolean
 ) => React.ReactNode
 
 // TODO: All of these props should be mutually exclusive. Using a union should
@@ -216,6 +217,8 @@ export interface MediaContextProviderProps<M> {
    * will be triggered, which could lead to unintended side-effects.
    */
   disableDynamicMediaQueries?: boolean
+
+  isPending?: boolean
 }
 
 export interface CreateMediaConfig {
@@ -346,7 +349,7 @@ export function createMedia<
   }>({ hasParentMedia: false, breakpointProps: {} })
   MediaContext.displayName = "MediaParent.Context"
 
-  const getMediaContextValue = memoize(onlyMatch => ({
+  const getMediaContextValue = memoize((onlyMatch) => ({
     onlyMatch,
   }))
 
@@ -373,9 +376,9 @@ export function createMedia<
           )}
         >
           <DynamicResponsive.Consumer>
-            {matches => {
+            {({ mediaQueryMatches: matches, isPending }) => {
               const matchingMediaQueries = Object.keys(matches).filter(
-                key => matches[key]
+                (key) => matches[key]
               )
 
               const MediaContextValue = getMediaContextValue(
@@ -383,7 +386,9 @@ export function createMedia<
               )
 
               return (
-                <MediaContext.Provider value={MediaContextValue}>
+                <MediaContext.Provider
+                  value={{ ...MediaContextValue, isPending: isPending }}
+                >
                   {children}
                 </MediaContext.Provider>
               )
@@ -425,17 +430,16 @@ export function createMedia<
         interaction,
         ...breakpointProps
       } = props
-      const mediaParentContextValue = this.getMediaParentContextValue(
-        breakpointProps
-      )
+      const mediaParentContextValue =
+        this.getMediaParentContextValue(breakpointProps)
 
       return (
         <MediaParentContext.Consumer>
-          {mediaParentContext => {
+          {(mediaParentContext) => {
             return (
               <MediaParentContext.Provider value={mediaParentContextValue}>
                 <MediaContext.Consumer>
-                  {({ onlyMatch } = {}) => {
+                  {({ onlyMatch, isPending } = {}) => {
                     let className: string | null
                     if (props.interaction) {
                       className = createClassName(
@@ -496,18 +500,14 @@ export function createMedia<
                         ))
 
                     if (props.children instanceof Function) {
-                      return props.children(className, renderChildren)
-                    } else {
-                      return (
-                        <div
-                          className={`fresnel-container ${className} ${passedClassName}`}
-                          style={style}
-                          suppressHydrationWarning={!renderChildren}
-                        >
-                          {renderChildren ? props.children : null}
-                        </div>
+                      return props.children(
+                        className,
+                        renderChildren,
+                        isPending
                       )
                     }
+                    console.log("Warning: Child has to be a function")
+                    return null
                   }}
                 </MediaContext.Consumer>
               </MediaParentContext.Provider>
@@ -533,7 +533,7 @@ export function createMedia<
 const MutuallyExclusiveProps: string[] = MediaQueries.validKeys()
 
 function validateProps(props) {
-  const selectedProps = Object.keys(props).filter(prop =>
+  const selectedProps = Object.keys(props).filter((prop) =>
     MutuallyExclusiveProps.includes(prop)
   )
   if (selectedProps.length < 1) {
