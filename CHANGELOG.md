@@ -1,3 +1,20 @@
+# v4.0.1 (Thu Aug 11 2022)
+
+#### ⚠️ Pushed to `main`
+
+- Update README.md ([@damassi](https://github.com/damassi))
+
+#### 🏠  Internal
+
+- chore(deps): bump minimist from 1.2.5 to 1.2.6 [#288](https://github.com/artsy/fresnel/pull/288) ([@dependabot[bot]](https://github.com/dependabot[bot]))
+
+#### Authors: 2
+
+- [@dependabot[bot]](https://github.com/dependabot[bot])
+- Christopher Pappas ([@damassi](https://github.com/damassi))
+
+---
+
 # v4.0.0 (Wed Aug 10 2022)
 
 #### 💥  Breaking Change
