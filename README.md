@@ -11,7 +11,7 @@
 
 Due to React 18 more strictly handling server-side rendering rehydration full
 SSR support is incompatable with any version greater than 17. See
-[this issue](https://github.com/artsy/fresnel/issues/260) for more info, and Dan
+[this issue](https://github.com/artsy/fresnel/issues/260) to track our progress in fixing this issue, and Dan
 Abromov's
 [comment here](https://github.com/facebook/react/issues/23381#issuecomment-1096899474).
 
