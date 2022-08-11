@@ -349,7 +349,7 @@ export function createMedia<
   }>({ hasParentMedia: false, breakpointProps: {} })
   MediaContext.displayName = "MediaParent.Context"
 
-  const getMediaContextValue = memoize((onlyMatch) => ({
+  const getMediaContextValue = memoize(onlyMatch => ({
     onlyMatch,
   }))
 
@@ -378,7 +378,7 @@ export function createMedia<
           <DynamicResponsive.Consumer>
             {({ mediaQueryMatches: matches, isPending }) => {
               const matchingMediaQueries = Object.keys(matches).filter(
-                (key) => matches[key]
+                key => matches[key]
               )
 
               const MediaContextValue = getMediaContextValue(
@@ -387,7 +387,7 @@ export function createMedia<
 
               return (
                 <MediaContext.Provider
-                  value={{ ...MediaContextValue, isPending: isPending }}
+                  value={{ ...MediaContextValue, isPending }}
                 >
                   {children}
                 </MediaContext.Provider>
@@ -430,12 +430,13 @@ export function createMedia<
         interaction,
         ...breakpointProps
       } = props
-      const mediaParentContextValue =
-        this.getMediaParentContextValue(breakpointProps)
+      const mediaParentContextValue = this.getMediaParentContextValue(
+        breakpointProps
+      )
 
       return (
         <MediaParentContext.Consumer>
-          {(mediaParentContext) => {
+          {mediaParentContext => {
             return (
               <MediaParentContext.Provider value={mediaParentContextValue}>
                 <MediaContext.Consumer>
@@ -533,7 +534,7 @@ export function createMedia<
 const MutuallyExclusiveProps: string[] = MediaQueries.validKeys()
 
 function validateProps(props) {
-  const selectedProps = Object.keys(props).filter((prop) =>
+  const selectedProps = Object.keys(props).filter(prop =>
     MutuallyExclusiveProps.includes(prop)
   )
   if (selectedProps.length < 1) {
