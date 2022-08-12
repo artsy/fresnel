@@ -6,11 +6,6 @@ import React, {
   useTransition,
 } from "react"
 
-/**
- * TODO: This is the deprecated runtime media-query component from Reaction.
- *       It can probably be simplified somewhat if we’re not going to be using
- *       it directly any longer.
- */
 /** TODO */
 export type MediaQueries<M extends string = string> = { [K in M]: string }
 
@@ -115,20 +110,20 @@ export function createResponsiveComponents<M extends string>() {
     const [isPending, startTransition] = useTransition()
 
     const [mediaQueryMatchers] = useState(() => {
-      let mediaQueryMatchers: MediaQueryMatchers | undefined = undefined
+      let _mediaQueryMatchers: MediaQueryMatchers | undefined = undefined
 
       if (isSupportedEnvironment() && mediaQueries != null) {
-        mediaQueryMatchers = setupMatchers(mediaQueries)
+        _mediaQueryMatchers = setupMatchers(mediaQueries)
       }
-      return mediaQueryMatchers
+      return _mediaQueryMatchers
     })
 
     const [mediaQueryMatches, setMediaQueryMatches] = useState(() => {
-      let mediaQueryMatches: MediaQueryMatches
+      let _mediaQueryMatches: MediaQueryMatches
       if (isSupportedEnvironment() && mediaQueryMatchers != null) {
-        mediaQueryMatches = checkMatchers(mediaQueryMatchers)
+        _mediaQueryMatches = checkMatchers(mediaQueryMatchers)
       } else {
-        mediaQueryMatches = Object.keys(mediaQueries).reduce(
+        _mediaQueryMatches = Object.keys(mediaQueries).reduce(
           (matches, key) => ({
             ...matches,
             [key]:
@@ -138,7 +133,7 @@ export function createResponsiveComponents<M extends string>() {
           {}
         )
       }
-      return mediaQueryMatches
+      return _mediaQueryMatches
     })
 
     /**
@@ -146,23 +141,23 @@ export function createResponsiveComponents<M extends string>() {
      */
     const mediaQueryStatusChangedCallback = useCallback(() => {
       if (isSupportedEnvironment() && mediaQueryMatchers) {
-        const mediaQueryMatches = checkMatchers(mediaQueryMatchers)
+        const _mediaQueryMatches = checkMatchers(mediaQueryMatchers)
         startTransition(() => {
-          setMediaQueryMatches(mediaQueryMatches)
+          setMediaQueryMatches(_mediaQueryMatches)
         })
       }
     }, [mediaQueryMatchers])
 
     useEffect(() => {
       if (mediaQueryMatchers) {
-        Object.values(mediaQueryMatchers).forEach((matcher) => {
+        Object.values(mediaQueryMatchers).forEach(matcher => {
           matcher.addEventListener("change", mediaQueryStatusChangedCallback)
         })
       }
 
       return () => {
         if (mediaQueryMatchers) {
-          Object.values(mediaQueryMatchers).forEach((matcher) =>
+          Object.values(mediaQueryMatchers).forEach(matcher =>
             matcher.removeEventListener(
               "change",
               mediaQueryStatusChangedCallback

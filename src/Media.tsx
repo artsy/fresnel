@@ -1,5 +1,6 @@
 // tslint:disable:jsdoc-format
 import React, { CSSProperties } from "react"
+import { SuspenseWrapper } from "./suspense/SuspenseWrapper"
 
 import { BreakpointConstraint } from "./Breakpoints"
 import { createResponsiveComponents } from "./DynamicResponsive"
@@ -349,7 +350,7 @@ export function createMedia<
   }>({ hasParentMedia: false, breakpointProps: {} })
   MediaContext.displayName = "MediaParent.Context"
 
-  const getMediaContextValue = memoize(onlyMatch => ({
+  const getMediaContextValue = memoize((onlyMatch) => ({
     onlyMatch,
   }))
 
@@ -359,10 +360,10 @@ export function createMedia<
     }
   > = ({ disableDynamicMediaQueries, onlyMatch, children }) => {
     if (disableDynamicMediaQueries) {
-      const MediaContextValue = getMediaContextValue(onlyMatch)
+      const mediaContextValue = getMediaContextValue(onlyMatch)
 
       return (
-        <MediaContext.Provider value={MediaContextValue}>
+        <MediaContext.Provider value={mediaContextValue}>
           {children}
         </MediaContext.Provider>
       )
@@ -378,16 +379,16 @@ export function createMedia<
           <DynamicResponsive.Consumer>
             {({ mediaQueryMatches: matches, isPending }) => {
               const matchingMediaQueries = Object.keys(matches).filter(
-                key => matches[key]
+                (key) => matches[key]
               )
 
-              const MediaContextValue = getMediaContextValue(
+              const mediaContextValue = getMediaContextValue(
                 intersection(matchingMediaQueries, onlyMatch)
               )
 
               return (
                 <MediaContext.Provider
-                  value={{ ...MediaContextValue, isPending }}
+                  value={{ ...mediaContextValue, isPending }}
                 >
                   {children}
                 </MediaContext.Provider>
@@ -430,13 +431,12 @@ export function createMedia<
         interaction,
         ...breakpointProps
       } = props
-      const mediaParentContextValue = this.getMediaParentContextValue(
-        breakpointProps
-      )
+      const mediaParentContextValue =
+        this.getMediaParentContextValue(breakpointProps)
 
       return (
         <MediaParentContext.Consumer>
-          {mediaParentContext => {
+          {(mediaParentContext) => {
             return (
               <MediaParentContext.Provider value={mediaParentContextValue}>
                 <MediaContext.Consumer>
@@ -492,6 +492,7 @@ export function createMedia<
                           breakpointProps
                         )
                       ).length > 0
+
                     const renderChildren =
                       doesMatchParent &&
                       (onlyMatch === undefined ||
@@ -501,14 +502,35 @@ export function createMedia<
                         ))
 
                     if (props.children instanceof Function) {
-                      return props.children(
-                        className,
-                        renderChildren,
-                        isPending
+                      return (
+                        <>
+                          <SuspenseWrapper
+                            active={renderChildren}
+                            isPending={isPending}
+                          >
+                            {props.children(
+                              className,
+                              renderChildren,
+                              isPending
+                            )}
+                          </SuspenseWrapper>
+                        </>
+                      )
+                    } else {
+                      return (
+                        <SuspenseWrapper
+                          active={renderChildren}
+                          isPending={isPending}
+                        >
+                          <div
+                            className={`fresnel-container ${className} ${passedClassName}`}
+                            style={style}
+                          >
+                            {renderChildren ? props.children : null}
+                          </div>
+                        </SuspenseWrapper>
                       )
                     }
-                    console.log("Warning: Child has to be a function")
-                    return null
                   }}
                 </MediaContext.Consumer>
               </MediaParentContext.Provider>
@@ -534,7 +556,7 @@ export function createMedia<
 const MutuallyExclusiveProps: string[] = MediaQueries.validKeys()
 
 function validateProps(props) {
-  const selectedProps = Object.keys(props).filter(prop =>
+  const selectedProps = Object.keys(props).filter((prop) =>
     MutuallyExclusiveProps.includes(prop)
   )
   if (selectedProps.length < 1) {

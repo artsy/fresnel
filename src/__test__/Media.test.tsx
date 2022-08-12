@@ -464,73 +464,6 @@ describe("Media", () => {
     })
   })
 
-  describe("during hydration", () => {
-    // FIXME: Unable to reproduce this here, so we'll do a more synthetic test.
-    xit("does not warn about Media components that do not match and are empty", done => {
-      const spy = jest.spyOn(console, "error")
-
-      const App = () => (
-        <MediaContextProvider>
-          <Media at="extra-small">
-            <div className="extra-small" />
-          </Media>
-          <Media at="medium">
-            <div className="medium" />
-          </Media>
-          <Media greaterThanOrEqual="large">
-            <div className="large" />
-          </Media>
-        </MediaContextProvider>
-      )
-
-      const container = document.createElement("div")
-      document.body.appendChild(container)
-
-      mockCurrentDynamicBreakpoint("medium")
-
-      container.innerHTML = ReactDOMServer.renderToString(<App />)
-      ReactDOM.hydrate(<App />, container, () => {
-        expect(spy).not.toHaveBeenCalled()
-        done()
-      })
-    })
-
-    // This is the best we can do until we figure out a way to reproduce a
-    // warning, as per above.
-    it("does not warn about Media components that do not match and are empty", () => {
-      mockCurrentDynamicBreakpoint("medium")
-
-      const query = (renderer
-        .create(
-          <MediaContextProvider>
-            <Media at="extra-small">
-              <span className="extra-small" />
-            </Media>
-            <Media at="medium">
-              <span className="medium" />
-            </Media>
-            <Media at="large">
-              <span className="large" />
-            </Media>
-          </MediaContextProvider>
-        )
-        .toJSON() as any) as ReactTestRendererJSON[]
-
-      expect(
-        query.find(e => e.props.className.includes("extra-small")).props
-          .suppressHydrationWarning
-      ).toEqual(true)
-      expect(
-        query.find(e => e.props.className.includes("medium")).props
-          .suppressHydrationWarning
-      ).toEqual(false)
-      expect(
-        query.find(e => e.props.className.includes("large")).props
-          .suppressHydrationWarning
-      ).toEqual(true)
-    })
-  })
-
   describe("prevent nested unnecessary renders", () => {
     it("only renders one element when Media is nested within Media", () => {
       const query = renderer.create(
@@ -761,8 +694,8 @@ function mockCurrentDynamicBreakpoint(at) {
     // Return mock object that only matches the mocked breakpoint
     return {
       matches: key === at,
-      addListener: jest.fn(),
-      removeListener: jest.fn(),
+      addEventListener: jest.fn(),
+      removeEventListener: jest.fn(),
     }
   })
 }
