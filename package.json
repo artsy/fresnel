@@ -1,6 +1,6 @@
 {
   "name": "@artsy/fresnel",
-  "version": "5.0.0",
+  "version": "5.0.1",
   "description": "An SSR compatible approach to CSS media query based responsive layouts for React.",
   "main": "dist/index.js",
   "files": [
