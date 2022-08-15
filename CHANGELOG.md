@@ -1,3 +1,16 @@
+# v5.0.0 (Mon Aug 15 2022)
+
+#### 💥  Breaking Change
+
+- feat(react-18): Add official React 18 SSR support [#290](https://github.com/artsy/fresnel/pull/290) (markus.gritsch@millipede.me [@damassi](https://github.com/damassi))
+
+#### Authors: 2
+
+- Christopher Pappas ([@damassi](https://github.com/damassi))
+- Gritsch Markus (markus.gritsch@millipede.me)
+
+---
+
 # v4.0.1 (Thu Aug 11 2022)
 
 #### ⚠️ Pushed to `main`
