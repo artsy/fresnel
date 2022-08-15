@@ -1,3 +1,15 @@
+# v5.0.1 (Mon Aug 15 2022)
+
+#### 🐛  Bug Fix
+
+- docs(react-18): Update to remove unnecessary warning [#291](https://github.com/artsy/fresnel/pull/291) ([@damassi](https://github.com/damassi))
+
+#### Authors: 1
+
+- Christopher Pappas ([@damassi](https://github.com/damassi))
+
+---
+
 # v5.0.0 (Mon Aug 15 2022)
 
 #### 💥  Breaking Change
