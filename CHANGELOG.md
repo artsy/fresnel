@@ -1,3 +1,15 @@
+# v6.1.0 (Wed Aug 17 2022)
+
+#### 🚀  Enhancement
+
+- Fix typo in `REAMDE.md` [#293](https://github.com/artsy/fresnel/pull/293) ([@inomdzhon](https://github.com/inomdzhon))
+
+#### Authors: 1
+
+- Inomdzhon Mirdzhamolov ([@inomdzhon](https://github.com/inomdzhon))
+
+---
+
 # v6.0.0 (Wed Aug 17 2022)
 
 #### 💥  Breaking Change
