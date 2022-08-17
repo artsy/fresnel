@@ -1,3 +1,15 @@
+# v6.0.0 (Wed Aug 17 2022)
+
+#### 💥  Breaking Change
+
+- NOTICE: Publish new major version removing Suspense compatibility [#292](https://github.com/artsy/fresnel/pull/292) ([@damassi](https://github.com/damassi))
+
+#### Authors: 1
+
+- Christopher Pappas ([@damassi](https://github.com/damassi))
+
+---
+
 # v5.0.2 (Wed Aug 17 2022)
 
 
