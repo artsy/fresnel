@@ -71,7 +71,7 @@
     "babel-preset-env": "1.7.0",
     "chalk": "2.4.1",
     "concurrently": "3.6.1",
-    "express": "4.16.4",
+    "express": "4.17.3",
     "husky": "0.14.3",
     "jest": "24.9.0",
     "jest-styled-components": "6.2.2",
