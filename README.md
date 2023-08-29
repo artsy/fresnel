@@ -7,32 +7,16 @@
 
 – https://en.wikipedia.org/wiki/Fresnel_equations
 
-### ⚠️ React 18 Notice
+### 👀 Next.js / React 18
 
-Due to React 18 more strictly handling server-side rendering rehydration full
-SSR support is incompatable with any version greater than 17. See
-[this issue](https://github.com/artsy/fresnel/issues/260) to track our progress in fixing this issue, and Dan
-Abramov's
-[comment here](https://github.com/facebook/react/issues/23381#issuecomment-1096899474).
+For users of Next.js 13 + React 18: This library works great.
 
-In the meantime -- for users of server-side rendering features -- you can
-disable DOM cleaning optimizations by setting `disableDynamicMediaQueries` on
-the context like so and things should work:
-
-```tsx
-<MediaContextProvider disableDynamicMediaQueries>
-  <Media at='xs'>
-    <MobileApp />
-  </Media>
-  <Media greaterThan='xs'>
-    <DesktopApp />
-  </Media>
-<MediaContextProvider>
-```
-
-Note that this will fire all effects within sub components for each breakpoint
-on re-hydration. For some users this could be an issue; for many others, no
-problem at all.
+For those _not_ using Next.js 13, and are _only_ using React 18 + server-side
+rendering features in a custom framework, you (may) run into rehydration issues
+due to React 18 more strictly handling rehydration, which now treats warnings as
+hard errors. [This issue](https://github.com/artsy/fresnel/issues/260) documents
+some of the problems that were observed a while back that now seem to be fixed
+on the Next.js side.
 
 ## Installation
 
