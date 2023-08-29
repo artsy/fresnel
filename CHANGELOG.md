@@ -1,3 +1,34 @@
+# v6.2.0 (Tue Aug 29 2023)
+
+#### 🚀  Enhancement
+
+- docs(readme): update with note about Next 13 + React 18 [#328](https://github.com/artsy/fresnel/pull/328) ([@damassi](https://github.com/damassi))
+
+#### 🏠  Internal
+
+- chore(deps): bump semver from 5.7.1 to 5.7.2 [#327](https://github.com/artsy/fresnel/pull/327) ([@dependabot[bot]](https://github.com/dependabot[bot]))
+- chore(deps): update yarn orb from 6.4.0 to v6.5.0 [#322](https://github.com/artsy/fresnel/pull/322) ([@renovate[bot]](https://github.com/renovate[bot]))
+- chore(deps): bump json5 from 1.0.1 to 1.0.2 in /examples/basic [#315](https://github.com/artsy/fresnel/pull/315) ([@dependabot[bot]](https://github.com/dependabot[bot]))
+- chore(deps): bump json5 from 1.0.1 to 1.0.2 in /examples/ssr-rendering [#316](https://github.com/artsy/fresnel/pull/316) ([@dependabot[bot]](https://github.com/dependabot[bot]))
+- chore(deps): bump json5 from 1.0.1 to 1.0.2 in /examples/kitchen-sink [#317](https://github.com/artsy/fresnel/pull/317) ([@dependabot[bot]](https://github.com/dependabot[bot]))
+- chore(deps): bump ua-parser-js from 0.7.28 to 0.7.33 [#319](https://github.com/artsy/fresnel/pull/319) ([@dependabot[bot]](https://github.com/dependabot[bot]))
+- chore(deps): bump decode-uri-component from 0.2.0 to 0.2.2 [#304](https://github.com/artsy/fresnel/pull/304) ([@dependabot[bot]](https://github.com/dependabot[bot]))
+- chore(deps): update dep typescript from 4.9.4 to v4.9.5 [#320](https://github.com/artsy/fresnel/pull/320) ([@renovate[bot]](https://github.com/renovate[bot]))
+- chore(deps): update dep typescript from 4.9.3 to v4.9.4 [#308](https://github.com/artsy/fresnel/pull/308) ([@renovate[bot]](https://github.com/renovate[bot]))
+- chore(deps): update yarn orb from 6.2.0 to v6.4.0 [#303](https://github.com/artsy/fresnel/pull/303) ([@renovate[bot]](https://github.com/renovate[bot]))
+- chore(deps): update dep typescript from 4.8.4 to v4.9.3 [#302](https://github.com/artsy/fresnel/pull/302) ([@renovate[bot]](https://github.com/renovate[bot]))
+- chore(deps): update dep typescript from 4.8.3 to v4.8.4 [#296](https://github.com/artsy/fresnel/pull/296) ([@renovate[bot]](https://github.com/renovate[bot]))
+- chore(deps): update dep typescript from 4.8.2 to v4.8.3 [#295](https://github.com/artsy/fresnel/pull/295) ([@renovate[bot]](https://github.com/renovate[bot]))
+- chore(deps): update dep typescript from 4.7.4 to v4.8.2 [#294](https://github.com/artsy/fresnel/pull/294) ([@renovate[bot]](https://github.com/renovate[bot]))
+
+#### Authors: 3
+
+- [@dependabot[bot]](https://github.com/dependabot[bot])
+- [@renovate[bot]](https://github.com/renovate[bot])
+- Christopher Pappas ([@damassi](https://github.com/damassi))
+
+---
+
 # v6.1.0 (Wed Aug 17 2022)
 
 #### 🚀  Enhancement
