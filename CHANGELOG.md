@@ -1,3 +1,15 @@
+# v6.2.1 (Tue Aug 29 2023)
+
+#### 🐛  Bug Fix
+
+- Revert "docs(readme): update with note about Next 13 + React 18" [#329](https://github.com/artsy/fresnel/pull/329) ([@damassi](https://github.com/damassi))
+
+#### Authors: 1
+
+- Christopher Pappas ([@damassi](https://github.com/damassi))
+
+---
+
 # v6.2.0 (Tue Aug 29 2023)
 
 #### 🚀  Enhancement
