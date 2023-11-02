@@ -1,7 +1,6 @@
 {
   "name": "@artsy/fresnel-basic",
   "version": "1.0.0",
-  "main": "index.js",
   "license": "MIT",
   "scripts": {
     "start": "babel-node --extensions '.ts,.tsx,.js,.jsx' src/server.tsx"
@@ -23,7 +22,7 @@
     "@types/react": "^18.0.17",
     "@types/react-dom": "^18.0.6",
     "babel-loader": "8.0.6",
-    "webpack": "4.46.0",
+    "webpack": "^5.89.0",
     "webpack-cli": "3.3.2",
     "webpack-dev-middleware": "3.7.0"
   }
