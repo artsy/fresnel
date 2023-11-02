@@ -9,7 +9,6 @@ module.exports = {
   output: {
     filename: "[name].js",
     publicPath: "/assets",
-    hashFunction: "sha256",
   },
   module: {
     rules: [

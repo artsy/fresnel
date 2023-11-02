@@ -2,10 +2,8 @@
 # yarn lockfile v1
 
 
-"@artsy/fresnel@latest":
-  version "6.1.0"
-  resolved "https://registry.yarnpkg.com/@artsy/fresnel/-/fresnel-6.1.0.tgz#fac8aeb6a01cbd7791351dce523f5ab5e2fc8679"
-  integrity sha512-PexfFmf3Un3C752SFpryYROgahfdSsHhNETSZlJcO0W3MJ14hyw/MbLQl3DnNdQGIJZE6y1MbnH7ntEt8PWB0Q==
+"@artsy/fresnel@../../dist":
+  version "0.0.0"
 
 "@next/env@12.2.4":
   version "12.2.4"
