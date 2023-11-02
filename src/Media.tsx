@@ -476,9 +476,9 @@ export function createMedia<
      * If we're on the client, this is the first render, and we are not going
      * to render the children, we need to cleanup the the server-rendered HTML
      * to avoid a hydration mismatch on React 18+. We do this by grabbing the
-     * already-existing element directly from the DOM using the unique class id
-     * and clearing its contents. This solution follows one of the suggestions
-     * from Dan Abromov here:
+     * already-existing element(s) directly from the DOM using the unique class
+     * id and clearing its contents. This solution follows one of the
+     * suggestions from Dan Abromov here:
      *
      * https://github.com/facebook/react/issues/23381#issuecomment-1096899474
      *
@@ -488,8 +488,8 @@ export function createMedia<
      * on initial hydration.
      */
     if (isClient && isFirstRender && !renderChildren) {
-      const containerEl = document.getElementsByClassName(uniqueComponentId)[0]
-      if (!!containerEl) containerEl.innerHTML = ""
+      const containerEls = document.getElementsByClassName(uniqueComponentId)
+      Array.from(containerEls).forEach(el => (el.innerHTML = ""))
     }
 
     return (
