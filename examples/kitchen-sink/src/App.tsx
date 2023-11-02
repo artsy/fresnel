@@ -94,44 +94,42 @@ export const App: React.FunctionComponent = () => (
          * rendered.
          */}
         <Media lessThan="sm">
-          {className => (
+          {(className, renderChildren) => (
             <li className={className} style={ExtraSmallStyle}>
-              xs
+              {renderChildren ? `xs` : null}
             </li>
           )}
         </Media>
         <Media between={["sm", "lg"]}>
-          {(className, renderChildren) =>
-            renderChildren && (
-              <>
-                <li
-                  className={className}
-                  style={{
-                    ...SmallStyle,
-                    height: "100px",
-                    lineHeight: "100px",
-                  }}
-                >
-                  sm
-                </li>
-                <li
-                  className={className}
-                  style={{
-                    ...MediumStyle,
-                    height: "100px",
-                    lineHeight: "100px",
-                  }}
-                >
-                  md
-                </li>
-              </>
-            )
-          }
+          {(className, renderChildren) => (
+            <>
+              <li
+                className={className}
+                style={{
+                  ...SmallStyle,
+                  height: "100px",
+                  lineHeight: "100px",
+                }}
+              >
+                {renderChildren ? `sm` : null}
+              </li>
+              <li
+                className={className}
+                style={{
+                  ...MediumStyle,
+                  height: "100px",
+                  lineHeight: "100px",
+                }}
+              >
+                {renderChildren ? `md` : null}
+              </li>
+            </>
+          )}
         </Media>
         <Media greaterThanOrEqual="lg">
-          {className => (
+          {(className, renderChildren) => (
             <li className={className} style={LargeStyle}>
-              lg
+              {renderChildren ? `lg` : null}
             </li>
           )}
         </Media>

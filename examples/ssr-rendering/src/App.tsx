@@ -4,7 +4,7 @@ import { Media, MediaContextProvider } from "./Media"
 
 export const App = () => {
   return (
-    <MediaContextProvider disableDynamicMediaQueries>
+    <MediaContextProvider>
       <Media interaction="landscape">landscape</Media>
       <Media interaction="portrait">portrait</Media>
 
