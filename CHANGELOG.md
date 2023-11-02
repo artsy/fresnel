@@ -1,3 +1,15 @@
+# v7.1.2 (Thu Nov 02 2023)
+
+#### 🐛  Bug Fix
+
+- fix(install): remove postinstall [#345](https://github.com/artsy/fresnel/pull/345) ([@damassi](https://github.com/damassi))
+
+#### Authors: 1
+
+- Christopher Pappas ([@damassi](https://github.com/damassi))
+
+---
+
 # v7.1.1 (Thu Nov 02 2023)
 
 #### 🐛  Bug Fix
