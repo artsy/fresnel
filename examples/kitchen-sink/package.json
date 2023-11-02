@@ -4,7 +4,7 @@
   "main": "index.js",
   "license": "MIT",
   "scripts": {
-    "start": "babel-node --extensions '.ts,.tsx,.js,.jsx' src/server.tsx"
+    "start": "babel-node --extensions '.ts,.tsx,.js,.jsx' server.tsx"
   },
   "dependencies": {
     "@artsy/detect-responsive-traits": "0.1.0",

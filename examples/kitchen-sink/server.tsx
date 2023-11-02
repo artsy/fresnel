@@ -1,11 +1,11 @@
-import Webpack from "webpack"
-import WebpackDevServer from "webpack-dev-server"
-// @ts-ignore
-import webpackConfig from "./webpack.config"
 import express from "express"
 import ReactDOMServer from "react-dom/server"
 import React from "react"
 import chalk from "chalk"
+
+import webpack from "webpack"
+import webpackDevMiddleware from "webpack-dev-middleware"
+import webpackConfig from "./webpack.config"
 
 import { findDevice } from "@artsy/detect-responsive-traits"
 
@@ -19,7 +19,16 @@ import {
 } from "./src/Media"
 import { App } from "./src/App"
 
+const compiler = webpack(webpackConfig)
 const app = express()
+
+app.use(
+  webpackDevMiddleware(compiler, {
+    publicPath: webpackConfig.output.publicPath,
+    serverSideRender: true,
+    stats: "errors-only",
+  })
+)
 
 /**
  * Find the breakpoints and interactions that the server should render
@@ -95,7 +104,7 @@ app.get("/rehydration", (req, res) => {
           // loading the JS bundle.
           setTimeout(function () {
             var script = document.createElement("script")
-            script.src = "/bundle.js"
+            script.src = "/assets/app.js"
             document.getElementsByTagName("head")[0].appendChild(script);
             document.getElementById("loading-indicator").remove();
           }, 1000)
@@ -117,7 +126,7 @@ app.get("/client-only", (_req, res) => {
         <script>
           setTimeout(function () {
             var script = document.createElement("script")
-            script.src = "/bundle.js"
+            script.src = "/assets/app.js"
             document.getElementsByTagName("head")[0].appendChild(script);
           }, 1000)
         </script>
@@ -177,18 +186,6 @@ function log(userAgent: string, onlyMatch?: string[], device?: string) {
   )
 }
 
-const compiler = Webpack(webpackConfig)
-const devServerOptions = Object.assign({}, webpackConfig.devServer, {
-  stats: {
-    colors: true,
-  },
-  before(s) {
-    s.use(app)
-  },
-})
-const server = new WebpackDevServer(compiler, devServerOptions)
-
-server.listen(8080, "127.0.0.1", () => {
-  // tslint:disable-next-line:no-console
-  console.log("Starting server on http://localhost:8080")
+app.listen(3000, () => {
+  console.warn("\nApp started at http://localhost:3000 \n")
 })
