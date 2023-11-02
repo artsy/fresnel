@@ -1,5 +1,10 @@
 {
   "extends": ["tslint:recommended", "tslint-react", "tslint-config-prettier"],
+  "linterOptions": {
+    "exclude": [
+      "**/dist/*"
+    ]
+  },
   "rules": {
     "array-type": false,
     "curly": false,

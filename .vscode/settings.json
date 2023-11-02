@@ -19,7 +19,5 @@
   "tslint.autoFixOnSave": true,
   "typescript.tsdk": "./node_modules/typescript/lib",
   "debug.node.autoAttach": "on",
-  "cSpell.words": [
-    "resizable"
-  ]
+  "cSpell.words": ["resizable"]
 }

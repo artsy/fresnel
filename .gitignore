@@ -10,7 +10,6 @@ assets/reaction-force.js
 public/assets/fonts
 example/*.js
 example/*.map
-dist
 node_modules
 npm-debug.log
 out*
