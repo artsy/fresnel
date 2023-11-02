@@ -1,3 +1,20 @@
+# v7.1.1 (Thu Nov 02 2023)
+
+#### 🐛  Bug Fix
+
+- fix: Avoid undefined class name [#342](https://github.com/artsy/fresnel/pull/342) ([@roderickhsiao](https://github.com/roderickhsiao))
+
+#### 🏠  Internal
+
+- docs(readme): Update with react 18 / 17 install instructions [#344](https://github.com/artsy/fresnel/pull/344) ([@damassi](https://github.com/damassi))
+
+#### Authors: 2
+
+- Christopher Pappas ([@damassi](https://github.com/damassi))
+- Roderick Hsiao ([@roderickhsiao](https://github.com/roderickhsiao))
+
+---
+
 # v7.1.0 (Thu Nov 02 2023)
 
 #### 🚀  Enhancement
