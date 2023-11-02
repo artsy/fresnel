@@ -500,7 +500,7 @@ export function createMedia<
           } else {
             return (
               <div
-                className={`fresnel-container ${className} ${passedClassName}`}
+                className={["fresnel-container", className, passedClassName].filter(Boolean).join(" ")}
                 style={style}
                 suppressHydrationWarning={!renderChildren}
               >
