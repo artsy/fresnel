@@ -8,7 +8,7 @@
   },
   "dependencies": {
     "@artsy/detect-responsive-traits": "0.1.0",
-    "@artsy/fresnel": "latest",
+    "@artsy/fresnel": "../../dist",
     "@babel/node": "^7.4.5",
     "express": "^4.17.0",
     "react": "^18.2.0",
@@ -24,9 +24,9 @@
     "@types/react": "^18.0.17",
     "@types/react-dom": "^18.0.6",
     "babel-loader": "8.0.6",
-    "webpack": "4.39.3",
-    "webpack-cli": "3.3.2",
-    "webpack-dev-middleware": "3.7.0",
-    "webpack-dev-server": "3.8.0"
+    "webpack": "^5.89.0",
+    "webpack-cli": "^5.1.4",
+    "webpack-dev-middleware": "^6.1.1",
+    "webpack-dev-server": "^4.15.1"
   }
 }

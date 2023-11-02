@@ -19,6 +19,7 @@
     "compile": "babel src --out-dir dist -s --source-maps --extensions '.ts,.tsx' --ignore src/**/__tests__",
     "kitchen-sink": "cd examples/kitchen-sink && yarn start",
     "lint": "tslint -c tslint.json --project tsconfig.json",
+    "postinstall": "yarn compile",
     "precommit": "lint-staged",
     "prepush": "yarn run type-check",
     "prepublishOnly": "yarn clean && yarn compile && yarn type-declarations",

@@ -1,6 +1,7 @@
 import Webpack from "webpack"
 import WebpackDevServer from "webpack-dev-server"
-import webpackConfig from "../webpack.config"
+// @ts-ignore
+import webpackConfig from "./webpack.config"
 import express from "express"
 import ReactDOMServer from "react-dom/server"
 import React from "react"
@@ -15,8 +16,8 @@ import {
   MediaContextProvider,
   SortedBreakpoints,
   SSRStyleID,
-} from "./Media"
-import { App } from "./app"
+} from "./src/Media"
+import { App } from "./src/App"
 
 const app = express()
 

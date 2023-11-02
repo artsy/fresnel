@@ -5,7 +5,6 @@
     "declaration": true,
     "experimentalDecorators": true,
     "jsx": "react",
-    "keyofStringsOnly": true,
     "lib": ["dom", "es2015", "es2016", "es2017"],
     "module": "commonjs",
     "moduleResolution": "node",
