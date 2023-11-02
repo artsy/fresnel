@@ -1,3 +1,15 @@
+# v7.1.3 (Thu Nov 02 2023)
+
+#### 🐛  Bug Fix
+
+- fix(next): Make work with next via suppressHydrationWarning [#346](https://github.com/artsy/fresnel/pull/346) ([@damassi](https://github.com/damassi))
+
+#### Authors: 1
+
+- Christopher Pappas ([@damassi](https://github.com/damassi))
+
+---
+
 # v7.1.2 (Thu Nov 02 2023)
 
 #### 🐛  Bug Fix
