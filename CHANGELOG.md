@@ -1,3 +1,15 @@
+# v7.0.0 (Thu Nov 02 2023)
+
+#### 💥  Breaking Change
+
+- React 18 Support: Cleanup DOM during hydration to avoid mismatch [#341](https://github.com/artsy/fresnel/pull/341) ([@mgreenw](https://github.com/mgreenw))
+
+#### Authors: 1
+
+- Max Greenwald ([@mgreenw](https://github.com/mgreenw))
+
+---
+
 # v6.2.1 (Tue Aug 29 2023)
 
 #### 🐛  Bug Fix
