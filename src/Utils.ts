@@ -1,5 +1,6 @@
 import { MediaBreakpointProps } from "./Media"
 import { BreakpointConstraintKey } from "./Breakpoints"
+import { useRef } from "react"
 
 /**
  * Extracts the single breakpoint prop from the props object.
@@ -72,5 +73,19 @@ export function memoize<F extends (...args: any[]) => void>(func: F) {
       results[argsKey] = func(...args)
     }
     return results[argsKey]
+  }
+}
+
+/**
+ * Hook to determine if the current render is the first render.
+ */
+export function useIsFirstRender(): boolean {
+  const isFirst = useRef(true)
+
+  if (isFirst.current) {
+    isFirst.current = false
+    return true
+  } else {
+    return false
   }
 }

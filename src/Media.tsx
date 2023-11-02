@@ -9,6 +9,7 @@ import {
   createClassName,
   castBreakpointsToIntegers,
   memoize,
+  useIsFirstRender,
 } from "./Utils"
 import { BreakpointConstraint } from "./Breakpoints"
 
@@ -340,10 +341,15 @@ export function createMedia<
   >({})
   MediaContext.displayName = "Media.Context"
 
-  const MediaParentContext = React.createContext<{
+  type MediaParentContextValue = {
     hasParentMedia: boolean
     breakpointProps: MediaBreakpointProps<BreakpointKey>
-  }>({ hasParentMedia: false, breakpointProps: {} })
+  }
+
+  const MediaParentContext = React.createContext<MediaParentContextValue>({
+    hasParentMedia: false,
+    breakpointProps: {},
+  })
   MediaContext.displayName = "MediaParent.Context"
 
   const getMediaContextValue = memoize(onlyMatch => ({
@@ -394,128 +400,117 @@ export function createMedia<
     }
   }
 
-  const Media = class extends React.Component<
-    MediaProps<BreakpointKey, Interaction>
-  > {
-    constructor(props) {
-      super(props)
-      validateProps(props)
-    }
+  const Media = (props: MediaProps<BreakpointKey, Interaction>) => {
+    validateProps(props)
 
-    static defaultProps = {
-      className: "",
-      style: {},
-    }
+    const {
+      children,
+      className: passedClassName,
+      style,
+      interaction,
+      ...breakpointProps
+    } = props
 
-    static contextType = MediaParentContext
-
-    getMediaParentContextValue = memoize(
-      (breakpointProps: MediaBreakpointProps<BreakpointKey>) => ({
-        hasParentMedia: true,
-        breakpointProps,
-      })
-    )
-
-    render() {
-      const props = this.props
-      const {
-        children,
-        className: passedClassName,
-        style,
-        interaction,
-        ...breakpointProps
-      } = props
-      const mediaParentContextValue = this.getMediaParentContextValue(
-        breakpointProps
+    const getMediaParentContextValue = React.useMemo(() => {
+      return memoize(
+        (newBreakpointProps: MediaBreakpointProps<BreakpointKey>) => ({
+          hasParentMedia: true,
+          breakpointProps: newBreakpointProps,
+        })
       )
+    }, [])
 
-      return (
-        <MediaParentContext.Consumer>
-          {mediaParentContext => {
+    const mediaParentContext = React.useContext(MediaParentContext)
+    const childMediaParentContext = getMediaParentContextValue(breakpointProps)
+    const { onlyMatch } = React.useContext(MediaContext)
+
+    const id = React.useId()
+    const isClient = typeof window !== "undefined"
+    const isFirstRender = useIsFirstRender()
+
+    let className: string | null
+    if (props.interaction) {
+      className = createClassName("interaction", props.interaction)
+    } else {
+      if (props.at) {
+        const largestBreakpoint = mediaQueries.breakpoints.largestBreakpoint
+        if (props.at === largestBreakpoint) {
+          console.warn(
+            "[@artsy/fresnel] " +
+              "`at` is being used with the largest breakpoint. " +
+              "Consider using `<Media greaterThanOrEqual=" +
+              `"${largestBreakpoint}">\` to account for future ` +
+              `breakpoint definitions outside of this range.`
+          )
+        }
+      }
+
+      const type = propKey(breakpointProps)
+      const breakpoint = breakpointProps[type]!
+      className = createClassName(type, breakpoint)
+    }
+
+    const doesMatchParent =
+      !mediaParentContext.hasParentMedia ||
+      intersection(
+        mediaQueries.breakpoints.toVisibleAtBreakpointSet(
+          mediaParentContext.breakpointProps
+        ),
+        mediaQueries.breakpoints.toVisibleAtBreakpointSet(breakpointProps)
+      ).length > 0
+
+    const renderChildren =
+      doesMatchParent &&
+      (onlyMatch === undefined ||
+        mediaQueries.shouldRenderMediaQuery(
+          { ...breakpointProps, interaction },
+          onlyMatch
+        ))
+
+    // Append a unique id to the className (consistent on server and client)
+    const uniqueComponentId = ` fresnel-${id}`
+    className += uniqueComponentId
+
+    /**
+     * SPECIAL CASE:
+     * If we're on the client, this is the first render, and we are not going
+     * to render the children, we need to cleanup the the server-rendered HTML
+     * to avoid a hydration mismatch on React 18+. We do this by grabbing the
+     * already-existing element directly from the DOM using the unique class id
+     * and clearing its contents. This solution follows one of the suggestions
+     * from Dan Abromov here:
+     *
+     * https://github.com/facebook/react/issues/23381#issuecomment-1096899474
+     *
+     * This will not have a negative impact on client-only rendering because
+     * either 1) isFirstRender will be false OR 2) the element won't exist yet
+     * so there will be nothing to clean up. It will only apply on SSR'd HTML
+     * on initial hydration.
+     */
+    if (isClient && isFirstRender && !renderChildren) {
+      const containerEl = document.getElementsByClassName(uniqueComponentId)[0]
+      if (!!containerEl) containerEl.innerHTML = ""
+    }
+
+    return (
+      <MediaParentContext.Provider value={childMediaParentContext}>
+        {(() => {
+          if (props.children instanceof Function) {
+            return props.children(className, renderChildren)
+          } else {
             return (
-              <MediaParentContext.Provider value={mediaParentContextValue}>
-                <MediaContext.Consumer>
-                  {({ onlyMatch } = {}) => {
-                    let className: string | null
-                    if (props.interaction) {
-                      className = createClassName(
-                        "interaction",
-                        props.interaction
-                      )
-                    } else {
-                      if (props.at) {
-                        const largestBreakpoint =
-                          mediaQueries.breakpoints.largestBreakpoint
-                        if (props.at === largestBreakpoint) {
-                          // TODO: We should look into making React’s __DEV__ available
-                          //       and have webpack completely compile these away.
-                          let ownerName = null
-                          try {
-                            const owner = (this as any)._reactInternalFiber
-                              ._debugOwner.type
-                            ownerName = owner.displayName || owner.name
-                          } catch (err) {
-                            // no-op
-                          }
-
-                          console.warn(
-                            "[@artsy/fresnel] " +
-                              "`at` is being used with the largest breakpoint. " +
-                              "Consider using `<Media greaterThanOrEqual=" +
-                              `"${largestBreakpoint}">\` to account for future ` +
-                              `breakpoint definitions outside of this range.${
-                                ownerName
-                                  ? ` It is being used in the ${ownerName} component.`
-                                  : ""
-                              }`
-                          )
-                        }
-                      }
-
-                      const type = propKey(breakpointProps)
-                      const breakpoint = breakpointProps[type]!
-                      className = createClassName(type, breakpoint)
-                    }
-
-                    const doesMatchParent =
-                      !mediaParentContext.hasParentMedia ||
-                      intersection(
-                        mediaQueries.breakpoints.toVisibleAtBreakpointSet(
-                          mediaParentContext.breakpointProps
-                        ),
-                        mediaQueries.breakpoints.toVisibleAtBreakpointSet(
-                          breakpointProps
-                        )
-                      ).length > 0
-                    const renderChildren =
-                      doesMatchParent &&
-                      (onlyMatch === undefined ||
-                        mediaQueries.shouldRenderMediaQuery(
-                          { ...breakpointProps, interaction },
-                          onlyMatch
-                        ))
-
-                    if (props.children instanceof Function) {
-                      return props.children(className, renderChildren)
-                    } else {
-                      return (
-                        <div
-                          className={`fresnel-container ${className} ${passedClassName}`}
-                          style={style}
-                          suppressHydrationWarning={!renderChildren}
-                        >
-                          {renderChildren ? props.children : null}
-                        </div>
-                      )
-                    }
-                  }}
-                </MediaContext.Consumer>
-              </MediaParentContext.Provider>
+              <div
+                className={`fresnel-container ${className} ${passedClassName}`}
+                style={style}
+                suppressHydrationWarning={!renderChildren}
+              >
+                {renderChildren ? props.children : null}
+              </div>
             )
-          }}
-        </MediaParentContext.Consumer>
-      )
-    }
+          }
+        })()}
+      </MediaParentContext.Provider>
+    )
   }
 
   return {
