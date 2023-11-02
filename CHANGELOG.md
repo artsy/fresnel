@@ -1,3 +1,15 @@
+# v7.1.0 (Thu Nov 02 2023)
+
+#### 🚀  Enhancement
+
+- chore(examples): Does some cleanup and some dep updates [#343](https://github.com/artsy/fresnel/pull/343) ([@damassi](https://github.com/damassi))
+
+#### Authors: 1
+
+- Christopher Pappas ([@damassi](https://github.com/damassi))
+
+---
+
 # v7.0.0 (Thu Nov 02 2023)
 
 #### 💥  Breaking Change
