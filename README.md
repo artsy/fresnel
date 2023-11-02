@@ -7,37 +7,14 @@
 
 – https://en.wikipedia.org/wiki/Fresnel_equations
 
-### ⚠️ React 18 Notice
-
-Due to React 18 more strictly handling server-side rendering rehydration full
-SSR support is incompatable with any version greater than 17. See
-[this issue](https://github.com/artsy/fresnel/issues/260) to track our progress in fixing this issue, and Dan
-Abramov's
-[comment here](https://github.com/facebook/react/issues/23381#issuecomment-1096899474).
-
-In the meantime -- for users of server-side rendering features -- you can
-disable DOM cleaning optimizations by setting `disableDynamicMediaQueries` on
-the context like so and things should work:
-
-```tsx
-<MediaContextProvider disableDynamicMediaQueries>
-  <Media at='xs'>
-    <MobileApp />
-  </Media>
-  <Media greaterThan='xs'>
-    <DesktopApp />
-  </Media>
-<MediaContextProvider>
-```
-
-Note that this will fire all effects within sub components for each breakpoint
-on re-hydration. For some users this could be an issue; for many others, no
-problem at all.
-
 ## Installation
 
 ```sh
+  # React 18+
   yarn add @artsy/fresnel
+
+  # React 17
+  yarn add @artsy/fresnel@6
 ```
 
 **Table of Contents**
