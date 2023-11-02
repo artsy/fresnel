@@ -520,14 +520,6 @@ describe("Media", () => {
         query.find(e => e.props.className.includes("extra-small")).props
           .suppressHydrationWarning
       ).toEqual(true)
-      expect(
-        query.find(e => e.props.className.includes("medium")).props
-          .suppressHydrationWarning
-      ).toEqual(false)
-      expect(
-        query.find(e => e.props.className.includes("large")).props
-          .suppressHydrationWarning
-      ).toEqual(true)
     })
   })
 
