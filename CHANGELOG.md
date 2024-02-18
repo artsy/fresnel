@@ -1,3 +1,15 @@
+# v7.1.4 (Sun Feb 18 2024)
+
+#### 🐛  Bug Fix
+
+- add nextjs app router example + move nextjs pages example [#351](https://github.com/artsy/fresnel/pull/351) ([@alyustik](https://github.com/alyustik))
+
+#### Authors: 1
+
+- Artem ([@alyustik](https://github.com/alyustik))
+
+---
+
 # v7.1.3 (Thu Nov 02 2023)
 
 #### 🐛  Bug Fix
