@@ -9,7 +9,7 @@
     "start": "next start"
   },
   "dependencies": {
-    "@artsy/fresnel": "../../dist",
+    "@artsy/fresnel": "../../../dist",
     "next": "^12.2.4",
     "react": "^18.2.0",
     "react-dom": "^18.2.0"
