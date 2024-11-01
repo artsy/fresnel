@@ -1,3 +1,15 @@
+# v8.0.1 (Fri Nov 01 2024)
+
+#### 🐛  Bug Fix
+
+- fix(types): Fix more type errors [#372](https://github.com/artsy/fresnel/pull/372) ([@damassi](https://github.com/damassi))
+
+#### Authors: 1
+
+- Christopher Pappas ([@damassi](https://github.com/damassi))
+
+---
+
 # v8.0.0 (Fri Nov 01 2024)
 
 #### 💥  Breaking Change
