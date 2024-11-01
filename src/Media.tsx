@@ -292,6 +292,8 @@ export interface CreateMediaResults<BreakpointKey, Interactions> {
   ): [SizeValue, MediaBreakpointProps<BreakpointKey>][]
 }
 
+export type StringKeys<T> = Extract<keyof T, string>
+
 /**
  * This is used to generate a Media component, its context provider, and CSS
  * rules based on your application’s breakpoints and interactions.
@@ -324,8 +326,8 @@ export interface CreateMediaResults<BreakpointKey, Interactions> {
  */
 export function createMedia<
   MediaConfig extends CreateMediaConfig,
-  BreakpointKey extends keyof MediaConfig["breakpoints"],
-  Interaction extends keyof MediaConfig["interactions"]
+  BreakpointKey extends StringKeys<keyof MediaConfig["breakpoints"]>,
+  Interaction extends StringKeys<keyof MediaConfig["interactions"]>
 >(config: MediaConfig): CreateMediaResults<BreakpointKey, Interaction> {
   const breakpoints = castBreakpointsToIntegers(config.breakpoints)
 
@@ -356,11 +358,17 @@ export function createMedia<
     onlyMatch,
   }))
 
-  const MediaContextProvider: React.FunctionComponent<
-    MediaContextProviderProps<BreakpointKey | Interaction> & {
-      children?: React.ReactNode
-    }
-  > = ({ disableDynamicMediaQueries, onlyMatch, children }) => {
+  const DynamicResponsiveProvider = (DynamicResponsive.Provider as unknown) as React.FC<
+    React.PropsWithChildren<any>
+  >
+
+  const MediaContextProvider = ({
+    disableDynamicMediaQueries,
+    onlyMatch,
+    children,
+  }: MediaContextProviderProps<BreakpointKey | Interaction> & {
+    children?: React.ReactNode
+  }): React.ReactNode => {
     if (disableDynamicMediaQueries) {
       const MediaContextValue = getMediaContextValue(onlyMatch)
 
@@ -368,10 +376,10 @@ export function createMedia<
         <MediaContext.Provider value={MediaContextValue}>
           {children}
         </MediaContext.Provider>
-      )
+      ) as React.ReactNode
     } else {
       return (
-        <DynamicResponsive.Provider
+        <DynamicResponsiveProvider
           mediaQueries={mediaQueries.dynamicResponsiveMediaQueries}
           initialMatchingMediaQueries={intersection(
             mediaQueries.mediaQueryTypes,
@@ -392,15 +400,17 @@ export function createMedia<
                 <MediaContext.Provider value={MediaContextValue}>
                   {children}
                 </MediaContext.Provider>
-              )
+              ) as React.ReactNode
             }}
           </DynamicResponsive.Consumer>
-        </DynamicResponsive.Provider>
-      )
+        </DynamicResponsiveProvider>
+      ) as React.ReactNode
     }
   }
 
-  const Media = (props: MediaProps<BreakpointKey, Interaction>) => {
+  const Media = (
+    props: MediaProps<BreakpointKey, Interaction>
+  ): React.ReactNode => {
     validateProps(props)
 
     const {
@@ -508,11 +518,11 @@ export function createMedia<
               >
                 {renderChildren ? props.children : null}
               </div>
-            )
+            ) as React.ReactNode
           }
         })()}
       </MediaParentContext.Provider>
-    )
+    ) as React.ReactNode
   }
 
   return {

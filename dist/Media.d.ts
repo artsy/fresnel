@@ -249,6 +249,7 @@ export interface CreateMediaResults<BreakpointKey, Interactions> {
      */
     valuesWithBreakpointProps<SizeValue>(values: SizeValue[]): [SizeValue, MediaBreakpointProps<BreakpointKey>][];
 }
+export type StringKeys<T> = Extract<keyof T, string>;
 /**
  * This is used to generate a Media component, its context provider, and CSS
  * rules based on your application’s breakpoints and interactions.
@@ -279,4 +280,4 @@ export interface CreateMediaResults<BreakpointKey, Interactions> {
    ```
  *
  */
-export declare function createMedia<MediaConfig extends CreateMediaConfig, BreakpointKey extends keyof MediaConfig["breakpoints"], Interaction extends keyof MediaConfig["interactions"]>(config: MediaConfig): CreateMediaResults<BreakpointKey, Interaction>;
+export declare function createMedia<MediaConfig extends CreateMediaConfig, BreakpointKey extends StringKeys<keyof MediaConfig["breakpoints"]>, Interaction extends StringKeys<keyof MediaConfig["interactions"]>>(config: MediaConfig): CreateMediaResults<BreakpointKey, Interaction>;

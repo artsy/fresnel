@@ -16,8 +16,6 @@
     "skipLibCheck": true,
     "target": "es2015",
     "strict": true,
-
-    "keyofStringsOnly": true,
     "ignoreDeprecations": "5.0"
   },
   "exclude": ["node_modules/*", "dist", "examples/*", "src/**/__test__/*"]
