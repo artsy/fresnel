@@ -29,7 +29,7 @@ export interface ResponsiveProviderState {
 }
 /** TODO */
 export declare function createResponsiveComponents<M extends string>(): {
-    Consumer: React.FunctionComponent<React.ConsumerProps<MediaQueryMatches<M>>>;
+    Consumer: React.Consumer<{}>;
     Provider: {
         new (props: ResponsiveProviderProps<M>): {
             isSupportedEnvironment: () => boolean;
@@ -48,7 +48,7 @@ export declare function createResponsiveComponents<M extends string>(): {
             componentDidMount(): void;
             componentWillUnmount(): void;
             shouldComponentUpdate(nextProps: Readonly<ResponsiveProviderProps<M>>, nextState: Readonly<ResponsiveProviderState>): boolean;
-            render(): JSX.Element;
+            render(): React.ReactNode;
             context: unknown;
             setState<K extends keyof ResponsiveProviderState>(state: ResponsiveProviderState | ((prevState: Readonly<ResponsiveProviderState>, props: Readonly<ResponsiveProviderProps<M>>) => ResponsiveProviderState | Pick<ResponsiveProviderState, K> | null) | Pick<ResponsiveProviderState, K> | null, callback?: (() => void) | undefined): void;
             forceUpdate(callback?: (() => void) | undefined): void;

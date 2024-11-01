@@ -42,11 +42,7 @@ export function createResponsiveComponents<M extends string>() {
   const ResponsiveContext = React.createContext({})
   ResponsiveContext.displayName = "Media.DynamicContext"
 
-  const ResponsiveConsumer: React.FunctionComponent<
-    React.ConsumerProps<MediaQueryMatches<M>>
-  > = ResponsiveContext.Consumer as React.FunctionComponent<
-    React.ConsumerProps<any>
-  >
+  const ResponsiveConsumer = ResponsiveContext.Consumer
 
   return {
     Consumer: ResponsiveConsumer,
@@ -169,7 +165,7 @@ export function createResponsiveComponents<M extends string>() {
           <ResponsiveContext.Provider value={this.state.mediaQueryMatches}>
             {this.props.children}
           </ResponsiveContext.Provider>
-        )
+        ) as React.ReactNode
       }
     },
   }
