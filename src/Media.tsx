@@ -19,10 +19,7 @@ import { BreakpointConstraint } from "./Breakpoints"
  *
  * @see {@link MediaProps.children}.
  */
-export type RenderProp = (
-  className: string,
-  renderChildren: boolean
-) => React.ReactNode
+export type RenderProp = (className: string, renderChildren: boolean) => any
 
 // TODO: All of these props should be mutually exclusive. Using a union should
 //       probably be made possible by https://github.com/Microsoft/TypeScript/pull/27408.
@@ -184,7 +181,7 @@ export interface MediaProps<BreakpointKey, Interaction>
      ```
    *
    */
-  children: React.ReactNode | RenderProp
+  children: any
 
   /**
    * Additional classNames to passed down and applied to Media container
@@ -250,7 +247,7 @@ export interface CreateMediaResults<BreakpointKey, Interactions> {
    */
   MediaContextProvider: React.ComponentType<
     MediaContextProviderProps<BreakpointKey | Interactions> & {
-      children: React.ReactNode
+      children: any
     }
   >
 
@@ -292,8 +289,6 @@ export interface CreateMediaResults<BreakpointKey, Interactions> {
   ): [SizeValue, MediaBreakpointProps<BreakpointKey>][]
 }
 
-export type StringKeys<T> = Extract<keyof T, string>
-
 /**
  * This is used to generate a Media component, its context provider, and CSS
  * rules based on your application’s breakpoints and interactions.
@@ -326,8 +321,8 @@ export type StringKeys<T> = Extract<keyof T, string>
  */
 export function createMedia<
   MediaConfig extends CreateMediaConfig,
-  BreakpointKey extends StringKeys<keyof MediaConfig["breakpoints"]>,
-  Interaction extends StringKeys<keyof MediaConfig["interactions"]>
+  BreakpointKey extends keyof MediaConfig["breakpoints"],
+  Interaction extends keyof MediaConfig["interactions"]
 >(config: MediaConfig): CreateMediaResults<BreakpointKey, Interaction> {
   const breakpoints = castBreakpointsToIntegers(config.breakpoints)
 
@@ -368,7 +363,7 @@ export function createMedia<
     children,
   }: MediaContextProviderProps<BreakpointKey | Interaction> & {
     children?: React.ReactNode
-  }): React.ReactNode => {
+  }): any => {
     if (disableDynamicMediaQueries) {
       const MediaContextValue = getMediaContextValue(onlyMatch)
 
@@ -408,9 +403,7 @@ export function createMedia<
     }
   }
 
-  const Media = (
-    props: MediaProps<BreakpointKey, Interaction>
-  ): React.ReactNode => {
+  const Media = (props: MediaProps<BreakpointKey, Interaction>): any => {
     validateProps(props)
 
     const {

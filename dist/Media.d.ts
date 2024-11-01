@@ -1,14 +1,14 @@
-import React, { CSSProperties } from "react";
-import { BreakpointConstraint } from "./Breakpoints";
+import React, { CSSProperties } from "react"
+import { BreakpointConstraint } from "./Breakpoints"
 /**
  * A render prop that can be used to render a different container element than
  * the default `div`.
  *
  * @see {@link MediaProps.children}.
  */
-export type RenderProp = (className: string, renderChildren: boolean) => React.ReactNode;
+export type RenderProp = (className: string, renderChildren: boolean) => any
 export interface MediaBreakpointProps<BreakpointKey = string> {
-    /**
+  /**
      * Children will only be shown if the viewport matches the specified
      * breakpoint. That is, a viewport width that’s higher than the configured
      * breakpoint value, but lower than the value of the next breakpoint, if any
@@ -31,8 +31,8 @@ export interface MediaBreakpointProps<BreakpointKey = string> {
        ```
      *
      */
-    at?: BreakpointKey;
-    /**
+  at?: BreakpointKey
+  /**
      * Children will only be shown if the viewport is smaller than the specified
      * breakpoint.
      *
@@ -50,8 +50,8 @@ export interface MediaBreakpointProps<BreakpointKey = string> {
        ```
      *
      */
-    lessThan?: BreakpointKey;
-    /**
+  lessThan?: BreakpointKey
+  /**
      * Children will only be shown if the viewport is greater than the specified
      * breakpoint.
      *
@@ -69,8 +69,8 @@ export interface MediaBreakpointProps<BreakpointKey = string> {
        ```
      *
      */
-    greaterThan?: BreakpointKey;
-    /**
+  greaterThan?: BreakpointKey
+  /**
      * Children will only be shown if the viewport is greater or equal to the
      * specified breakpoint.
      *
@@ -91,8 +91,8 @@ export interface MediaBreakpointProps<BreakpointKey = string> {
        ```
      *
      */
-    greaterThanOrEqual?: BreakpointKey;
-    /**
+  greaterThanOrEqual?: BreakpointKey
+  /**
      * Children will only be shown if the viewport is between the specified
      * breakpoints. That is, a viewport width that’s higher than or equal to the
      * small breakpoint value, but lower than the value of the large breakpoint.
@@ -111,10 +111,11 @@ export interface MediaBreakpointProps<BreakpointKey = string> {
        ```
      *
      */
-    between?: [BreakpointKey, BreakpointKey];
+  between?: [BreakpointKey, BreakpointKey]
 }
-export interface MediaProps<BreakpointKey, Interaction> extends MediaBreakpointProps<BreakpointKey> {
-    /**
+export interface MediaProps<BreakpointKey, Interaction>
+  extends MediaBreakpointProps<BreakpointKey> {
+  /**
      * Children will only be shown if the interaction query matches.
      *
      * @example
@@ -127,8 +128,8 @@ export interface MediaProps<BreakpointKey, Interaction> extends MediaBreakpointP
        <Media interaction="hover">ohai</Media>
        ```
      */
-    interaction?: Interaction;
-    /**
+  interaction?: Interaction
+  /**
      * The component(s) that should conditionally be shown, depending on the media
      * query matching.
      *
@@ -158,98 +159,104 @@ export interface MediaProps<BreakpointKey, Interaction> extends MediaBreakpointP
        ```
      *
      */
-    children: React.ReactNode | RenderProp;
-    /**
-     * Additional classNames to passed down and applied to Media container
-     */
-    className?: string;
-    /**
-     * Additional styles to passed down and applied to Media container
-     */
-    style?: CSSProperties;
+  children: any
+  /**
+   * Additional classNames to passed down and applied to Media container
+   */
+  className?: string
+  /**
+   * Additional styles to passed down and applied to Media container
+   */
+  style?: CSSProperties
 }
 export interface MediaContextProviderProps<M> {
-    /**
-     * This list of breakpoints and interactions can be used to limit the rendered
-     * output to these.
-     *
-     * For instance, when a server knows for some user-agents that certain
-     * breakpoints will never apply, omitting them altogether will lower the
-     * rendered byte size.
-     */
-    onlyMatch?: M[];
-    /**
-     * Disables usage of browser MediaQuery API to only render at the current
-     * breakpoint.
-     *
-     * Use this with caution, as disabling this means React components for all
-     * breakpoints will be mounted client-side and all associated life-cycle hooks
-     * will be triggered, which could lead to unintended side-effects.
-     */
-    disableDynamicMediaQueries?: boolean;
+  /**
+   * This list of breakpoints and interactions can be used to limit the rendered
+   * output to these.
+   *
+   * For instance, when a server knows for some user-agents that certain
+   * breakpoints will never apply, omitting them altogether will lower the
+   * rendered byte size.
+   */
+  onlyMatch?: M[]
+  /**
+   * Disables usage of browser MediaQuery API to only render at the current
+   * breakpoint.
+   *
+   * Use this with caution, as disabling this means React components for all
+   * breakpoints will be mounted client-side and all associated life-cycle hooks
+   * will be triggered, which could lead to unintended side-effects.
+   */
+  disableDynamicMediaQueries?: boolean
 }
 export interface CreateMediaConfig {
-    /**
-     * The breakpoint definitions for your application. Width definitions should
-     * start at 0.
-     *
-     * @see {@link createMedia}
-     */
-    breakpoints: {
-        [key: string]: number | string;
-    };
-    /**
-     * The interaction definitions for your application.
-     */
-    interactions?: {
-        [key: string]: string;
-    };
+  /**
+   * The breakpoint definitions for your application. Width definitions should
+   * start at 0.
+   *
+   * @see {@link createMedia}
+   */
+  breakpoints: {
+    [key: string]: number | string
+  }
+  /**
+   * The interaction definitions for your application.
+   */
+  interactions?: {
+    [key: string]: string
+  }
 }
 export interface CreateMediaResults<BreakpointKey, Interactions> {
-    /**
-     * The React component that you use throughout your application.
-     *
-     * @see {@link MediaBreakpointProps}
-     */
-    Media: React.ComponentType<MediaProps<BreakpointKey, Interactions>>;
-    /**
-     * The React Context provider component that you use to constrain rendering of
-     * breakpoints to a set list and to enable client-side dynamic constraining.
-     *
-     * @see {@link MediaContextProviderProps}
-     */
-    MediaContextProvider: React.ComponentType<MediaContextProviderProps<BreakpointKey | Interactions> & {
-        children: React.ReactNode;
-    }>;
-    /**
-     * Generates a set of CSS rules that you should include in your application’s
-     * styling to enable the hiding behaviour of your `Media` component uses.
-     */
-    createMediaStyle(breakpointKeys?: BreakpointConstraint[]): string;
-    /**
-     * A list of your application’s breakpoints sorted from small to large.
-     */
-    SortedBreakpoints: BreakpointKey[];
-    /**
-     * Creates a list of your application’s breakpoints that support the given
-     * widths and everything in between.
-     */
-    findBreakpointsForWidths(fromWidth: number, throughWidth: number): BreakpointKey[] | undefined;
-    /**
-     * Finds the breakpoint that matches the given width.
-     */
-    findBreakpointAtWidth(width: number): BreakpointKey | undefined;
-    /**
-     * Maps a list of values for various breakpoints to props that can be used
-     * with the `Media` component.
-     *
-     * The values map to corresponding indices in the sorted breakpoints array. If
-     * less values are specified than the number of breakpoints your application
-     * has, the last value will be applied to all subsequent breakpoints.
-     */
-    valuesWithBreakpointProps<SizeValue>(values: SizeValue[]): [SizeValue, MediaBreakpointProps<BreakpointKey>][];
+  /**
+   * The React component that you use throughout your application.
+   *
+   * @see {@link MediaBreakpointProps}
+   */
+  Media: React.ComponentType<MediaProps<BreakpointKey, Interactions>>
+  /**
+   * The React Context provider component that you use to constrain rendering of
+   * breakpoints to a set list and to enable client-side dynamic constraining.
+   *
+   * @see {@link MediaContextProviderProps}
+   */
+  MediaContextProvider: React.ComponentType<
+    MediaContextProviderProps<BreakpointKey | Interactions> & {
+      children: any
+    }
+  >
+  /**
+   * Generates a set of CSS rules that you should include in your application’s
+   * styling to enable the hiding behaviour of your `Media` component uses.
+   */
+  createMediaStyle(breakpointKeys?: BreakpointConstraint[]): string
+  /**
+   * A list of your application’s breakpoints sorted from small to large.
+   */
+  SortedBreakpoints: BreakpointKey[]
+  /**
+   * Creates a list of your application’s breakpoints that support the given
+   * widths and everything in between.
+   */
+  findBreakpointsForWidths(
+    fromWidth: number,
+    throughWidth: number
+  ): BreakpointKey[] | undefined
+  /**
+   * Finds the breakpoint that matches the given width.
+   */
+  findBreakpointAtWidth(width: number): BreakpointKey | undefined
+  /**
+   * Maps a list of values for various breakpoints to props that can be used
+   * with the `Media` component.
+   *
+   * The values map to corresponding indices in the sorted breakpoints array. If
+   * less values are specified than the number of breakpoints your application
+   * has, the last value will be applied to all subsequent breakpoints.
+   */
+  valuesWithBreakpointProps<SizeValue>(
+    values: SizeValue[]
+  ): [SizeValue, MediaBreakpointProps<BreakpointKey>][]
 }
-export type StringKeys<T> = Extract<keyof T, string>;
 /**
  * This is used to generate a Media component, its context provider, and CSS
  * rules based on your application’s breakpoints and interactions.
@@ -280,4 +287,8 @@ export type StringKeys<T> = Extract<keyof T, string>;
    ```
  *
  */
-export declare function createMedia<MediaConfig extends CreateMediaConfig, BreakpointKey extends StringKeys<keyof MediaConfig["breakpoints"]>, Interaction extends StringKeys<keyof MediaConfig["interactions"]>>(config: MediaConfig): CreateMediaResults<BreakpointKey, Interaction>;
+export declare function createMedia<
+  MediaConfig extends CreateMediaConfig,
+  BreakpointKey extends keyof MediaConfig["breakpoints"],
+  Interaction extends keyof MediaConfig["interactions"]
+>(config: MediaConfig): CreateMediaResults<BreakpointKey, Interaction>
