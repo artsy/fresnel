@@ -7,8 +7,8 @@ import { MediaBreakpointProps } from "./Media"
  */
 export declare class MediaQueries<B extends string> {
   static validKeys(): (
-    | BreakpointConstraint
-    | import("./Interactions").InteractionKey)[]
+    | import("./Interactions").InteractionKey
+    | BreakpointConstraint)[]
   private _breakpoints
   private _interactions
   constructor(
