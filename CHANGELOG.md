@@ -1,3 +1,23 @@
+# v8.0.0 (Fri Nov 01 2024)
+
+#### 💥  Breaking Change
+
+- chore(react): Upgrade to latest react@18.3 types [#371](https://github.com/artsy/fresnel/pull/371) ([@damassi](https://github.com/damassi))
+
+#### 🏠  Internal
+
+- chore(deps): bump ws from 5.2.3 to 5.2.4 [#364](https://github.com/artsy/fresnel/pull/364) ([@dependabot[bot]](https://github.com/dependabot[bot]))
+- chore(deps): bump webpack-dev-middleware from 5.1.0 to 5.3.4 [#359](https://github.com/artsy/fresnel/pull/359) ([@dependabot[bot]](https://github.com/dependabot[bot]))
+- chore(deps-dev): bump express from 4.16.4 to 4.19.2 [#360](https://github.com/artsy/fresnel/pull/360) ([@dependabot[bot]](https://github.com/dependabot[bot]))
+- chore(deps): bump ip from 1.1.5 to 1.1.9 [#353](https://github.com/artsy/fresnel/pull/353) ([@dependabot[bot]](https://github.com/dependabot[bot]))
+
+#### Authors: 2
+
+- [@dependabot[bot]](https://github.com/dependabot[bot])
+- Christopher Pappas ([@damassi](https://github.com/damassi))
+
+---
+
 # v7.1.4 (Sun Feb 18 2024)
 
 #### 🐛  Bug Fix
