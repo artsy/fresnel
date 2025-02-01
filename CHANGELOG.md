@@ -1,3 +1,15 @@
+# v8.1.0 (Sat Feb 01 2025)
+
+#### 🚀  Enhancement
+
+- fix(types): update MediaProps.children type [#374](https://github.com/artsy/fresnel/pull/374) ([@stephentuso](https://github.com/stephentuso))
+
+#### Authors: 1
+
+- Stephen Tuso ([@stephentuso](https://github.com/stephentuso))
+
+---
+
 # v8.0.1 (Fri Nov 01 2024)
 
 #### 🐛  Bug Fix
