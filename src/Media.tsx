@@ -181,7 +181,9 @@ export interface MediaProps<BreakpointKey, Interaction>
      ```
    *
    */
-  children: any
+  children:
+    | React.ReactNode
+    | ((className: string, renderChildren: boolean) => React.ReactNode)
 
   /**
    * Additional classNames to passed down and applied to Media container
