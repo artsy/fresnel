@@ -1,3 +1,15 @@
+# v8.2.0 (Fri Oct 31 2025)
+
+#### 🚀  Enhancement
+
+- feat: add conventional commit github action [#377](https://github.com/artsy/fresnel/pull/377) ([@amonkhouse](https://github.com/amonkhouse))
+
+#### Authors: 1
+
+- Amy Monkhouse ([@amonkhouse](https://github.com/amonkhouse))
+
+---
+
 # v8.1.0 (Sat Feb 01 2025)
 
 #### 🚀  Enhancement
