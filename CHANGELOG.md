@@ -1,3 +1,15 @@
+# v8.3.0 (Mon Nov 10 2025)
+
+#### 🚀  Enhancement
+
+- feat: add add-version-label github action [#378](https://github.com/artsy/fresnel/pull/378) ([@amonkhouse](https://github.com/amonkhouse))
+
+#### Authors: 1
+
+- Amy Monkhouse ([@amonkhouse](https://github.com/amonkhouse))
+
+---
+
 # v8.2.0 (Fri Oct 31 2025)
 
 #### 🚀  Enhancement
