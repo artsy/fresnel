@@ -1,0 +1,11 @@
+name: ☢️ Add Version Label
+
+on:
+  pull_request:
+    types: [opened, reopened, synchronize]
+
+jobs:
+  run-add-version-label:
+    uses: artsy/duchamp/.github/workflows/add-version-label.yml@main
+    secrets:
+      danger-token: ${{ secrets.DANGER_TOKEN }}
