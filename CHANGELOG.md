@@ -1,3 +1,15 @@
+# v8.4.0 (Tue Nov 11 2025)
+
+#### 🚀  Enhancement
+
+- feat: add yarn check github action [#379](https://github.com/artsy/fresnel/pull/379) ([@mc-jones](https://github.com/mc-jones))
+
+#### Authors: 1
+
+- Matt Jones ([@mc-jones](https://github.com/mc-jones))
+
+---
+
 # v8.3.0 (Mon Nov 10 2025)
 
 #### 🚀  Enhancement
