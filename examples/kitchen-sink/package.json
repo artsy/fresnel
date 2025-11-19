@@ -7,7 +7,7 @@
     "start": "babel-node --extensions '.ts,.tsx,.js,.jsx' server.tsx"
   },
   "dependencies": {
-    "@artsy/detect-responsive-traits": "0.1.0",
+    "@artsy/detect-responsive-traits": "0.2.0",
     "@artsy/fresnel": "../../dist",
     "@babel/node": "^7.4.5",
     "express": "^4.17.0",
