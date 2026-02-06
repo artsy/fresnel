@@ -1,3 +1,15 @@
+# v8.5.0 (Fri Feb 06 2026)
+
+#### 🚀  Enhancement
+
+- feat: add triggers to conventional commits check [#381](https://github.com/artsy/fresnel/pull/381) ([@mc-jones](https://github.com/mc-jones))
+
+#### Authors: 1
+
+- Matt Jones ([@mc-jones](https://github.com/mc-jones))
+
+---
+
 # v8.4.0 (Tue Nov 11 2025)
 
 #### 🚀  Enhancement
